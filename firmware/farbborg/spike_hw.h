@@ -11,9 +11,9 @@
 
 #define FCPU      50000000
 
-#define PIXMAP   ( (uint32_t *) 0x70020000)
-#define PWMTABLE ( (uint32_t *) 0x70021000)
-#define MAGIC    (*(uint32_t *) 0x70021D54)
+#define PIXMAP   ( (uint32_t *) 0xF0020000)
+#define PWMTABLE ( (uint32_t *) 0xF0021000)
+#define MAGIC    (*(uint32_t *) 0xF0021D54)
 
 #define UART_RXBUFSIZE 32
 
@@ -43,9 +43,8 @@ void     isr_unregister(int irq);
 /****************************************************************************
  * General Stuff
  */
-void     halt();
-void     jump(uint32_t addr);
-
+extern void     halt();
+extern void     jump(uint32_t addr);
 
 /****************************************************************************
  * Timer
@@ -105,11 +104,11 @@ typedef struct {
 	uint8_t b;
 } color_t; 
 
-typedef stsruct {
+/*typedef stsruct {
 	color_t image[];
 	
 
-} farborg_t;
+} farborg_t; */
 
 /***************************************************************************
  * Pointer to actual components
@@ -118,5 +117,8 @@ extern timer_t  *timer0;
 extern uart_t   *uart0; 
 extern gpio_t   *gpio0; 
 extern uint32_t *sram0; 
+
+char *memcpy (char *destaddr, const char *srcaddr, int len);
+
 
 #endif // SPIKEHW_H

@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env /usr/bin/ruby
 
 require "serialport.so"
 require "optparse"
