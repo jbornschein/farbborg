@@ -9,7 +9,10 @@
 #define RAM_START 0x40000000
 #define RAM_SIZE  0x04000000
 
-#define FCPU      100000000
+#define FCPU      50000000
+
+#define PIXMAP   ( (uint32_t *) 0xF0020000)
+#define PWMTABLE ( (uint32_t *) 0xF0021000)
 
 #define UART_RXBUFSIZE 32
 
@@ -39,9 +42,8 @@ void     isr_unregister(int irq);
 /****************************************************************************
  * General Stuff
  */
-void     halt();
-void     jump(uint32_t addr);
-
+extern void     halt();
+extern void     jump(uint32_t addr);
 
 /****************************************************************************
  * Timer
@@ -64,7 +66,6 @@ void msleep(uint32_t msec);
 void nsleep(uint32_t nsec);
 
 void tic_init();
-
 
 /***************************************************************************
  * GPIO0
@@ -91,13 +92,31 @@ void uart_putchar(char c);
 void uart_putstr(char *str);
 char uart_getchar();
 
+/****************************************************************************
+ * Farborg
+ */
+ 
+typedef struct {
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
+} color_t; 
+
+/*typedef stsruct {
+	color_t image[];
+	
+
+} farborg_t; */
 
 /***************************************************************************
  * Pointer to actual components
  */
+ 
 extern timer_t  *timer0;
 extern uart_t   *uart0; 
 extern gpio_t   *gpio0; 
 extern uint32_t *sram0; 
+
+char *memcpy (char *destaddr, const char *srcaddr, int len);
 
 #endif // SPIKEHW_H

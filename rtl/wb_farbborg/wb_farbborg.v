@@ -75,13 +75,13 @@ pwm pwm1 (
 
 assign wb_ack_o = wb_stb_i & ack;
 
-always @(posedge clk)
+always @(wb_stb_i, wb_cyc_i, wb_we_i)
 begin
 	if (wb_stb_i && wb_cyc_i) 
 	begin
 		if (wb_we_i) 
 			we <= 1;
-		ack <= ~ack;
+		ack <= 1;
 	end else
 	begin
 		ack <= 0;

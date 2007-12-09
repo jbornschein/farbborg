@@ -4,6 +4,9 @@
 
 #include "spike_hw.h"
 
+#define PIXMAP   ( (uint32_t *) 0xF0020000)
+#define PWMTABLE ( (uint32_t *) 0xF0021000)
+//#define MAGIC    (*(uint8_t *) 0xF0021D54)
 
 /* prototypes */
 void writeint(uint8_t nibbles, uint32_t val);
@@ -66,12 +69,26 @@ void memtest()
 int main(int argc, char **argv)
 {
 	int8_t  *p;
-	int32_t *p32;
+	int32_t *p32, i, tmp;
 
 	// Initialize stuff
 	uart_init();
 	//memtest();
 
+	PIXMAP[0]   = 0x11;
+	PIXMAP[1]   = 0x12;
+	PWMTABLE[0] = 0x21;
+	PWMTABLE[1] = 0x22;
+	//MAGIC[0]    = 0x33;
+	
+    // me be init of the pwm table
+	for (i = 0; i < 256; i++) {
+		tmp = i;
+		if (tmp < 14) 
+		  tmp = 14;		
+		PWMTABLE[i] = tmp;
+	}
+	
 	uart_putstr("\r\n\r\n** SPIKE BOOTLOADER **\n");
 	for(;;) {
 		uint32_t start, size, checksum, help;

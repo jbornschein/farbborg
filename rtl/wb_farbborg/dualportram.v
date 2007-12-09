@@ -60,19 +60,19 @@ module dualportram2(clka, clkb, wea, addra, addrb, dia, dob);
     reg    [ 7:0] RAM0 [511:0];
     reg    [ 8:0] read_addrb;
    
-    initial begin 
-        for (read_addrb = 0; read_addrb < 256; read_addrb = read_addrb +1) begin 
-           RAM3[2*read_addrb] = 8'h10;
-           RAM2[2*read_addrb] = 8'h20;
-           RAM1[2*read_addrb] = 8'h30;
-           RAM0[2*read_addrb] = 8'h40;
-           RAM3[2*read_addrb+1] = 8'ha0;
-           RAM2[2*read_addrb+1] = 8'hb5;
-           RAM1[2*read_addrb+1] = 8'hc5;
-           RAM0[2*read_addrb+1] = 8'hff;
-        end
-        read_addrb = 0;
-    end
+//    initial begin 
+//        for (read_addrb = 0; read_addrb < 256; read_addrb = read_addrb +1) begin 
+//           RAM3[2*read_addrb] = 8'h10;
+//           RAM2[2*read_addrb] = 8'h20;
+//           RAM1[2*read_addrb] = 8'h30;
+//           RAM0[2*read_addrb] = 8'h40;
+//           RAM3[2*read_addrb+1] = 8'ha0;
+//           RAM2[2*read_addrb+1] = 8'hb5;
+//           RAM1[2*read_addrb+1] = 8'hc5;
+//           RAM0[2*read_addrb+1] = 8'hff;
+//           end
+//           read_addrb = 0;
+//        end
        
     always @(posedge clka)
     begin
