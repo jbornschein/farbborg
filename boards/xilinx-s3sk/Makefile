@@ -106,16 +106,16 @@ system-routed.ncd: system.ncd
 system.bit: system-routed.ncd
 	bitgen -w system-routed.ncd system.bit
 
-system-routed.xdl: system-routed.ncd
-	xdl -ncd2xdl system-routed.ncd system-routed.xdl
+system.xdl: system.ncd
+	xdl -ncd2xdl system.ncd system.xdl
 
 system-routed.twr: system-routed.ncd
 	trce -v 10 system-routed.ncd system.pcf
 
 timing: system-routed.twr
 
-usage: system-routed.xdl
-	xdlanalyze.pl system-routed.xdl $(USAGE_DEPTH)
+usage: system.xdl
+	xdlanalyze.pl $< $(USAGE_DEPTH)
 
 ####################################################################
 # final targets

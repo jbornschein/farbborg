@@ -58,35 +58,33 @@ reg          ack;
 output[ 4:0] plane_out;
 
 pwm pwm1 ( 
-    .reset(reset),
-    .cp2(clk_pwm),
-    .addr(wb_adr_i[12:2]),
-    .din(wb_dat_i[7:0]),
-    .we(we),
-    .clk(clk),
-    .lsr_clr(lsr_clr),
-    .lsr_d(lsr_d),
-    .lsr_c(lsr_c),
-    .latch_data(latch_data),
-    .psr_c(psr_c),
-    .psr_d(psr_d),
-    .col_enable(col_enable)
+    .reset			(reset			),
+    .pwm_clk		(clk_pwm		),
+    .cpu_addr		(wb_adr_i[12:2]	),
+    .din			(wb_dat_i[15:0]	),
+    .we				(we				),
+    .cpu_clk		(clk			),
+    .lsr_clr		(lsr_clr		),
+    .lsr_d			(lsr_d			),
+    .lsr_c			(lsr_c			),
+    .latch_data		(latch_data		),
+    .psr_c			(psr_c			),
+    .psr_d			(psr_d			),
+    .col_enable		(col_enable		)
 );
 
 assign wb_ack_o = wb_stb_i & ack;
 
 always @(wb_stb_i, wb_cyc_i, wb_we_i)
 begin
+	ack <= 0;
+	we  <= 0;
 	if (wb_stb_i && wb_cyc_i) 
 	begin
 		if (wb_we_i) 
 			we <= 1;
 		ack <= 1;
-	end else
-	begin
-		ack <= 0;
-		we  <= 0;
-    end
+	end
 end
 
 endmodule
