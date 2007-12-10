@@ -36,7 +36,10 @@ SRC=                                      \
 	../../rtl/wb_gpio/wb_gpio.v           \
 	../../rtl/wb_conbus/wb_conbus_top.v   \
 	../../rtl/wb_conbus/wb_conbus_arb.v   \
-	../../rtl/wb_sram/wb_sram32.v
+	../../rtl/wb_sram/wb_sram32.v         \
+	../../rtl/wb_farbborg/wb_farbborg.v   \
+	../../rtl/wb_farbborg/pwm.v	          \
+	../../rtl/wb_farbborg/dualportram.v	
 #	../../rtl/wb_uart/uart.v              \
 
 #############################################################################
@@ -102,9 +105,6 @@ system-routed.ncd: system.ncd
 
 system.bit: system-routed.ncd
 	bitgen -w system-routed.ncd system.bit
-
-system.mcs: system.bit
-	promgen -u 0 system
 
 system-routed.xdl: system-routed.ncd
 	xdl -ncd2xdl system-routed.ncd system-routed.xdl

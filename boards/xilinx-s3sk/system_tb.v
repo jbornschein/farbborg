@@ -152,7 +152,7 @@ system #(
 );
 
 assign btn = { 3'b0, reset };
-assign sw  = { 7'b00000001 };
+assign sw  = { 8'b00000001 };
 
 /* Clocking device */
 initial         clk <= 0;
