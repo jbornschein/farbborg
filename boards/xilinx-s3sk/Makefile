@@ -3,13 +3,15 @@ VINCDIR=                                  \
 	-I../../rtl/lm32                      \
 	-I../../rtl/wb_ddr
 
-SYN_SRC=
+SYN_SRC= \
+	../../rtl/wb_farbborg/dualportram_xilinx.v
 
 SIM_SRC=                                  \
 	system_tb.v                           \
 	../../sim/sram/sram16.v               \
 	../../sim/unisims/BUFG.v              \
-	../../sim/unisims/DCM.v
+	../../sim/unisims/DCM.v               \
+	../../rtl/wb_farbborg/dualportram.v
 
 SRC=                                      \
 	system.v                              \
@@ -38,8 +40,7 @@ SRC=                                      \
 	../../rtl/wb_conbus/wb_conbus_arb.v   \
 	../../rtl/wb_sram/wb_sram32.v         \
 	../../rtl/wb_farbborg/wb_farbborg.v   \
-	../../rtl/wb_farbborg/pwm.v	          \
-	../../rtl/wb_farbborg/dualportram.v	
+	../../rtl/wb_farbborg/pwm.v
 #	../../rtl/wb_uart/uart.v              \
 
 #############################################################################

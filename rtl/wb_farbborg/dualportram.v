@@ -28,43 +28,54 @@ module dualportram_10x8_7x64(clka, clkb, wea, addra, addrb, dia, dob);
     input      [ 9:0] addra;
     input      [ 6:0] addrb;
     input      [ 7:0] dia;
-    output reg [63:0] dob;
-    reg        [ 7:0] RAM7 [127:0];
-    reg        [ 7:0] RAM6 [127:0];
-    reg        [ 7:0] RAM5 [127:0];
-    reg        [ 7:0] RAM4 [127:0];
-    reg        [ 7:0] RAM3 [127:0];
-    reg        [ 7:0] RAM2 [127:0];
-    reg        [ 7:0] RAM1 [127:0];
-    reg        [ 7:0] RAM0 [127:0];
+    output     [63:0] dob;
+    reg        [31:0] RAM1 [127:0];
+    reg        [31:0] RAM0 [127:0];
 
 
     always @(posedge clka)
     begin
         if (wea == 1'b1) 
         begin
-            case (addra[2:0])
-                3'b000 : RAM0[addra[9:3]] <= dia;
-                3'b001 : RAM1[addra[9:3]] <= dia;
-                3'b010 : RAM2[addra[9:3]] <= dia;
-                3'b011 : RAM3[addra[9:3]] <= dia;
-				3'b100 : RAM4[addra[9:3]] <= dia;
-                3'b101 : RAM5[addra[9:3]] <= dia;
-                3'b110 : RAM6[addra[9:3]] <= dia;
-                3'b111 : RAM7[addra[9:3]] <= dia;
-            endcase
-        end
+			case(addra[1:0])
+				2'b00 : begin
+					case (addra[2])
+						1'b0 : RAM0[addra[9:3]] [7:0] <= dia;
+						1'b1 : RAM1[addra[9:3]] [7:0] <= dia;
+					endcase
+				end
+				2'b01 : begin
+					case (addra[2])
+						1'b0 : RAM0[addra[9:3]] [15:8] <= dia;
+						1'b1 : RAM1[addra[9:3]] [15:8] <= dia;
+					endcase
+				end
+				2'b10 : begin
+					case (addra[2])
+						1'b0 : RAM0[addra[9:3]] [23:16] <= dia;
+						1'b1 : RAM1[addra[9:3]] [23:16] <= dia;
+					endcase
+				end
+				2'b11 : begin
+					case (addra[2])
+						1'b0 : RAM0[addra[9:3]] [31:24] <= dia;
+						1'b1 : RAM1[addra[9:3]] [31:24] <= dia;
+					endcase
+				end
+        	endcase
+		end
     end
     
+	reg [31:0] byte1;
+	reg [31:0] byte0;
+	
+	
     always @(posedge clkb)
     begin
-		dob <= {RAM7[addrb],
-                RAM6[addrb],
-                RAM5[addrb], 
-                RAM4[addrb],
-			    RAM3[addrb],
-                RAM2[addrb],
-                RAM1[addrb], 
-                RAM0[addrb]};
+		byte1 <= RAM1[addrb];
+		byte0 <= RAM0[addrb];
 	end
+	
+	assign dob = {byte1, byte0};
+	
 endmodule
