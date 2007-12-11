@@ -11,8 +11,8 @@
 
 #define FCPU      50000000
 
-#define PIXMAP   ( (uint32_t *) 0xF0020000)
-#define PWMTABLE ( (uint32_t *) 0xF0021000)
+#define PIXMAP   ( (uint32_t *) 0xF0040000)
+#define PWMTABLE ( (uint32_t *) 0xF0041000)
 
 #define UART_RXBUFSIZE 32
 

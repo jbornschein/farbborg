@@ -34,48 +34,48 @@ begin
     addrb <= 0;
        
     // Port a
-    #(0.45*tcka)
+    #(0.5*tcka)
     dia   <= 8'h21;
     addra <= 0;
     wea   <= 1;
     
-    #(0.5*tcka)
-    wea   <= 0;
+    //#(0.5*tcka)
+    //wea   <= 0;
    
-    #(0.5*tcka)
+    #(1*tcka)
     dia   <= 8'h43;
     addra <= 1;
     wea   <= 1;
     
-    #(0.5*tcka)
-    wea   <= 0;
+    //#(0.5*tcka)
+    //wea   <= 0;
     
-    #(0.5*tcka)
+    #(1*tcka)
     dia   <= 8'h65;
     addra <= 2;
     wea   <= 1;
     
-    #(0.5*tcka)
-    wea   <= 0;
+    //#(0.5*tcka)
+    //wea   <= 0;
     
-    #(0.5*tcka)
+    #(1*tcka)
     dia   <= 8'h87;
     addra <= 3;
     wea   <= 1;
     
-    #(0.5*tcka)
-    wea   <= 0;
+    //#(0.5*tcka)
+    //wea   <= 0;
 
-    #(0.5*tcka)
+    #(1*tcka)
     dia   <= 8'h21;
     addra <= 4;
     wea   <= 1;
     addrb <= 1;
     
-    #(0.5*tcka)
-    wea   <= 0;
+    //#(0.5*tcka)
+    //wea   <= 0;
    
-    #(0.5*tcka)
+    #(1*tcka)
     dia   <= 8'h43;
     addra <= 5;
     wea   <= 1;

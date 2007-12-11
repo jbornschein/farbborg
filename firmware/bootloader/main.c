@@ -4,8 +4,8 @@
 
 #include "spike_hw.h"
 
-#define PIXMAP   ( (uint32_t *) 0xF0020000)
-#define PWMTABLE ( (uint32_t *) 0xF0021000)
+#define PIXMAP   ( (uint32_t *) 0xF0040000)
+#define PWMTABLE ( (uint32_t *) 0xF0041000)
 //#define MAGIC    (*(uint8_t *) 0xF0021D54)
 
 /* prototypes */
@@ -71,14 +71,16 @@ int main(int argc, char **argv)
 	int8_t  *p;
 	int32_t *p32, i, tmp;
 
-	// Initialize stuff
-	uart_init();
-	//memtest();
-
 	PIXMAP[0]   = 0x11;
 	PIXMAP[1]   = 0x12;
 	PWMTABLE[0] = 0x21;
 	PWMTABLE[1] = 0x22;
+
+	// Initialize stuff
+	uart_init();
+	//memtest();
+
+
 	//MAGIC[0]    = 0x33;
 	
     // me be init of the pwm table

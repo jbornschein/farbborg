@@ -81,7 +81,7 @@ begin
     wb_cyc_i  = 0;
     
     
-    #(5000*tcka) $finish;       
+    #(50000*tcka) $finish;       
 end
 
 always #(tcka/2) clk = ~clk;

@@ -291,7 +291,7 @@ wb_conbus_top #(
 	.s7_stb_o(  farbborg0_stb   ),
 	.s7_ack_i(  farbborg0_ack   ),
 	.s7_err_i(  gnd         ),
-	.s7_rty_i(  gnd         ),
+	.s7_rty_i(  gnd         )
 );
 
 

@@ -1,100 +1,83 @@
-// a schreiben (8 Bit), b lesen (16 Bit)
-module dualportram1(clka, clkb, wea, addra, addrb, dia, dob);
-    input         clka;
-    input         clkb;
-    input         wea;
-    input  [ 8:0] addra;
-    input  [ 7:0] addrb;
-    input  [ 7:0] dia;
-    output [15:0] dob;
-    reg    [ 7:0] RAM0 [255:0];
-    reg    [ 7:0] RAM1 [255:0];
-    reg    [ 7:0] read_addrb;
-    reg    [ 8:0] help;
-       
-    initial begin
-        for (help = 0; help < 256; help = help +1) begin
-            if (help < 17) begin 
-                RAM1[help] = 0;
-                RAM0[help] = 17;
-            end
-            else begin
-                RAM1[help] = 0;
-                RAM0[help] = help;
-                //{help[0],help[1],help[2],help[3],
-                // help[4],help[5],help[6],help[7]};
-            end
-        end
-    end
-    
+
+module dualportram_8x16_8x16(clka, clkb, wea, addra, addrb, dia, dob);
+    input             clka;
+    input             clkb;
+    input             wea;
+    input      [ 7:0] addra;
+    input      [ 7:0] addrb;
+    input      [15:0] dia;
+    output reg [15:0] dob;
+    reg        [15:0] RAM0 [255:0];
+        
     always @(posedge clka)
     begin
         if (wea == 1'b1)
-            if (addra[0] == 0)
-                RAM0[addra[8:1]] <= dia;
-            if (addra[0] == 1)
-                RAM1[addra[8:1]] <= dia; 
+            RAM0[addra[7:0]] <= dia;
     end
     
     always @(posedge clkb)
     begin
-        read_addrb <= addrb;
+        dob <= RAM0[addrb];
     end
-    
-    assign dob = {RAM1[read_addrb], 
-                  RAM0[read_addrb]};
 endmodule
 
-// a schreiben (8 Bit)make, b lesen (32 Bit)
-module dualportram2(clka, clkb, wea, addra, addrb, dia, dob);
-    input         clka;
-    input         clkb;
-    input         wea;
-    input  [10:0] addra;
-    input  [ 8:0] addrb;
-    input  [ 7:0] dia;
-    output [31:0] dob;
-    reg    [ 7:0] RAM3 [511:0];
-    reg    [ 7:0] RAM2 [511:0];
-    reg    [ 7:0] RAM1 [511:0];
-    reg    [ 7:0] RAM0 [511:0];
-    reg    [ 8:0] read_addrb;
-   
-//    initial begin 
-//        for (read_addrb = 0; read_addrb < 256; read_addrb = read_addrb +1) begin 
-//           RAM3[2*read_addrb] = 8'h10;
-//           RAM2[2*read_addrb] = 8'h20;
-//           RAM1[2*read_addrb] = 8'h30;
-//           RAM0[2*read_addrb] = 8'h40;
-//           RAM3[2*read_addrb+1] = 8'ha0;
-//           RAM2[2*read_addrb+1] = 8'hb5;
-//           RAM1[2*read_addrb+1] = 8'hc5;
-//           RAM0[2*read_addrb+1] = 8'hff;
-//           end
-//           read_addrb = 0;
-//        end
-       
+module dualportram_10x8_7x64(clka, clkb, wea, addra, addrb, dia, dob);
+    input             clka;
+    input             clkb;
+    input             wea;
+    input      [ 9:0] addra;
+    input      [ 6:0] addrb;
+    input      [ 7:0] dia;
+    output     [63:0] dob;
+    reg        [7:0] RAM0 [127:0];
+    reg        [7:0] RAM1 [127:0];
+    reg        [7:0] RAM2 [127:0];
+    reg        [7:0] RAM3 [127:0];
+    reg        [7:0] RAM4 [127:0];
+    reg        [7:0] RAM5 [127:0];
+    reg        [7:0] RAM6 [127:0];
+    reg        [7:0] RAM7 [127:0];
+    
+    
+    
     always @(posedge clka)
     begin
-        if (wea == 1'b1) 
-        begin
-            case (addra[1:0])
-                2'b00 : RAM0[addra[10:2]] <= dia;
-                2'b01 : RAM1[addra[10:2]] <= dia;
-                2'b10 : RAM2[addra[10:2]] <= dia;
-                2'b11 : RAM3[addra[10:2]] <= dia;
-            endcase
-        end 
+        if (wea == 1'b1) begin
+	        case (addra[2:0])
+	                3'b000 : RAM0[addra[9:3]] <= dia;
+	                3'b001 : RAM1[addra[9:3]] <= dia;
+	                3'b010 : RAM2[addra[9:3]] <= dia;
+	                3'b011 : RAM3[addra[9:3]] <= dia;
+					3'b100 : RAM4[addra[9:3]] <= dia;
+	                3'b101 : RAM5[addra[9:3]] <= dia;
+	                3'b110 : RAM6[addra[9:3]] <= dia;
+	                3'b111 : RAM7[addra[9:3]] <= dia;
+	        endcase
+        end
     end
     
+	reg [7:0] byte7;
+	reg [7:0] byte6;
+	reg [7:0] byte5;
+	reg [7:0] byte4;
+	reg [7:0] byte3;
+	reg [7:0] byte2;
+	reg [7:0] byte1;
+	reg [7:0] byte0;
+	
     always @(posedge clkb)
     begin
-        read_addrb <= addrb;
-    end
-    
-    assign dob = {RAM3[read_addrb],
-                  RAM2[read_addrb],
-                  RAM1[read_addrb], 
-                  RAM0[read_addrb]};
-
+		byte7 <= RAM7[addrb];
+		byte6 <= RAM6[addrb];
+		byte5 <= RAM5[addrb];
+		byte4 <= RAM4[addrb];
+		byte3 <= RAM3[addrb];
+		byte2 <= RAM2[addrb];
+		byte1 <= RAM1[addrb];
+		byte0 <= RAM0[addrb];
+		
+	end
+	
+	assign dob = {byte7, byte6, byte5, byte4, byte3, byte2, byte1, byte0 };
+	
 endmodule

@@ -35,7 +35,7 @@ begin
     addrb <= 0;
        
     // Port a
-    #(0.45*tcka)
+    #(0.51*tcka)
     dia   <= 8'h21;
     addra <= 0;
     wea   <= 1;

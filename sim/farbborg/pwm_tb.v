@@ -43,7 +43,7 @@ begin
     cp2 = 0;
     reset = 1;
     
-    #(2*tcka)
+    #(4*tcka)
     reset = 0;   
     
     #(500000*tcka) $finish;       
