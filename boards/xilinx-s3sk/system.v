@@ -475,15 +475,14 @@ wb_farbborg farbborg0 (
 	.wb_sel_i( farbborg0_sel   ),
 	.wb_ack_o( farbborg0_ack   ), 
 	.clk_pwm(  clk             ),
-	.lsr_clr(  lsr_clk         ),
+	.lsr_clr(  lsr_clr         ),
 	.lsr_d(    lsr_d           ),
 	.lsr_c(    lsr_c           ),
 	.latch_data(latch_data     ),
 	.psr_c(    psr_c           ),
-	.psr_d(    psr_d           )
+	.psr_d(    psr_d           ),
+	.col_enable (col_enable    )
 );
-
-assign col_enable = 1'b1;
 
 //---------------------------------------------------------------------------
 // LogicAnalyzerComponent

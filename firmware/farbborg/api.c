@@ -11,8 +11,16 @@ color blue  = {  0,   0, 255};
 
 uint32_t imag[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
 
+
+
+
+
 // Die pixmap soll au§erhalb dses avrs liegen 
-extern uint32_t pixmap[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
+//extern uint32_t pixmap[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
+
+uint32_t (*pixmap_p)[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES] = 0xf0040000;
+
+
 
 // a voxel is compareabel to a pixel in 2D, with the differents, that it has 
 // a volume

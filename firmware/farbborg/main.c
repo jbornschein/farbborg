@@ -25,10 +25,15 @@ int main()
 		  tmp = 14;		
 		PWMTABLE[i] = tmp;
 	}
-		
+	
+	*((uint32_t *) 0xf0041d54) = 0x23;
+	
 	for (i = 0; i < 1024; i++) {
-		PIXMAP[i] = 0;
+		PIXMAP[i] = 0x80;
 	}
+	
+	while(1);
+	
 
 	display_loop((void *) 0);
     

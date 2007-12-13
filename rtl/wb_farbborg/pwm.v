@@ -67,7 +67,7 @@ assign we_pixmap   = we & ~cpu_addr[10];
 
 //writes from BASE+0x400 to BASE+0x800 go to pwmtable
 wire   we_pwmtable;
-assign we_pwmtable = we & cpu_addr[10];
+assign we_pwmtable = we & cpu_addr[10] & ~cpu_addr[9];
 
 always @(posedge pwm_clk or posedge reset) begin
 	if (reset == 1'b 1) begin
@@ -197,6 +197,8 @@ always @(posedge pwm_clk or posedge reset) begin
     end
 end
 
+
+//magic: write 0x23 to 0x1d54 to enable pwm
 always @(posedge cpu_clk or posedge reset) begin
     if (reset == 1'b1) begin
         pwm_enable <= 1'b0;
@@ -204,8 +206,8 @@ always @(posedge cpu_clk or posedge reset) begin
         if (we == 1'b 1) begin
             if (cpu_addr[10]  == 1'b1 )
                 pwm_enable <= 1'b0; //disable pwm when user accesses pwm table
-            if (cpu_addr == {3'b111, 8'h55})  //0x755
-                if (din == 8'h23)
+            if (cpu_addr == {3'b111, 8'h55})  //0x755, or 0x1d54 if <<2
+                if (din[7:0] == 8'h23)
                     pwm_enable <= 1'b1;
         end
     end

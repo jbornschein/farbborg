@@ -31,7 +31,7 @@ image.srec: image image.lst
 
 
 upload: image.srec
-	../../tools/uploader/upload.rb -s /dev/tty.usbserial -t $<
+	../../tools/uploader/upload.rb -s /dev/ttyUSB0 -t $<
 
 clean:
 	rm -f srectovhdl image image.lst image.bin image.srec image.map  *.o *.d
