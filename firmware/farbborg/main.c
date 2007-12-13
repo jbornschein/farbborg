@@ -23,15 +23,14 @@ int main()
 		tmp = i;
 		if (tmp < 14) 
 		  tmp = 14;		
-		PWMTABLE[2*i]   = tmp;
-		PWMTABLE[2*i+1] = tmp >> 8;
+		PWMTABLE[i]   = tmp;
 	}	
 		
 	for (i = 0; i < 1024; i++) {
 		PIXMAP[i] = 0;
 	}
-
-	//display_loop((void *) 0);
+	FARBBORG_EN = 0x23;
+	display_loop((void *) 0);
     
     return 0;
 }

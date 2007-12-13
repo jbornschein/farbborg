@@ -13,6 +13,8 @@
 
 #define PIXMAP   ( (uint32_t *) 0xF0040000)
 #define PWMTABLE ( (uint32_t *) 0xF0041000)
+#define FARBBORG_EN ( *(uint32_t *) 0xF0041D54)
+
 
 #define UART_RXBUFSIZE 32
 

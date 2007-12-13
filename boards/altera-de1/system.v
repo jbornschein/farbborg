@@ -34,6 +34,14 @@ module system
 	
 wire         rst;
 wire         clk = clock_50;
+reg          clk_pwm;
+
+always @(posedge clk) begin
+	if (clk_pwm)
+		clk_pwm = 0;
+	else 
+		clk_pwm = 1;
+end
 
 //---------------------------------------------------------------------------
 // Wishbine Wires
@@ -470,13 +478,14 @@ wb_farbborg farbborg0 (
 	.wb_we_i(  farbborg0_we    ),
 	.wb_sel_i( farbborg0_sel   ),
 	.wb_ack_o( farbborg0_ack   ), 
-	.clk_pwm(  clk             ),
+	.clk_pwm(  clk_pwm           ),
 	.lsr_clr(  gpio_0[2]         ),
 	.lsr_d(    gpio_0[1]         ),
 	.lsr_c(    gpio_0[3]         ),
 	.latch_data(gpio_0[19:12]    ),
 	.psr_c(    gpio_0[4]         ),
-	.psr_d(    gpio_0[5]         )
+	.psr_d(    gpio_0[5]         ),
+	.col_enable(gpio_0[0]        )
 );
 
 

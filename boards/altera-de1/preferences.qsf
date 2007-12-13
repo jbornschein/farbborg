@@ -10,6 +10,7 @@ set_global_assignment -name FLOW_ENABLE_IO_ASSIGNMENT_ANALYSIS ON
 # ==========================
 set_location_assignment pin_a13 -to gpio_0[0]
 set_location_assignment pin_b13 -to gpio_0[1]
+set_location_assignment pin_a14 -to gpio_0[2]
 set_location_assignment pin_b14 -to gpio_0[3]
 set_location_assignment pin_a15 -to gpio_0[4]
 set_location_assignment pin_b15 -to gpio_0[5]
