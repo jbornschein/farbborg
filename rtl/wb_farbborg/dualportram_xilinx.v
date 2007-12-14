@@ -30,10 +30,12 @@ module dualportram_10x8_7x64(clka, clkb, wea, addra, addrb, dia, dob);
     input      [ 7:0] dia;
     output     [63:0] dob;
 	
-	wire xaddra, xaddrb;
+	wire [10:0] xaddra;
+	wire [8:0] xaddrb;
 	assign xaddra = {2'b00, addra[9:3], addra[1:0]};
 	assign xaddrb = {2'b00, addrb };
 	
+	wire xwea_o, xwea_1;
 	assign xwea_0 = wea & (~ addra[2]);
 	assign xwea_1 = wea &    addra[2] ;
 	
@@ -60,10 +62,10 @@ module dualportram_10x8_7x64(clka, clkb, wea, addra, addrb, dia, dob);
 		.DOB(dob_0),   // Port B 32-bit Data Output
 		//.DOPA(DOPA), // Port A 1-bit Parity Output
 		//.DOPB(DOPB), // Port B 4-bit Parity Output
-		.ADDRA(xADDRA),  // Port A 11-bit Address Input
-		.ADDRB(xADDRB),  // Port B 9-bit Address Input
-		.CLKA(CLKA),    // Port A Clock
-		.CLKB(CLKB),    // Port B Clock
+		.ADDRA(xaddra),  // Port A 11-bit Address Input
+		.ADDRB(xaddrb),  // Port B 9-bit Address Input
+		.CLKA(clka),    // Port A Clock
+		.CLKB(clkb),    // Port B Clock
 		.DIA(dia),      // Port A 8-bit Data Input
 		.DIB(32'h00000000),// Port B 32-bit Data Input
 		.DIPA(1'b0),    // Port A 1-bit parity Input
@@ -72,7 +74,7 @@ module dualportram_10x8_7x64(clka, clkb, wea, addra, addrb, dia, dob);
 		.ENB(1'b1),      // Port B RAM Enable Input
 		.SSRA(1'b0),    // Port A Synchronous Set/Reset Input
 		.SSRB(1'b0),    // Port B Synchronous Set/Reset Input
-		.WEA(xWEA_0),      // Port A Write Enable Input
+		.WEA(xwea_0),      // Port A Write Enable Input
 		.WEB(1'b0)       // Port B Write Enable Input
 	);
 
@@ -91,10 +93,10 @@ module dualportram_10x8_7x64(clka, clkb, wea, addra, addrb, dia, dob);
 		.DOB(dob_1),   // Port B 32-bit Data Output
 		//.DOPA(DOPA), // Port A 1-bit Parity Output
 		//.DOPB(DOPB), // Port B 4-bit Parity Output
-		.ADDRA(xADDRA),  // Port A 11-bit Address Input
-		.ADDRB(xADDRB),  // Port B 9-bit Address Input
-		.CLKA(CLKA),    // Port A Clock
-		.CLKB(CLKB),    // Port B Clock
+		.ADDRA(xaddra),  // Port A 11-bit Address Input
+		.ADDRB(xaddrb),  // Port B 9-bit Address Input
+		.CLKA(clka),    // Port A Clock
+		.CLKB(clkb),    // Port B Clock
 		.DIA(dia),      // Port A 8-bit Data Input
 		.DIB(32'h00000000),// Port B 32-bit Data Input
 		.DIPA(1'b0),    // Port A 1-bit parity Input
@@ -103,7 +105,7 @@ module dualportram_10x8_7x64(clka, clkb, wea, addra, addrb, dia, dob);
 		.ENB(1'b1),      // Port B RAM Enable Input
 		.SSRA(1'b0),    // Port A Synchronous Set/Reset Input
 		.SSRB(1'b0),    // Port B Synchronous Set/Reset Input
-		.WEA(xWEA_1),      // Port A Write Enable Input
+		.WEA(xwea_1),      // Port A Write Enable Input
 		.WEB(1'b0)       // Port B Write Enable Input
 	);
 
