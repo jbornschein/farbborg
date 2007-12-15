@@ -54,6 +54,7 @@ wire [31:0]  lm32i_adr,
              gpio0_adr,
              bram0_adr,
              sram0_adr,
+             spi0_adr,
              farbborg0_adr;
 
 
@@ -72,6 +73,8 @@ wire [31:0]  lm32i_dat_r,
              bram0_dat_w,
              sram0_dat_w,
              sram0_dat_r,
+             spi0_dat_w,
+             spi0_dat_r,
              farbborg0_dat_w,
              farbborg0_dat_r;
 
