@@ -42,10 +42,6 @@ reg   [15:0] delaycnt;
 //readline from the pixmap. represents 8 values, that we compare with simultaneously.
 wire  [63:0] line;
 
-reg   [ 5:0] i;
-reg   [ 8:0] a;
-reg   [ 8:0] b;
-
 //selects if the enable line for the matrix controller is asserted.
 //is used to protect the leds as long as the configuration is not yet complete.
 reg   pwm_enable;
@@ -159,37 +155,37 @@ always @(posedge pwm_clk or posedge reset) begin
         end else begin
             latch_data[7] <= 1'b0;
         end
-        if (pwmcount == line[(7*8)-1:(6*8)]) begin
+        if (pwmcount < line[(7*8)-1:(6*8)]) begin
             latch_data[6] <= 1'b1;
         end else begin
             latch_data[6] <= 1'b0;
         end       
-        if (pwmcount == line[(6*8)-1:(5*8)]) begin
+        if (pwmcount < line[(6*8)-1:(5*8)]) begin
             latch_data[5] <= 1'b1;
         end else begin
             latch_data[5] <= 1'b0;
         end
-        if (pwmcount == line[(5*8)-1:(4*8)]) begin
+        if (pwmcount < line[(5*8)-1:(4*8)]) begin
             latch_data[4] <= 1'b1;
         end else begin
             latch_data[4] <= 1'b0;
         end
-        if (pwmcount == line[(4*8)-1:(3*8)]) begin
+        if (pwmcount < line[(4*8)-1:(3*8)]) begin
             latch_data[3] <= 1'b1;
         end else begin
             latch_data[3] <= 1'b0;
         end
-        if (pwmcount == line[(3*8)-1:(2*8)]) begin
+        if (pwmcount < line[(3*8)-1:(2*8)]) begin
             latch_data[2] <= 1'b1;
         end else begin
             latch_data[2] <= 1'b0;
         end
-        if (pwmcount == line[(2*8)-1:(1*8)]) begin
+        if (pwmcount < line[(2*8)-1:(1*8)]) begin
             latch_data[1] <= 1'b1;
         end else begin
             latch_data[1] <= 1'b0;
         end
-        if (pwmcount == line[(1*8)-1:0]) begin
+        if (pwmcount < line[(1*8)-1:0]) begin
             latch_data[0] <= 1'b1;
         end else begin
             latch_data[0] <= 1'b0;
@@ -197,8 +193,6 @@ always @(posedge pwm_clk or posedge reset) begin
     end
 end
 
-
-//magic: write 0x23 to 0x1d54 to enable pwm
 always @(posedge cpu_clk or posedge reset) begin
     if (reset == 1'b1) begin
         pwm_enable <= 1'b0;
@@ -206,8 +200,8 @@ always @(posedge cpu_clk or posedge reset) begin
         if (we == 1'b 1) begin
             if (cpu_addr[10]  == 1'b1 )
                 pwm_enable <= 1'b0; //disable pwm when user accesses pwm table
-            if (cpu_addr == {3'b111, 8'h55})  //0x755, or 0x1d54 if <<2
-                if (din[7:0] == 8'h23)
+            if (cpu_addr == {3'b111, 8'h55})  //0x755
+                if (din == 8'h23)
                     pwm_enable <= 1'b1;
         end
     end

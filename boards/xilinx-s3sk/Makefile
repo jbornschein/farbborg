@@ -3,13 +3,15 @@ VINCDIR=                                  \
 	-I../../rtl/lm32                      \
 	-I../../rtl/wb_ddr
 
-SYN_SRC=
+SYN_SRC= \
+	../../rtl/wb_farbborg/dualportram_xilinx.v
 
 SIM_SRC=                                  \
 	system_tb.v                           \
 	../../sim/sram/sram16.v               \
 	../../sim/unisims/BUFG.v              \
-	../../sim/unisims/DCM.v
+	../../sim/unisims/DCM.v               \
+	../../rtl/wb_farbborg/dualportram.v
 
 SRC=                                      \
 	system.v                              \
@@ -36,7 +38,9 @@ SRC=                                      \
 	../../rtl/wb_gpio/wb_gpio.v           \
 	../../rtl/wb_conbus/wb_conbus_top.v   \
 	../../rtl/wb_conbus/wb_conbus_arb.v   \
-	../../rtl/wb_sram/wb_sram32.v
+	../../rtl/wb_sram/wb_sram32.v         \
+	../../rtl/wb_farbborg/wb_farbborg.v   \
+	../../rtl/wb_farbborg/pwm.v
 #	../../rtl/wb_uart/uart.v              \
 
 #############################################################################
@@ -103,19 +107,16 @@ system-routed.ncd: system.ncd
 system.bit: system-routed.ncd
 	bitgen -w system-routed.ncd system.bit
 
-system.mcs: system.bit
-	promgen -u 0 system
-
-system-routed.xdl: system-routed.ncd
-	xdl -ncd2xdl system-routed.ncd system-routed.xdl
+system.xdl: system.ncd
+	xdl -ncd2xdl system.ncd system.xdl
 
 system-routed.twr: system-routed.ncd
 	trce -v 10 system-routed.ncd system.pcf
 
 timing: system-routed.twr
 
-usage: system-routed.xdl
-	xdlanalyze.pl system-routed.xdl $(USAGE_DEPTH)
+usage: system.xdl
+	xdlanalyze.pl $< $(USAGE_DEPTH)
 
 ####################################################################
 # final targets

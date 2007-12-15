@@ -10,7 +10,7 @@ module system
 	parameter   clk_freq         = 50000000,
 	parameter   uart_baud_rate   = 115200
 ) (
-	input                   clk, 
+	input                   clk,
 	// Debug 
 	output            [7:0] led,
 	input             [3:0] btn,
@@ -24,7 +24,17 @@ module system
 	output            [3:0] sram_be_n,    // Byte   Enable
 	output            [1:0] sram_ce_n,    // Chip   Enable
 	output                  sram_oe_n,    // Output Enable
-	output                  sram_we_n     // Write  Enable
+	output                  sram_we_n,    // Write  Enable
+
+   	//Borg
+	output                  lsr_clr,  //latch shift register
+    output                  lsr_d,
+    output                  lsr_c,
+    output           [7:0]  latch_data,
+    output                  psr_c,    //plane shift register
+    output                  psr_d,
+   
+    output                  col_enable //enable col latches
 );
 	
 wire         rst;
@@ -43,7 +53,9 @@ wire [31:0]  lm32i_adr,
              timer0_adr,
              gpio0_adr,
              bram0_adr,
-             sram0_adr;
+             sram0_adr,
+             farbborg0_adr;
+
 
 
 wire [31:0]  lm32i_dat_r,
@@ -59,7 +71,9 @@ wire [31:0]  lm32i_dat_r,
              bram0_dat_r,
              bram0_dat_w,
              sram0_dat_w,
-             sram0_dat_r;
+             sram0_dat_r,
+             farbborg0_dat_w,
+             farbborg0_dat_r;
 
 wire [3:0]   lm32i_sel,
              lm32d_sel,
@@ -67,7 +81,8 @@ wire [3:0]   lm32i_sel,
              timer0_sel,
              gpio0_sel,
              bram0_sel,
-             sram0_sel;
+             sram0_sel,
+             farbborg0_sel;
 
 wire         lm32i_we,
              lm32d_we,
@@ -75,7 +90,8 @@ wire         lm32i_we,
              timer0_we,
              gpio0_we,
              bram0_we,
-             sram0_we;
+             sram0_we,
+             farbborg0_we;
 
 wire         lm32i_cyc,
              lm32d_cyc,
@@ -83,7 +99,8 @@ wire         lm32i_cyc,
              timer0_cyc,
              gpio0_cyc,
              bram0_cyc,
-             sram0_cyc;
+             sram0_cyc,
+             farbborg0_cyc;
 
 wire         lm32i_stb,
              lm32d_stb,
@@ -91,7 +108,8 @@ wire         lm32i_stb,
              timer0_stb,
              gpio0_stb,
              bram0_stb,
-             sram0_stb;
+             sram0_stb,
+             farbborg0_stb;
 
 wire         lm32i_ack,
              lm32d_ack,
@@ -99,7 +117,8 @@ wire         lm32i_ack,
              timer0_ack,
              gpio0_ack,
              bram0_ack,
-             sram0_ack;
+             sram0_ack,
+             farbborg0_ack;
 
 wire         lm32i_rty,
              lm32d_rty;
@@ -140,7 +159,7 @@ wb_conbus_top #(
 	.s4_addr   ( 15'h7001 ),    // timer0
 	.s5_addr   ( 15'h7002 ),    // gpio0
 	.s6_addr   ( 15'h7003 ),
-	.s7_addr   ( 15'h7004 )
+	.s7_addr   ( 15'h7004 )     // Borg
 ) conmax0 (
 	.clk_i( clk ),
 	.rst_i( rst ),
@@ -269,10 +288,16 @@ wb_conbus_top #(
 	.s6_err_i(  gnd    ),
 	.s6_rty_i(  gnd    ),
 	// Slave7
-	.s7_dat_i(  gnd32  ),
-	.s7_ack_i(  gnd    ),
-	.s7_err_i(  gnd    ),
-	.s7_rty_i(  gnd    )
+	.s7_dat_i(  farbborg0_dat_r ),
+	.s7_dat_o(  farbborg0_dat_w ),
+	.s7_adr_o(  farbborg0_adr   ),
+	.s7_sel_o(  farbborg0_sel   ),
+	.s7_we_o(   farbborg0_we    ),
+	.s7_cyc_o(  farbborg0_cyc   ),
+	.s7_stb_o(  farbborg0_stb   ),
+	.s7_ack_i(  farbborg0_ack   ),
+	.s7_err_i(  gnd         ),
+	.s7_rty_i(  gnd         )
 );
 
 
@@ -432,6 +457,39 @@ wb_gpio gpio0 (
 	.gpio_in(  gpio0_in     ),
 	.gpio_out( gpio0_out    ),
 	.gpio_oe(  gpio0_oe     )
+);
+
+//---------------------------------------------------------------------------
+// farbborg0
+//---------------------------------------------------------------------------
+reg clk_pwm, clk_tmp;
+always @(posedge clk) begin
+	clk_tmp <= ~clk_tmp;
+end
+always @(posedge clk_tmp) begin
+	clk_pwm <= ~clk_pwm;
+end
+
+wb_farbborg farbborg0 (
+	.clk(      clk          ),
+	.reset(    rst          ),
+	//
+	.wb_adr_i( farbborg0_adr   ),
+	.wb_dat_i( farbborg0_dat_w ),
+	.wb_dat_o( farbborg0_dat_r ),
+	.wb_stb_i( farbborg0_stb   ),
+	.wb_cyc_i( farbborg0_cyc   ),
+	.wb_we_i(  farbborg0_we    ),
+	.wb_sel_i( farbborg0_sel   ),
+	.wb_ack_o( farbborg0_ack   ), 
+	.clk_pwm(  clk_pwm         ),
+	.lsr_clr(  lsr_clr         ),
+	.lsr_d(    lsr_d           ),
+	.lsr_c(    lsr_c           ),
+	.latch_data(latch_data     ),
+	.psr_c(    psr_c           ),
+	.psr_d(    psr_d           ),
+	.col_enable (col_enable    )
 );
 
 //---------------------------------------------------------------------------

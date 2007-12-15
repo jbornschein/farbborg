@@ -9,6 +9,7 @@
 #define G 1
 #define B 2
 
+
 typedef struct {
 	unsigned char x, y, z;
 } voxel; 

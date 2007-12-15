@@ -9,10 +9,15 @@ color red   = {255,   0,   0};
 color green = {  0, 255,   0};
 color blue  = {  0,   0, 255};
 
+
+
 uint32_t imag[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
 
+
+
 // Die pixmap soll au§erhalb dses avrs liegen 
-extern uint32_t pixmap[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
+uint32_t pixmap[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
+
 
 // a voxel is compareabel to a pixel in 2D, with the differents, that it has 
 // a volume
@@ -116,8 +121,9 @@ void fade(unsigned char msProStep, unsigned char steps) {
 	signed short *aC = (signed short*) addColor;
 	signed short helpColor[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
 	signed short *help = (signed short *) helpColor;
-	unsigned char *pix, z, i, 
-	              *im  = (unsigned char*) imag;
+	unsigned char z, i;
+	uint32_t *pix;
+	uint32_t *im  = (uint32_t *) imag;
  	
 	for (z = 0; z < MAX_Z; z++) {
 		pix = &PIXMAP[128*z];
@@ -129,7 +135,7 @@ void fade(unsigned char msProStep, unsigned char steps) {
  	for (s = 0; s < steps; s++) {
 		aC   = (signed short*) addColor;
 		help = (signed short *) helpColor;
-		im   = (unsigned char*) imag;
+		im   = (uint32_t *) imag;
 		for (z = 0; z < MAX_Z; z++) {
 			pix = &PIXMAP[128*z];
 			for (i = 0; i < MAX_Y*MAX_X*COLOR_BYTES; i++) {
@@ -152,7 +158,7 @@ void swapAndWait(unsigned char ms) {
 		}
 	}
 	myWait(ms);
-} 
+}
 
 void clearScreen(color c) {
 	uint32_t *pix = (uint32_t *) pixmap, *im = (uint32_t *) imag;
