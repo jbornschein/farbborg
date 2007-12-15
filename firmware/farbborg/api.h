@@ -9,7 +9,6 @@
 #define G 1
 #define B 2
 
-#define pixmap (*pixmap_p)
 
 typedef struct {
 	unsigned char x, y, z;

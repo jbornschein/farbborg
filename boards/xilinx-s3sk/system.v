@@ -462,6 +462,14 @@ wb_gpio gpio0 (
 //---------------------------------------------------------------------------
 // farbborg0
 //---------------------------------------------------------------------------
+reg clk_pwm, clk_tmp;
+always @(posedge clk) begin
+	clk_tmp <= ~clk_tmp;
+end
+always @(posedge clk_tmp) begin
+	clk_pwm <= ~clk_pwm;
+end
+
 wb_farbborg farbborg0 (
 	.clk(      clk          ),
 	.reset(    rst          ),
@@ -474,7 +482,7 @@ wb_farbborg farbborg0 (
 	.wb_we_i(  farbborg0_we    ),
 	.wb_sel_i( farbborg0_sel   ),
 	.wb_ack_o( farbborg0_ack   ), 
-	.clk_pwm(  clk             ),
+	.clk_pwm(  clk_pwm         ),
 	.lsr_clr(  lsr_clr         ),
 	.lsr_d(    lsr_d           ),
 	.lsr_c(    lsr_c           ),

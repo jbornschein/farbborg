@@ -42,10 +42,6 @@ reg   [15:0] delaycnt;
 //readline from the pixmap. represents 8 values, that we compare with simultaneously.
 wire  [63:0] line;
 
-reg   [ 5:0] i;
-reg   [ 8:0] a;
-reg   [ 8:0] b;
-
 //selects if the enable line for the matrix controller is asserted.
 //is used to protect the leds as long as the configuration is not yet complete.
 reg   pwm_enable;

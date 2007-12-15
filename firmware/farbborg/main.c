@@ -21,19 +21,17 @@ int main()
 	// me be init of the pwm table
 	for (i = 0; i < 256; i++) {
 		tmp = i;
-		if (tmp < 14) 
-		  tmp = 14;		
+		if (tmp < 14)
+		  tmp = 14;
 		PWMTABLE[i] = tmp;
 	}
 	
-	*((uint32_t *) 0xf0041d54) = 0x23;
 	
 	for (i = 0; i < 1024; i++) {
-		PIXMAP[i] = 0x80;
+		PIXMAP[i] = 0x0;
 	}
 	
-	while(1);
-	
+	*((uint32_t *) 0xf0041d54) = 0x23;
 
 	display_loop((void *) 0);
     

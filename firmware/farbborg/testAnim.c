@@ -32,9 +32,8 @@ void *display_loop(void * unused)  {
 		symetricRandom();
 		uart_putstr("12\n");
 		testAnim();
-		uart_putstr("12\n");
-		fnordLicht();
 		uart_putstr("13\n");
+		fnordLicht();
 	}
 	return 0;
 }
@@ -145,7 +144,7 @@ void funkyBeat() {
 					};
 	unsigned char i, j, b, x, y, z;
 	color curColor;
-	unsigned char *im;
+	uint32_t *im;
 	
 	for (j = 0; j < 10; j++) {
 		for (b = 0; b < 31; b++) {
@@ -183,7 +182,7 @@ void funkyBeat() {
 					clearImage(curColor);
 					break;
 				case chess:
-					im = (unsigned char *) imag;
+					im = (uint32_t *) imag;
 					for (i = 0; i < MAX_Z*MAX_Y*MAX_X; i++) {
 						if (i & 1) {
 							*im++ = curColor.r;
@@ -195,7 +194,7 @@ void funkyBeat() {
 					}
 					break;
 				case chessInv:
-					im = (unsigned char *) imag;
+					im = (uint32_t *) imag;
 					for (i = 0; i < MAX_Z*MAX_Y*MAX_X; i++) {
 						if (!(i & 1)) {
 							*im++ = curColor.r;
@@ -317,13 +316,14 @@ void movingArrows() {
 }
 
 void fnordLicht() {
-	unsigned char *im, i, j;
+	unsigned char i, j;
 	unsigned short k;
+	uint32_t * im;
 	clearImage(red);
 	fade(10, 40);
 	for (j = 0; j < 2; j++) {
 		for (i = 0; i < 255; i++) {
-			im = (unsigned char *) imag;
+			im = (uint32_t *) imag;
 			for (k = 0; k < MAX_Z*MAX_Y*MAX_X; k++) {
 				*im++ = 255 - i;
 				*im++ = i;
@@ -332,7 +332,7 @@ void fnordLicht() {
 			swapAndWait(20);
 		}
 		for (i = 0; i < 255; i++) {
-			im = (unsigned char *) imag;
+			im = (uint32_t *) imag;
 			for (k = 0; k < MAX_Z*MAX_Y*MAX_X; k++) {
 				*im++;
 				*im++ = 255 - i;
@@ -341,7 +341,7 @@ void fnordLicht() {
 			swapAndWait(20);
 		}
 		for (i = 0; i < 255; i++) {
-			im = (unsigned char *) imag;
+			im = (uint32_t *) imag;
 			for (k = 0; k < MAX_Z*MAX_Y*MAX_X; k++) {
 				*im++ = i;
 				*im++;
