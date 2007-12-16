@@ -7,36 +7,57 @@
 // Playlist
 void *display_loop(void * unused)  {
 	while (1) {
-		//test1();
-		uart_putstr("1\n");
-		brightnesTest();
-		uart_putstr("2\n");
-		funkyBeat();
-		uart_putstr("3\n");
-		movingArrows();
-		uart_putstr("4\n");
-		upgoingRandom();
-		uart_putstr("5\n");
-		planeBall();
-		uart_putstr("6\n");
-		wobbeln();
-		uart_putstr("7\n");
+	    uart_putstr("symetricRoutes()\n");
 		symetricRoutes();
-		uart_putstr("8\n");
-		spirale(); 
-		uart_putstr("9\n");
-		snake(); 
-		uart_putstr("10\n");
+		uart_putstr("fadeTest()\n");
+		fadeTest();
+		//uart_putstr("cubes()\n");
+		//cubes();
+		//uart_putstr("cubes()\n");
+		//brightnesTest();
+		//uart_putstr("brightnesTest()\n");
+		/*
+		uart_putstr("funkyBeat()\n");
+		funkyBeat();
+		uart_putstr("funkyBeat()\n");
+		funkyBeat();
+		uart_putstr("movingArrows()\n");
+		movingArrows();
+		uart_putstr("upgoingRandom()\n");
+		upgoingRandom();
+		*/
+		uart_putstr("planeBall()\n");
+		planeBall();
+		uart_putstr("wobbeln()\n");
+		wobbeln();
+		uart_putstr("symetricRoutes()\n");
+		symetricRoutes();
+		uart_putstr("spirale()\n");
+		spirale();
+		uart_putstr("snake()\n");
+		snake();
+		uart_putstr("movingCubes()\n");
 		movingCubes();
-		uart_putstr("11\n");
+		uart_putstr("symetricRandom()\n");
 		symetricRandom();
-		uart_putstr("12\n");
+		uart_putstr("testAnim()\n");
 		testAnim();
-		uart_putstr("13\n");
+		uart_putstr("fnordLicht()\n");
 		fnordLicht();
 	}
 	return 0;
 }
+
+void fadeTest() {
+	clearScreen(black);
+	clearImage(red);
+	fade(10, 100);
+	clearImage(blue);
+	fade(10, 100);
+	clearImage(green);
+	fade(10, 100);
+}
+
 
 void brightnesTest() {
   unsigned char x, y, z, offset, rund, color, tmp;
@@ -119,7 +140,7 @@ void funkyBeat() {
 					  {chess,      Black,   8},
 					  {chessInv,   Red,     8},
 					  {all,        Black,   8},
-					  {smallCube,  Red,     12},
+					  {smallCube,  Red,    12},
 					  {chessInv,   Blue,    4},  
 					  {all,        Green,   6},
 					  {all,        Black,   2},
@@ -182,7 +203,7 @@ void funkyBeat() {
 					clearImage(curColor);
 					break;
 				case chess:
-					im = (uint32_t *) imag;
+					im = imag;
 					for (i = 0; i < MAX_Z*MAX_Y*MAX_X; i++) {
 						if (i & 1) {
 							*im++ = curColor.r;
@@ -194,7 +215,7 @@ void funkyBeat() {
 					}
 					break;
 				case chessInv:
-					im = (uint32_t *) imag;
+					im = imag;
 					for (i = 0; i < MAX_Z*MAX_Y*MAX_X; i++) {
 						if (!(i & 1)) {
 							*im++ = curColor.r;
@@ -217,6 +238,104 @@ void funkyBeat() {
 			}
 			swapAndWait(beats[b].time*16);
 		}
+	}
+}
+
+#define NPOINTS 9
+#define NLINES 12
+void cubes() {
+	// Drehender Quader
+	voxel org[NPOINTS] = {{0x10, 0x10, 0x10}, // 0
+							{0x60, 0x10, 0x10}, // 1
+							{0x60, 0x60, 0x10}, // 2 
+							{0x10, 0x60, 0x10}, // 3
+							{0x10, 0x10, 0x60}, // 4
+							{0x60, 0x10, 0x60}, // 5
+							{0x60, 0x60, 0x60}, // 6
+							{0x10, 0x60, 0x60}, // 7
+							{0x00, 0x00, 0x00}  // 8
+							};							
+	unsigned char drawlist[NLINES*2] = {0, 1,
+										0, 4,
+										1, 2,
+										1, 5,
+										2, 3,
+										2, 6,
+										3, 0,
+										3, 7,
+										4, 5,
+										5, 6,
+										6, 7,
+										7, 4
+										};		
+	
+	voxel rot[NPOINTS], sca[NPOINTS], h1, h2; 
+	unsigned int  a;
+	unsigned char i;								
+											
+	for (a = 0; a < 1500; a++) {
+		scale(a/35+40, a/35+40, a/35+40, org, sca, 8, (voxel) {0x30, 0x30, 0x30});
+		rotate(a/3, a/5 , a/4, sca, rot, NPOINTS, (voxel) {0x38, 0x38, 0x38});
+		
+		for (i = 0; i < NLINES*2; i += 2) {
+			h1 = rot[drawlist[i]];
+			h2 = rot[drawlist[i+1]];
+			drawLine3D(((char)h1.x+8)/16, ((char)h1.y+8)/16, ((char)h1.z+8)/16,
+					   ((char)h2.x+8)/16, ((char)h2.y+8)/16, ((char)h2.z+8)/16, blue);
+		}
+		swapAndWait(6); 
+		clearImage(black);
+	}
+	swapAndWait(20);
+	// Drehende Phyramide
+	org[2] = (voxel) {0x37, 0x54, 0x10};
+	org[3] = (voxel) {0x37, 0x37, 0x48};
+	drawlist[0]  = 0; drawlist[1]  = 1;
+	drawlist[2]  = 1; drawlist[3]  = 2;
+	drawlist[4]  = 2; drawlist[5]  = 0;
+	drawlist[6]  = 0; drawlist[7]  = 3;
+	drawlist[8]  = 1; drawlist[9]  = 3;
+	drawlist[10] = 2; drawlist[11] = 3;	
+	for (a = 0; a < 1500; a++) {
+		scale(a/35+40, a/35+40, a/35+40, org, sca, 4, (voxel) {0x30, 0x30, 0x30});
+		rotate(a/3, a/4 , a/5, sca, rot, 4, (voxel) {0x38, 0x38, 0x38});
+		
+		for (i = 0; i < 12; i += 2) {
+			h1 = rot[drawlist[i]];
+			h2 = rot[drawlist[i+1]];
+			drawLine3D(((char)h1.x+8)/16, ((char)h1.y+8)/16, ((char)h1.z+8)/16,
+					   ((char)h2.x+8)/16, ((char)h2.y+8)/16, ((char)h2.z+8)/16, blue);
+		}
+		swapAndWait(6); 
+		clearImage(black);
+	}
+	wait(20);
+	for (a = 0	; a < 4; a++) {
+		org[a].x += 9;
+		org[a].y += 9;
+		org[a].z += 20;
+	}	
+	org[4] = (voxel) {0x40, 0x40, 0x40};
+	scale(40, 40, 40, org, &org[5], 3, org[4]);
+	drawlist[0]  = 0; drawlist[1]  = 4;
+	drawlist[2]  = 1; drawlist[3]  = 4;
+	drawlist[4]  = 2; drawlist[5]  = 4;
+	drawlist[6]  = 3; drawlist[7]  = 4;
+	drawlist[8]  = 0; drawlist[9]  = 5;
+	drawlist[10] = 1; drawlist[11] = 6;	
+	drawlist[12] = 2; drawlist[13] = 7;	
+	drawlist[14] = 3; drawlist[15] = 8;	
+	for (a = 0; a < 3000; a++) {
+		rotate(a/3,  a/3 , a/4	,  org, rot, NPOINTS, org[4]);		
+		rotate(a/20, a/20, a/20, &rot[5], &rot[5], 3, org[4]);
+		for (i = 0; i < 16; i += 2) {
+			h1 = rot[drawlist[i]];
+			h2 = rot[drawlist[i+1]];
+			drawLine3D(((char)h1.x+8)/16, ((char)h1.y+8)/16, ((char)h1.z+8)/16,
+					   ((char)h2.x+8)/16, ((char)h2.y+8)/16, ((char)h2.z+8)/16, red);
+		}
+		swapAndWait(6); 
+		clearImage(black);
 	}
 }
 
@@ -323,7 +442,7 @@ void fnordLicht() {
 	fade(10, 40);
 	for (j = 0; j < 2; j++) {
 		for (i = 0; i < 255; i++) {
-			im = (uint32_t *) imag;
+			im = imag;
 			for (k = 0; k < MAX_Z*MAX_Y*MAX_X; k++) {
 				*im++ = 255 - i;
 				*im++ = i;
@@ -332,7 +451,7 @@ void fnordLicht() {
 			swapAndWait(20);
 		}
 		for (i = 0; i < 255; i++) {
-			im = (uint32_t *) imag;
+			im = imag;
 			for (k = 0; k < MAX_Z*MAX_Y*MAX_X; k++) {
 				*im++;
 				*im++ = 255 - i;
@@ -341,7 +460,7 @@ void fnordLicht() {
 			swapAndWait(20);
 		}
 		for (i = 0; i < 255; i++) {
-			im = (uint32_t *) imag;
+			im = imag;
 			for (k = 0; k < MAX_Z*MAX_Y*MAX_X; k++) {
 				*im++ = i;
 				*im++;

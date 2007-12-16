@@ -1,3 +1,5 @@
+void fadeTest();
+void cubes();
 void test1();
 void testAnim();
 void fnordLicht();

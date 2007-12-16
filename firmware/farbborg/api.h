@@ -9,9 +9,8 @@
 #define G 1
 #define B 2
 
-
 typedef struct {
-	unsigned char x, y, z;
+	uint8_t x, y, z;
 } voxel; 
 
 typedef struct {
@@ -43,13 +42,21 @@ direction direction_r(direction dir);
 
 void shift(direction dir);
 
-void fade(unsigned char msProStep, unsigned char steps);
-void swapAndWait(unsigned char ms);
+void fade(unsigned int msProStep, unsigned int steps);
+void swapAndWait(unsigned int ms);
 
 unsigned char easyRandom();
 
 void drawLine3D(char px1, char py1, char pz1, 
  			    char px2, char py2, char pz2, color value);
+
+char Sin(unsigned char a);
+#define Cos(a) Sin((a)+16)
+
+void rotate(char a, char b, char c, voxel* points, 
+			voxel* resPoints, int numPoint, voxel rotP);
+void scale(char sx, char sy, char sz, voxel* points, 
+			voxel* resPoints, int numPoint, voxel scaleP);
 
 /* not jet implementet
 
