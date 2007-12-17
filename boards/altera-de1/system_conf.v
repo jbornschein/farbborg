@@ -39,7 +39,7 @@
 
 // `define CFG_DEBUG_ENABLED
 // `define CFG_ROM_DEBUG_ENABLED
-// `define CFG_BREAKPOINTS 32'h1
+// `define CFG_BREAKPOINTS :^32'h1
 // `define CFG_WATCHPOINTS 32'h1
 
 `endif // SYSTEM_CONF

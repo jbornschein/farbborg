@@ -7,8 +7,8 @@
 // Playlist
 void *display_loop(void * unused)  {
 	while (1) {
-	    uart_putstr("symetricRoutes()\n");
-		symetricRoutes();
+	    //uart_putstr("symetricRoutes()\n");
+		//symetricRoutes();
 		uart_putstr("fadeTest()\n");
 		fadeTest();
 		//uart_putstr("cubes()\n");
@@ -51,11 +51,11 @@ void *display_loop(void * unused)  {
 void fadeTest() {
 	clearScreen(black);
 	clearImage(red);
-	fade(10, 100);
+	fade(5, 255);
 	clearImage(blue);
-	fade(10, 100);
+	fade(5, 255);
 	clearImage(green);
-	fade(10, 100);
+	fade(5, 255);
 }
 
 

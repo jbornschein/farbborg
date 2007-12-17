@@ -164,9 +164,9 @@ void fade(unsigned int msProStep, unsigned int steps) {
 	
 	for (i = 0; i < MAX_Z*MAX_Y*MAX_X*COLOR_BYTES; i++) {
 		*help = *pixr * 1024;
-		*aC   = ((int32_t) (*im * 1024) - *help)/steps;
-		sprintf(buffer, "%d %d %d %d\n", *aC, *help, *pixr, *im);
-		uart_putstr(buffer);
+		*aC   = (int32_t)((int32_t) (*im * 1024) - *help)/(int32_tamke)steps;
+		//sprintf(buffer, "%d %d %d %d\n", *aC, *help, *pixr, *im);
+		//uart_putstr(buffer);
 		
 		pixr++;
 		help++;
