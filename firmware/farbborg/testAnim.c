@@ -7,25 +7,22 @@
 // Playlist
 void *display_loop(void * unused)  {
 	while (1) {
-	    //uart_putstr("symetricRoutes()\n");
-		//symetricRoutes();
+	    //uart_putstr("shiftTest()\n");
+		//shiftTest();
 		uart_putstr("fadeTest()\n");
 		fadeTest();
+	    uart_putstr("symetricRoutes()\n");
+		symetricRoutes();
 		//uart_putstr("cubes()\n");
 		//cubes();
-		//uart_putstr("cubes()\n");
-		//brightnesTest();
-		//uart_putstr("brightnesTest()\n");
-		/*
-		uart_putstr("funkyBeat()\n");
-		funkyBeat();
+		uart_putstr("brightnesTest()\n");
+		brightnesTest();
 		uart_putstr("funkyBeat()\n");
 		funkyBeat();
 		uart_putstr("movingArrows()\n");
 		movingArrows();
 		uart_putstr("upgoingRandom()\n");
 		upgoingRandom();
-		*/
 		uart_putstr("planeBall()\n");
 		planeBall();
 		uart_putstr("wobbeln()\n");
@@ -46,6 +43,21 @@ void *display_loop(void * unused)  {
 		fnordLicht();
 	}
 	return 0;
+}
+
+void shiftTest() {
+	int y, x;
+	clearScreen(black);
+	for (y = 0; y < MAX_Y; y++) {
+		for (x = 0; x < MAX_X; x++) {
+			imag[0][y][x][R] = 255;
+			imag[0][y][x][G] = 255;
+			imag[0][y][x][B] = 255;
+		}
+	}
+	swapAndWait(2000);
+	shift(up);
+	swapAndWait(10000);	
 }
 
 void fadeTest() {
@@ -383,7 +395,7 @@ void testAnim() {
 		if (i > 25) 
 			swapAndWait(300);
 		else 
-			fade(10, 40);	
+			fade(20, 50);	
 	}
 	clearImage(black);
 	fade(10, 50);
@@ -448,7 +460,7 @@ void fnordLicht() {
 				*im++ = i;
 				*im++ = 0;
 			}
-			swapAndWait(20);
+			swapAndWait(15);
 		}
 		for (i = 0; i < 255; i++) {
 			im = imag;
@@ -457,7 +469,7 @@ void fnordLicht() {
 				*im++ = 255 - i;
 				*im++ = i;
 			}
-			swapAndWait(20);
+			swapAndWait(15);
 		}
 		for (i = 0; i < 255; i++) {
 			im = imag;
@@ -466,7 +478,7 @@ void fnordLicht() {
 				*im++;
 				*im++ = 255 - i;
 			}
-			swapAndWait(20);
+			swapAndWait(15);
 		}
 	}
 }
@@ -646,7 +658,7 @@ void planeBall() {
 		           x, 4, 1, red);
 	}
 	fade(5, 10);
-	swapAndWait(5000);
+	swapAndWait(1000);
 	setVoxel((voxel) {2, 2, 5}, green);
 	swapAndWait(100);
 	setVoxel((voxel) {2, 2, 5}, black);

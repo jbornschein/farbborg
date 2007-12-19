@@ -156,7 +156,7 @@ void fade(unsigned int msProStep, unsigned int steps) {
 	int32_t addColor[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
 	int32_t *aC = addColor;
 	int32_t i, z, j, helpColor[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
-	int32_t *help = helpColor;
+	int32_t *help = helpColor, temp;
 	uint32_t *pix, val; 
 	uint32_t  *im  = imag, *pixr = pixmap_readback;
 	char buffer[80];
@@ -164,10 +164,13 @@ void fade(unsigned int msProStep, unsigned int steps) {
 	
 	for (i = 0; i < MAX_Z*MAX_Y*MAX_X*COLOR_BYTES; i++) {
 		*help = *pixr * 1024;
-		*aC   = (int32_t)((int32_t) (*im * 1024) - *help)/(int32_tamke)steps;
-		//sprintf(buffer, "%d %d %d %d\n", *aC, *help, *pixr, *im);
+		temp = (*im * 1024) - *help;
+		//sprintf(buffer, "%d \n", temp);
 		//uart_putstr(buffer);
-		
+		if (temp >= 0)
+			*aC   = temp/steps;
+		else 
+			*aC   = -(-temp/steps);	
 		pixr++;
 		help++;
 		aC++;
@@ -258,20 +261,23 @@ voxel next_voxel(voxel pix, direction dir);
 */
 
 void shift(direction dir) {
-	unsigned char i, z;
-	uint32_t *im  = imag;
+	uint32_t i, z;
+	uint32_t *fromIm, *toIm;
 	
 	switch (dir) {
 		case up:
-			for (z = 4; z < MAX_Z; z--) {
-				im = (uint32_t *) &imag[z][0][0][0];
+			for (z = 5; z ; z--) {
+				fromIm = &imag[z-1][0][0][0];
+				toIm   = &imag[z][0][0][0];
 				for (i = 0; i < MAX_Y*MAX_X*COLOR_BYTES; i++) {
-					im[MAX_Y*MAX_X*COLOR_BYTES] = *im++; 
+					*toIm = *fromIm;
+					fromIm++;
+					toIm++; 
 				}
 			}
-			im = (uint32_t *) imag;
+			toIm = imag;
 			for (i = 0; i < MAX_Y*MAX_X*COLOR_BYTES; i++) {
-				*im++ = 0; 
+				*toIm++ = 0; 
 			}
 			break;
 		case down:

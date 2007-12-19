@@ -1,3 +1,4 @@
+void shiftTest();
 void fadeTest();
 void cubes();
 void test1();

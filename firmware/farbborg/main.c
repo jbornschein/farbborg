@@ -9,7 +9,7 @@ int main()
 
 	// Say Hello!
 	uart_putstr( "** Farborg **\n" );
-	msleep( 3000 );
+	//msleep( 3000 );
 
 	// Initialize TIC
 	isr_init();
