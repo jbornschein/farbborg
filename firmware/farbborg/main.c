@@ -4,20 +4,21 @@
 int main()
 {
     int i, tmp;
+	uint32_t t = 1;
+	
     // Initialize stuff
 	uart_init();
 
 	// Say Hello!
 	uart_putstr( "** Farborg **\n" );
 	//msleep( 3000 );
-
+		
 	// Initialize TIC
 	isr_init();
 	tic_init();
 	irq_set_mask( 0x00000002 );
 	irq_enable();
 
-	
 	// me be init of the pwm table
 	for (i = 0; i < 256; i++) {
 		tmp = i;

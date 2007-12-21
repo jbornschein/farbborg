@@ -7,6 +7,11 @@
 // Playlist
 void *display_loop(void * unused)  {
 	while (1) {
+		uart_putstr("funkyBeat()\n");
+		funkyBeat();
+		uart_putstr("symetricRoutes()\n");
+		symetricRoutes();	
+	
 	    //uart_putstr("shiftTest()\n");
 		//shiftTest();
 		uart_putstr("fadeTest()\n");
@@ -15,10 +20,8 @@ void *display_loop(void * unused)  {
 		symetricRoutes();
 		//uart_putstr("cubes()\n");
 		//cubes();
-		uart_putstr("brightnesTest()\n");
-		brightnesTest();
-		uart_putstr("funkyBeat()\n");
-		funkyBeat();
+		//uart_putstr("brightnesTest()\n");
+		//brightnesTest();
 		uart_putstr("movingArrows()\n");
 		movingArrows();
 		uart_putstr("upgoingRandom()\n");
@@ -27,8 +30,6 @@ void *display_loop(void * unused)  {
 		planeBall();
 		uart_putstr("wobbeln()\n");
 		wobbeln();
-		uart_putstr("symetricRoutes()\n");
-		symetricRoutes();
 		uart_putstr("spirale()\n");
 		spirale();
 		uart_putstr("snake()\n");
@@ -129,8 +130,11 @@ typedef enum {
 	chessInv,
 	all,
 	smallCube,
-	smallCubeInc,
-	fade10
+	fade1,
+	blockUp,
+	blockDown,
+	blockRight,
+	blockDiagonal
 } beatPattern;
 
 typedef struct {
@@ -142,16 +146,16 @@ typedef struct {
 void funkyBeat() {
 	beat beats[31] = {// erster Takt
 					  {chess,      White,   8}, 
-				  	  {chessInv,   Green,  12},
+				  	  {chessInv,   C2,     12},
 					  {all,        Black,   4},
-					  {all,        Red,     6},
+					  {blockDiagonal,        Red,     6},
 					  {all,        Black,  10},	
 					  {chess,      C1,     12},
-					  {all,        Black,  16},
+					  {fade1,      Yellow, 16},
 					  {chessInv,   C2,      8},
 					  {chess,      Black,   8},
-					  {chessInv,   Red,     8},
-					  {all,        Black,   8},
+					  {blockDiagonal,   Red,     8},
+					  {blockDown,       White,   8},
 					  {smallCube,  Red,    12},
 					  {chessInv,   Blue,    4},  
 					  {all,        Green,   6},
@@ -161,19 +165,18 @@ void funkyBeat() {
 					  {all,        Black,   8},
 					  {smallCube,  White,  10},
 					  {chess,      Black,   6},
-					  {chessInv,   Blue,    2},
-					  {all,        Green,   8},
+					  {chessInv,   C3,      2},
+					  {blockDiagonal,        Green,   8},
 					  {smallCube,  Black,   8},
 					  {chess,      Red,     8},
 					  {all,        Black,   8},
 					  {smallCube,  Yellow,  8},
 					  {all,        Black,   8},
-					  {chess,      Yellow, 16},
+					  {fade1,       C2,     16},
 					  {smallCube,  White,   4},
 					  {chessInv,   Red,     6},
-					  {all,        Black,   2},
+					  {blockUp,    Green,   2},
 					  {chess,      C1,      8}
-					  
 					};
 	unsigned char i, j, b, x, y, z;
 	color curColor;
@@ -181,6 +184,7 @@ void funkyBeat() {
 	
 	for (j = 0; j < 10; j++) {
 		for (b = 0; b < 31; b++) {
+			clearImage(black);
 			switch (beats[b].bC) {
 				case Black:
 					curColor = black;
@@ -198,22 +202,24 @@ void funkyBeat() {
 					curColor = blue;
 					break;
 				case Yellow:
-					curColor = (color) {255, 255,   0};
+					curColor = (color) {255, 255, 102};
 					break;
 				case C1:
-					curColor = (color) {180, 120, 220};
+					curColor = (color) {102, 102, 255};
 					break;
 				case C2:
-					curColor = (color) {100, 120, 220};
+					curColor = (color) {102, 102, 255};
 					break;
 				case C3:
-					curColor = (color) {180,  60, 240};
+					curColor = (color) {113, 120, 204};
 					break;
 			}
 			switch (beats[b].pP) {
+				case fade1:
 				case all:
 					clearImage(curColor);
 					break;
+					
 				case chess:
 					im = imag;
 					for (i = 0; i < MAX_Z*MAX_Y*MAX_X; i++) {
@@ -226,6 +232,7 @@ void funkyBeat() {
 						}
 					}
 					break;
+					
 				case chessInv:
 					im = imag;
 					for (i = 0; i < MAX_Z*MAX_Y*MAX_X; i++) {
@@ -238,17 +245,63 @@ void funkyBeat() {
 						}
 					}
 					break;
+					
 				case smallCube:
-					for (z = 1; z < 2; z++) {
-						for (y = 2; y < 3; y++) {
-							for (x = 1; x < 2; x++) {
+					for (z = 1; z < 4; z++) {
+						for (y = 1; y < 4; y++) {
+							for (x = 1; x < 4; x++) {
 								setVoxel((voxel) {x, y, z}, curColor);
 							}
 						}
 					}
 					break;
+					
+				case blockUp:
+					for (z = 2; z < 5; z++) {
+						for (y = 0; y < 5; y++) {
+							for (x = 0; x < 5; x++) {
+								setVoxel((voxel) {x, y, z}, curColor);
+							}
+						}
+					}
+					break;	
+				
+				case blockDown:
+					for (z = 0; z < 3; z++) {
+						for (y = 0; y < 5; y++) {
+							for (x = 0; x < 5; x++) {
+								setVoxel((voxel) {x, y, z}, curColor);
+							}
+						}
+					}
+					break;
+					
+				case blockRight:
+					for (z = 0; z < 5; z++) {
+						for (y = 2; y < 5; y++) {
+							for (x = 0; x < 5; x++) {
+								setVoxel((voxel) {x, y, z}, curColor);
+							}
+						}
+					}
+					break;
+					
+				case blockDiagonal:
+					for (z = 0; z < 5; z++) {
+						for (y = 0; y < 5; y++) {
+							for (x = 0; x < 5; x++) {
+								if ((x + y + z) < 6)
+									setVoxel((voxel) {x, y, z}, curColor);
+							}
+						}
+					}
+					break;
 			}
-			swapAndWait(beats[b].time*16);
+			
+			if (beats[b].pP == fade1)
+				fade(16, beats[b].time);
+			else 
+				swapAndWait(beats[b].time*16);
 		}
 	}
 }
@@ -890,7 +943,7 @@ void snake() {
 			if (easyRandom() < 80) {
 				dir = 1 + (direction) (easyRandom() % 6);
 			}
-			if ((apple_num<10) && (easyRandom()<10)) {
+			if ((apple_num < 10) && (easyRandom() < 10)) {
 				voxel new_apple = (voxel) {easyRandom() % MAX_X,
 										   easyRandom() % MAX_Y,
 										   easyRandom() % MAX_Z};

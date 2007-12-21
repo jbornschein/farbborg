@@ -34,6 +34,7 @@ SRC =	                                  \
 	../../rtl/wb_farbborg/wb_farbborg.v   \
 	../../rtl/wb_farbborg/dualportram.v   \
 	../../rtl/wb_farbborg/pwm.v           \
+	../../rtl/wb_spi/wb_spi.v             \
 	../../rtl/wb_sram/wb_sram16.v
 
 

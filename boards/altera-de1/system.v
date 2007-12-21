@@ -28,7 +28,12 @@ module system
 	output                  sram_oe_n,    // Output Enable
 	output                  sram_we_n,    // Write  Enable#
 	
-	output           [35:0] gpio_0
+	output           [35:0] gpio_0,
+	
+	output 					sd_clk,
+	output 					sd_cmd,
+	output 					sd_dat3,
+	input  					sd_dat
 	
 );
 	
@@ -57,7 +62,8 @@ wire [31:0]  lm32i_adr,
              gpio0_adr,
              bram0_adr,
              sram0_adr,
-             farbborg0_adr;
+             farbborg0_adr,
+             spi0_adr;
 
 
 wire [31:0]  lm32i_dat_r,
@@ -75,7 +81,9 @@ wire [31:0]  lm32i_dat_r,
              sram0_dat_w,
              sram0_dat_r,
              farbborg0_dat_w,
-             farbborg0_dat_r;
+             farbborg0_dat_r,
+             spi0_dat_w,
+             spi0_dat_r;
 
 wire [3:0]   lm32i_sel,
              lm32d_sel,
@@ -84,7 +92,8 @@ wire [3:0]   lm32i_sel,
              gpio0_sel,
              bram0_sel,
              sram0_sel,
-             farbborg0_sel;
+             farbborg0_sel,
+             spi0_sel;
 
 wire         lm32i_we,
              lm32d_we,
@@ -93,7 +102,8 @@ wire         lm32i_we,
              gpio0_we,
              bram0_we,
              sram0_we,
-             farbborg0_we;
+             farbborg0_we,
+             spi0_we;
 
 wire         lm32i_cyc,
              lm32d_cyc,
@@ -102,7 +112,8 @@ wire         lm32i_cyc,
              gpio0_cyc,
              bram0_cyc,
              sram0_cyc,
-             farbborg0_cyc;
+             farbborg0_cyc,
+             spi0_cyc;
 
 wire         lm32i_stb,
              lm32d_stb,
@@ -111,7 +122,8 @@ wire         lm32i_stb,
              gpio0_stb,
              bram0_stb,
              sram0_stb,
-             farbborg0_stb;
+             farbborg0_stb,
+             spi0_stb;
 
 wire         lm32i_ack,
              lm32d_ack,
@@ -120,7 +132,8 @@ wire         lm32i_ack,
              gpio0_ack,
              bram0_ack,
              sram0_ack,
-             farbborg0_ack;
+             farbborg0_ack,
+             spi0_ack;
 
 wire         lm32i_rty,
              lm32d_rty;
@@ -285,10 +298,16 @@ wb_conbus_top #(
 	.s5_err_i(  gnd          ),
 	.s5_rty_i(  gnd          ),
 	// Slave6
-	.s6_dat_i(  gnd32  ),
-	.s6_ack_i(  gnd    ),
-	.s6_err_i(  gnd    ),
-	.s6_rty_i(  gnd    ),
+	.s6_dat_i(  spi0_dat_r   ),
+	.s6_dat_o(  spi0_dat_w   ),
+	.s6_adr_o(  spi0_adr     ),
+	.s6_sel_o(  spi0_sel     ),
+	.s6_we_o(   spi0_we      ),
+	.s6_cyc_o(  spi0_cyc     ),
+	.s6_stb_o(  spi0_stb     ),
+	.s6_ack_i(  spi0_ack     ),
+	.s6_err_i(  gnd          ),
+	.s6_rty_i(  gnd          ),
 	// Slave7
 	.s7_dat_i(  farbborg0_dat_r ),
 	.s7_dat_o(  farbborg0_dat_w ),
@@ -436,6 +455,30 @@ wb_timer #(
 	.wb_ack_o( timer0_ack   ), 
 	.intr(     timer0_intr  )
 );
+
+
+//---------------------------------------------------------------------------
+// spi0
+//---------------------------------------------------------------------------
+
+wb_spi spi0 (
+	.clk(      clk          ),
+	.reset(    rst          ),
+	//
+	.wb_adr_i( spi0_adr   ),
+	.wb_dat_i( spi0_dat_w ),
+	.wb_dat_o( spi0_dat_r ),
+	.wb_stb_i( spi0_stb   ),
+	.wb_cyc_i( spi0_cyc   ),
+	.wb_we_i(  spi0_we    ),
+	.wb_sel_i( spi0_sel   ),
+	.wb_ack_o( spi0_ack   ),
+	.spi_sck(  sd_clk     ),
+	.spi_mosi( sd_cmd     ),
+	.spi_miso( sd_dat     ),
+	.spi_cs(   sd_dat3    )
+);
+
 
 //------------------------------------------------------------------
 // General Purpose IO

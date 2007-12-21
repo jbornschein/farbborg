@@ -5,7 +5,8 @@ set_global_assignment -name PROJECT_CREATION_TIME_DATE "22:55:09  MARCH 06, 2007
 set_global_assignment -name LAST_QUARTUS_VERSION 7.2
 set_global_assignment -name SMART_RECOMPILE ON
 set_global_assignment -name FLOW_ENABLE_IO_ASSIGNMENT_ANALYSIS ON
-
+set_global_assignment -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name RESERVE_ASDO_AFTER_CONFIGURATION "AS INPUT TRI-STATED"
 # Pin & Location Assignments
 # ==========================
 set_location_assignment pin_a13 -to gpio_0[0]
@@ -286,6 +287,10 @@ set_location_assignment pin_y7 -to sram_lb_n
 set_location_assignment pin_t8 -to sram_oe_n
 set_location_assignment pin_w7 -to sram_ub_n
 set_location_assignment pin_aa10 -to sram_we_n
+set_location_assignment pin_v20 -to sd_clk
+set_location_assignment pin_y20 -to sd_cmd
+set_location_assignment pin_w20 -to sd_dat
+set_location_assignment pin_u20 -to sd_dat3
 
 # Analysis & Synthesis Assignments
 # ================================

@@ -167,10 +167,10 @@ void fade(unsigned int msProStep, unsigned int steps) {
 		temp = (*im * 1024) - *help;
 		//sprintf(buffer, "%d \n", temp);
 		//uart_putstr(buffer);
-		if (temp >= 0)
-			*aC   = temp/steps;
-		else 
-			*aC   = -(-temp/steps);	
+		//if (temp >= 0)
+			*aC   = temp/(int32_t) steps;
+		//else 
+		//	*aC   = -(-temp/steps);	
 		pixr++;
 		help++;
 		aC++;
