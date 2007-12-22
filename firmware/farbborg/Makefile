@@ -5,7 +5,7 @@ LM32_OBJDUMP=lm32-elf-objdump
 OBJ=crt0ram.o main.o testAnim.o spike_hw.o api.o util.o
 #CPU_FLAGS=-mbarrel-shift-enabled -mmultiply-enabled -msign-extend-enabled -mdivide-enabled
 CPU_FLAGS=-mbarrel-shift-enabled -mmultiply-enabled 
-CFLAGS=-MMD -O1 -ffunction-sections -g2 -w -D__lm32__ -fomit-frame-pointer $(CPU_FLAGS) 
+CFLAGS=-MMD -O1 -ffunction-sections -g2 -w -D__lm32__ -fomit-frame-pointer -std=gnu99 $(CPU_FLAGS) 
 LDFLAGS=$(CPU_FLAGS) -Tram.ld -O1 -lm -lc -lgcc -Wl,--gc-sections
 SEGMENTS = -j .text -j .data -j .rodata
 
