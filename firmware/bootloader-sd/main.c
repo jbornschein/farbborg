@@ -1,15 +1,49 @@
 /**
  * Bootloader for soc-lm32
  */
-
+#include <stddef.h>
 #include "spike_hw.h"
+#include "ff.h"
 
-/* prototypes */
+#include "diskio.h"
+
+void* memset (void *str, int c, size_t len)
+{
+  register char *st = str;
+
+  while (len-- > 0)
+    *st++ = c;
+  return str;
+}
+
+void *memcpy (void *destaddr, void const *srcaddr, size_t len)
+{
+  char *dest = destaddr;
+  char const *src = srcaddr;
+
+  while (len-- > 0)
+    *dest++ = *src++;
+  return destaddr;
+}
+
+int
+memcmp(const void* ab1, const void* ab2, size_t n)
+{
+	register const unsigned char*	b1 = (const unsigned char*)ab1;
+	register const unsigned char*	b2 = (const unsigned char*)ab2;
+	register const unsigned char*	e = b1 + n;
+
+	while (b1 < e)
+		if (*b1++ != *b2++)
+			return(*--b1 - *--b2);
+	return(0);
+}
+
+// prototypes 
 void writeint(uint8_t nibbles, uint32_t val);
 uint32_t readint(uint8_t nibbles, uint8_t* checksum);
 
-uint32_t readint(uint8_t nibbles, uint8_t* checksum) 
-{
+uint32_t readint(uint8_t nibbles, uint8_t* checksum) {
 	uint32_t val = 0, i;
     uint8_t c;
     for (i = 0; i < nibbles; i++) {
@@ -41,7 +75,7 @@ void writeint(uint8_t nibbles, uint32_t val)
 	}
 }
 
-
+/*
 void memtest()
 {
 	volatile uint32_t *p;
@@ -62,17 +96,62 @@ void memtest()
 	}
 	uart_putstr("OK\n\r");
 }
+ */
 
+FATFS fs;				/* File system object */
+FIL fil;
+//DIR dir;
 
-int main(int argc, char **argv)
+int main()
 {
+	WORD fsize;
+	FRESULT fresult;
 	int8_t  *p;
-	int32_t *p32, i, tmp;
+	int32_t *p32, i, tmp;	
+	
+ 	// Initialize stuff
+	//uart_init();
+	//dispInit();
+	
+	// Initialize TIC
+	//isr_init();
+	//tic_init();
+	//irq_set_mask( 0x00000002 );
+	//irq_enable();
+	
+	uart_putstr("init\n");
+		
+	memset(&fs, 0, sizeof(FATFS)); 	/* Clear file system object */
+	FatFs = &fs;	                /* Assign it to the FatFs module */	
 
-	// Initialize stuff
-	uart_init();
-	//memtest();
-	uart_putstr("\r\n\r\n** SPIKE BOOTLOADER **\n");
+	//scan_files("");
+
+	fresult = f_open(&fil, "sys/firmware.bin", FA_READ|FA_OPEN_EXISTING);
+		
+	if(fresult){
+		switch(fresult){
+			case FR_NO_FILE:
+			case FR_NO_PATH:
+				uart_putstr("file not found.\n");
+				break;
+			case FR_NOT_READY:
+				uart_putstr("no card.\n");
+				break;
+			case FR_NO_FILESYSTEM:
+				uart_putstr("no FAT.FS\n");
+				break;
+		}
+		goto uartmode;
+	}
+
+	uart_putstr("load\n");
+	
+	f_read (&fil, (uint8_t*)0x40000000, 64*1024 - 1, &fsize);
+	
+	jump(0x40000000);
+		
+uartmode: 
+	uart_putstr("\r\n** SPIKE BOOTLOADER **\n");
 	for(;;) {
 		uint32_t start, size, checksum, help;
 		uart_putchar('>');
@@ -82,15 +161,12 @@ int main(int argc, char **argv)
     		case 'r': // reset
     			jump(0x00000000);
     			break;
-			case 'm': // Memory Test
-				memtest();
-				break;
     		case 'u': // Upload programm
       			checksum = 0;
-      			/* read size */
+      			// read size 
     			size  = readint(2, (uint8_t *) &checksum);
     			size -= 5;
-      			/* read start */
+      			// read start
     			start = readint(8, (uint8_t *) &checksum);
     			for (p = (int8_t *) start; p < (int8_t *) (start+size); p++) {
     				*p = readint(2, (uint8_t *) &checksum);
@@ -101,33 +177,9 @@ int main(int argc, char **argv)
     			start = readint(8, (uint8_t *) &checksum);
     			jump(start);
     			break;   
-    		case 'v': // view memory 
-    		  start = readint(8, (uint8_t *) &checksum);
-    		  size  = readint(8, (uint8_t *) &checksum);
-    	      help = 0;
-    		  for (p32 = (int32_t *) start; p32 < (int32_t *) (size); p32++) {
-    				if (!(help++ & 3)) {
-    				    uart_putstr("\r\n[");
-    				    writeint(8, (uint32_t) p32);
-    				    uart_putchar(']');    
-    				}
-    				uart_putchar(' ');    
-    				writeint(8, *p32);
-    		  }
-    		  break;
-    		case 'e':
-    		    while (1) {
-    		      uart_putchar(uart_getchar());
-    		    }
-    		    break;
-    		case 'E':
-    		    checksum = 0;
-    		    while (1) {
-    		          readint(8, (uint8_t *) &checksum);
-    		          writeint(2, checksum); 
-    		    }
-    		    break;
     		}
 	}
+
+	while (1);
 }
 

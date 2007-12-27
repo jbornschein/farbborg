@@ -6,7 +6,7 @@
 
 module system
 #(
-	parameter   bootram_file     = "../../firmware/bootloader/image.ram", // XXX IGNORED XXX
+	parameter   bootram_file     = "../../firmware/bootloader-sd/image.ram", // XXX IGNORED XXX
 	parameter   clk_freq         = 50000000,
 	parameter   uart_baud_rate   = 115200
 ) (
@@ -363,7 +363,7 @@ lm32_cpu lm0 (
 // Block RAM
 //---------------------------------------------------------------------------
 wb_bram #(
-	.adr_width( 12 ),
+	.adr_width( 14 ),
 	.mem_file_name( bootram_file )
 ) bram0 (
 	.clk_i(  clk  ),
@@ -591,6 +591,10 @@ assign uart0_rxd = (sw[0]) ? uart_rxd  : 1'b1;
 // LEDs, buttons and switches
 //---------------------------------------------------------------------------
 assign rst  = ~key_n[0];
+
+assign gpio0_in[7:  0] = sw[9:2];
+assign gpio0_in[10: 8] = (sw[1]) ? ~key_n[3:1] : 3'b0;
+assign gpio0_in[31:11] = 20'b0;
 
 assign ledr = { clk, rst, 2'b0, lm32i_stb, lm32i_ack, lm32d_stb, lm32d_ack, ~uart_rxd, ~uart_txd };
 assign ledg = gpio0_out[7:0];

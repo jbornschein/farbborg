@@ -1,8 +1,5 @@
-void shiftTest();
-void plasmaTest();
-void fadeTest();
-void cubes();
 void test1();
+void testShift();
 void testAnim();
 void fnordLicht();
 void symetricRandom();

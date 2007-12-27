@@ -2,354 +2,70 @@
 #include "util.h"
 #include "api.h"
 #include "testAnim.h"
-#include "spike_hw.h"
-#include <math.h>
+#include "fileParser.h"
+
+
 
 #define SNAKE_LEN 100
 
 typedef struct
 {
     //entweder H S V oder R G B
-    float f[3];
-}farbe;
+    unsigned char f[3];
+} farbe;
 
 void fadeTest();
 void plasmaTest();
 void plasmaSnake();
 void setVoxelHSV(int x, int y, int z, farbe hsv);
-void setVoxelH(int x, int y, int z, float h);
+void setVoxelH(int x, int y, int z, double h);
 
-float offset;
+double offset;
 
 // Playlist
 void *display_loop(void * unused)  {
-	while (1) {
-		uart_putstr("plasmaTest()\n");
-		plasmaTest();
-		uart_putstr("plasmaSnake()\n");
-		plasmaSnake();
-		uart_putstr("funkyBeat()\n");
-		funkyBeat();
-		uart_putstr("symetricRoutes()\n");
-		symetricRoutes();	
-
-		uart_putstr("plasmaSnake()\n");
-		plasmaSnake();
-	    //uart_putstr("shiftTest()\n");
-		//shiftTest();
-		uart_putstr("fadeTest()\n");
-		fadeTest();
-	    uart_putstr("symetricRoutes()\n");
-		symetricRoutes();
-		//uart_putstr("cubes()\n");
-		//cubes();
-		//uart_putstr("brightnesTest()\n");
-		//brightnesTest();
-		uart_putstr("movingArrows()\n");
-		movingArrows();
-		uart_putstr("plasmaSnake()\n");
-		plasmaSnake();
-		uart_putstr("upgoingRandom()\n");
-		upgoingRandom();
-		uart_putstr("planeBall()\n");
-		planeBall();
-		uart_putstr("wobbeln()\n");
-		wobbeln();
-		uart_putstr("spirale()\n");
-		spirale();
-		uart_putstr("plasmaSnake()\n");
-		plasmaSnake();
-		uart_putstr("snake()\n");
-		snake();
-		uart_putstr("movingCubes()\n");
-		movingCubes();
-		uart_putstr("plasmaSnake()\n");
-		plasmaSnake();
-		uart_putstr("symetricRandom()\n");
-		symetricRandom();
-		uart_putstr("testAnim()\n");
-		testAnim();
-		uart_putstr("fnordLicht()\n");
-		fnordLicht();
-	}
-	return 0;
-}
-
-void shiftTest() {
-	int y, x;
-	clearScreen(black);
-	for (y = 0; y < MAX_Y; y++) {
-		for (x = 0; x < MAX_X; x++) {
-			imag[0][y][x][R] = 255;
-			imag[0][y][x][G] = 255;
-			imag[0][y][x][B] = 255;
-		}
-	}
-	swapAndWait(2000);
-	shift(up);
-	swapAndWait(10000);	
-}
-
-void fadeTest() {
-	clearScreen(black);
-	clearImage(red);
-	fade(5, 255);
-	clearImage(blue);
-	fade(5, 255);
-	clearImage(green);
-	fade(5, 255);
-}
-
-
-void brightnesTest() {
-  unsigned char x, y, z, offset, rund, color, tmp;
-  
-  for (color = R; color <= B; color++) {
-    offset = 1;
-    for (rund = 0; rund <= 1; rund++) {
-      for (x = 0; x < MAX_X; x++) {
-	    for (y = 0; y < MAX_Y; y++) {
-		  for (z = 0; z < MAX_Z; z++) {
-            for (tmp = 0; tmp <= 2; tmp++) {
-			  if (tmp == color)
-                imag[x][y][z][tmp] = offset + z;
- 			  else
-				imag[x][y][z][tmp] = 0;
-			  swapAndWait(20);
-            } //tmp
-		  } //z
-		} //y
-		offset += MAX_Z*MAX_Y;
-      } //x
-      offset = 130;
-	} //rund
-  } //color
-}
-
-#define FAKTOR (255/5) 
-
-void test1() {
-	unsigned char x, y, z, c;
-	for (z = 0; z < MAX_Z; z++) {
-		for (y = 0; y < MAX_Y; y++) {
-			for (x = 0; x < MAX_X; x++) {
-				for (c = 0; c < COLOR_BYTES; c++) {
-					imag[z][y][x][c] = 255;
-					swapAndWait(100);
-				}
-			}
-		}
-	}
-}
-
-typedef enum {
-	Black,
-	White,
-	Red,
-	Blue,
-	Green,
-	Yellow,
-	C1,
-	C2,
-	C3
-} beatColor;
-
-typedef enum {
-	chess,
-	chessInv,
-	all,
-	smallCube,
-	fade1,
-	blockUp,
-	blockDown,
-	blockRight,
-	blockDiagonal
-} beatPattern;
-
-typedef struct {
-	beatPattern pP;
-	beatColor bC;
-	unsigned char time; // 128 is a full note   32 is 1/4   16 is 1/8
-} beat;
-
-void funkyBeat() {
-	beat beats[31] = {// erster Takt
-					  {chess,      White,   8}, 
-				  	  {chessInv,   C2,     12},
-					  {all,        Black,   4},
-					  {blockDiagonal,        Red,     6},
-					  {all,        Black,  10},	
-					  {chess,      C1,     12},
-					  {fade1,      Yellow, 16},
-					  {chessInv,   C2,      8},
-					  {chess,      Black,   8},
-					  {blockDiagonal,   Red,     8},
-					  {blockDown,       White,   8},
-					  {smallCube,  Red,    12},
-					  {chessInv,   Blue,    4},  
-					  {all,        Green,   6},
-					  {all,        Black,   2},
-					  {chess,      Yellow,  8}, 
-					  // zeiter Takt
-					  {all,        Black,   8},
-					  {smallCube,  White,  10},
-					  {chess,      Black,   6},
-					  {chessInv,   C3,      2},
-					  {blockDiagonal,        Green,   8},
-					  {smallCube,  Black,   8},
-					  {chess,      Red,     8},
-					  {all,        Black,   8},
-					  {smallCube,  Yellow,  8},
-					  {all,        Black,   8},
-					  {fade1,       C2,     16},
-					  {smallCube,  White,   4},
-					  {chessInv,   Red,     6},
-					  {blockUp,    Green,   2},
-					  {chess,      C1,      8}
-					};
-	unsigned char i, j, b, x, y, z;
-	color curColor;
-	uint32_t *im;
+	offset = 0.0;
 	
-	for (j = 0; j < 10; j++) {
-		for (b = 0; b < 31; b++) {
-			clearImage(black);
-			switch (beats[b].bC) {
-				case Black:
-					curColor = black;
-					break;
-				case White:
-					curColor = white;
-					break;
-				case Red:
-					curColor = red;
-					break;
-				case Green:
-					curColor = green;
-					break;
-				case Blue:
-					curColor = blue;
-					break;
-				case Yellow:
-					curColor = (color) {255, 255, 102};
-					break;
-				case C1:
-					curColor = (color) {102, 102, 255};
-					break;
-				case C2:
-					curColor = (color) {102, 102, 255};
-					break;
-				case C3:
-					curColor = (color) {113, 120, 204};
-					break;
-			}
-			switch (beats[b].pP) {
-				case fade1:
-				case all:
-					clearImage(curColor);
-					break;
-					
-				case chess:
-					im = imag;
-					for (i = 0; i < MAX_Z*MAX_Y*MAX_X; i++) {
-						if (i & 1) {
-							*im++ = curColor.r;
-							*im++ = curColor.g;
-							*im++ = curColor.b;
-						} else {
-							im += 3;
-						}
-					}	
-					break;
-					
-				case chessInv:
-					im = imag;
-					for (i = 0; i < MAX_Z*MAX_Y*MAX_X; i++) {
-						if (!(i & 1)) {
-							*im++ = curColor.r;
-							*im++ = curColor.g;
-							*im++ = curColor.b;
-						} else {
-							im += 3;
-						}
-					}
-					break;
-					
-				case smallCube:
-					for (z = 1; z < 4; z++) {
-						for (y = 1; y < 4; y++) {
-							for (x = 1; x < 4; x++) {
-								setVoxel((voxel) {x, y, z}, curColor);
-							}
-						}
-					}
-					break;
-					
-				case blockUp:
-					for (z = 2; z < 5; z++) {
-						for (y = 0; y < 5; y++) {
-							for (x = 0; x < 5; x++) {
-								setVoxel((voxel) {x, y, z}, curColor);
-							}
-						}
-					}
-					break;	
-				
-				case blockDown:
-					for (z = 0; z < 3; z++) {
-						for (y = 0; y < 5; y++) {
-							for (x = 0; x < 5; x++) {
-								setVoxel((voxel) {x, y, z}, curColor);
-							}
-						}
-					}
-					break;
-					
-				case blockRight:
-					for (z = 0; z < 5; z++) {
-						for (y = 2; y < 5; y++) {
-							for (x = 0; x < 5; x++) {
-								setVoxel((voxel) {x, y, z}, curColor);
-							}
-						}
-					}
-					break;
-					
-				case blockDiagonal:
-					for (z = 0; z < 5; z++) {
-						for (y = 0; y < 5; y++) {
-							for (x = 0; x < 5; x++) {
-								if ((x + y + z) < 6)
-									setVoxel((voxel) {x, y, z}, curColor);
-							}
-						}
-					}
-					break;
-			}
-			
-			if (beats[b].pP == fade1)
-				fade(16, beats[b].time);
-			else 
-				swapAndWait(beats[b].time*16);
-		}
+	while (1) {
+     	//pyramide();
+		//fadeTest();
+		plasmaTest();
+		plasmaSnake();
+		//test1();
+		//brightnesTest();
+		//playPlaylist("playlist.apl");
+		//playAnimFile("sample.anim");
+		//funkyBeat();
+		//testShift();
+		//movingArrows(); 
+		//upgoingRandom();
+		//planeBall();
+		//wobbeln();
+		//symetricRoutes();
+		//spirale(); 
+		//snake(); 
+		//movingCubes();
+		//symetricRandom();
+		//testAnim();
+		//fnordLicht();
 	}
 }
 
 #define PI 3.14159265
 #define SQUARE(x) (x)*(x)
-#define fMAX_X (float)MAX_X
-#define fMAX_Y (float)MAX_Y
-#define fMAX_Z (float) MAX_Z
+#define fMAX_X (double)MAX_X
+#define fMAX_Y (double)MAX_Y
+#define fMAX_Z (double) MAX_Z
 
 void plasmaSnake()
 {
-	float scale = 4.0;
+	double scale = 4.0;
 	
 	voxel pixels[SNAKE_LEN]; 
 	voxel *head = &pixels[1];
 	voxel *tail = &pixels[0];
 	voxel old_head;
-	float snakeColor;
+	double snakeColor;
 	voxel apples[10];
 	unsigned char apple_num = 0;
 	char addR = 2, addG = -1, addB = 1;
@@ -404,7 +120,7 @@ void plasmaSnake()
 		if (!dead) {
 			*head = getNextVoxel(old_head, dir);
 			snakeColor = 0.5;
-			snakeColor += 0.5 * sinf(((float)head->x * (PI / (fMAX_X * scale))) + ((float)head->y * (PI / (fMAX_Y * scale))) + ((float)head->z * (PI / (fMAX_Z * scale))) + offset);
+			snakeColor += 0.5 * sin(((double)head->x * (PI / (fMAX_X * scale))) + ((double)head->y * (PI / (fMAX_Y * scale))) + ((double)head->z * (PI / (fMAX_Z * scale))) + offset);
 			setVoxelH(head->x, head->y, head->z, snakeColor);
 			if (easyRandom() < 80) {
 				dir = 1 + (direction) (easyRandom() % 6);
@@ -434,7 +150,7 @@ void plasmaSnake()
 		for (j = 0; j < apple_num; j++) {
 			if (x & 1) { // let the apples blink
 				snakeColor = 0.5;
-				snakeColor += 0.5 * sinf(((float)apples[j].x * (PI / (fMAX_X * scale))) + ((float)apples[j].y * (PI / (fMAX_Y * scale))) + ((float)apples[j].z * (PI / (fMAX_Z * scale))) + offset);
+				snakeColor += 0.5 * sin(((double)apples[j].x * (PI / (fMAX_X * scale))) + ((double)apples[j].y * (PI / (fMAX_Y * scale))) + ((double)apples[j].z * (PI / (fMAX_Z * scale))) + offset);
 				setVoxelH(apples[j].x, apples[j].y, apples[j].z, snakeColor);
 			} else {
 				setVoxel(apples[j], black);
@@ -457,22 +173,16 @@ void plasmaSnake()
 
 void plasmaTest()
 {
-	float color, oldOffset, scale;
-	float fx, fy, fz;
+	double color, oldOffset, scale;
+	double fx, fy, fz;
 	int x, y, z;
 	
-	float scaleX, scaleY, scaleZ;
-	
-	scale = 4.0;
+	scale = 2.0;
 	oldOffset = offset;
-	
-	scaleX = (PI / (fMAX_X * scale));
-	scaleY = (PI / (fMAX_Y * scale));
-	scaleZ = (PI / (fMAX_Z * scale));
 	
 	while(1)
 	{
-		offset += 0.08;
+		offset += 0.025;
 		
 		for(x = 0; x < MAX_X; x++)
 		{
@@ -489,11 +199,11 @@ void plasmaTest()
 					//reset color;
 					color = 0.0;
 					
-					//diagonal scrolling sinfe 
-					color += 0.5 * sinf((fx * scaleX) + (fy * scaleY) + (fz * scaleZ) + offset);
+					//diagonal scrolling sine 
+					//color += 0.5 * sin((fx * (PI / (fMAX_X * scale))) + (fy * (PI / (fMAX_Y * scale))) + (fz * (PI / (fMAX_Z * scale))) + offset);;
 					
-					//polar sinfe
-					/*color += 0.5 * sinf(
+					//polar sine
+					/*color += 0.5 * sin(
 						sqrt(
 							SQUARE(fx - (fMAX_X / 2.0))
 							+ SQUARE(fy - (fMAX_Y / 2.0))
@@ -502,16 +212,16 @@ void plasmaTest()
 						//scale to borg resolution
 						* (PI / (scale * (sqrt(SQUARE(fMAX_X) + SQUARE(fMAX_Y) + SQUARE(fMAX_Z)))))
 						+ offset * 0.6
-						); //end of sinfe
+						); //end of sine
 					*/	
-					//sum of x-sinfe and y-sinfe and z-sinfe
-					/*color +=  (
-							(0.5 * sinf((fx * (PI / (fMAX_X * scale))) + offset)) 
-							+ (0.5 * sinf((fy * (PI / (fMAX_Y * scale))) + offset))
-							+ (0.5 * sinf((fz * (PI / (fMAX_Z * scale))) + offset))
+					//sum of x-sine and y-sine and z-sine
+					color +=  (
+							(0.5 * sin((fx * (PI / (fMAX_X * scale))) + offset)) 
+							+ (0.5 * sin((fy * (PI / (fMAX_Y * scale))) + offset))
+							+ (0.5 * sin((fz * (PI / (fMAX_Z * scale))) + offset))
 							) / 3.0;
-					*/
-					//divide by number of added sinfes, to re-scale to colorspace	
+
+					//divide by number of added sines, to re-scale to colorspace	
 					color /= 1.0;
 					
 					//colorspace offset
@@ -522,7 +232,7 @@ void plasmaTest()
 			}
 		}
 		
-		swapAndWait(0);
+		swapAndWait(20);
 		
 		if((offset-oldOffset) >= 4*PI)
 			break;
@@ -541,11 +251,11 @@ farbe HSVtoRGB(farbe hsv)
     }
     else                //Farbsaettigung vorhanden
     {
-		unsigned short sextant;
-		float         p,q;
+		unsigned char sextant;
+		int         p,q;
 
 		hsv.f[0] = hsv.f[0]/60.0;
-		sextant  = (unsigned short) hsv.f[0];
+		sextant  = (unsigned char) hsv.f[0];
 		hsv.f[0] = hsv.f[0]-sextant;
 		p        = hsv.f[2]*(1-hsv.f[1]);
 		q        = hsv.f[2]*(1-(hsv.f[1]*hsv.f[0]));
@@ -596,9 +306,9 @@ void setVoxelHSV(int x, int y, int z, farbe hsv)
 	
 	rgb = HSVtoRGB(hsv);
 	
-	c.r = rgb.f[1] * 255.0 ;
-	c.g = rgb.f[2] * 255.0 ;
-	c.b = rgb.f[0] * 255.0 ;
+	c.r = rgb.f[1] ;
+	c.g = rgb.f[2];
+	c.b = rgb.f[0];
 	
 	p.x = x;
 	p.y = y;
@@ -607,10 +317,9 @@ void setVoxelHSV(int x, int y, int z, farbe hsv)
 	setVoxel(p, c);
 }
 
-void setVoxelH(int x, int y, int z, float h)
+void setVoxelH(int x, int y, int z, double h)
 {
 	farbe f;
-	
 	//cap to 1.0
 	h -= floor(h);
 
@@ -621,9 +330,20 @@ void setVoxelH(int x, int y, int z, float h)
 	setVoxelHSV(x, y, z, f);
 }
 
+void fadeTest() {
+	clearScreen(black);
+	clearImage(red);
+	fade(10, 100);
+	clearImage(blue);
+	fade(10, 100);
+	clearImage(green);
+	fade(10, 100);
+}
+
+
 #define NPOINTS 9
 #define NLINES 12
-void cubes() {
+void pyramide() {
 	// Drehender Quader
 	voxel org[NPOINTS] = {{0x10, 0x10, 0x10}, // 0
 							{0x60, 0x10, 0x10}, // 1
@@ -719,6 +439,62 @@ void cubes() {
 	}
 }
 
+#define FAKTOR (255/5) 
+
+void test1() {
+	unsigned char x, y, z, c;
+	for (z = 0; z < MAX_Z; z++) {
+		for (y = 0; y < MAX_Y; y++) {
+			for (x = 0; x < MAX_X; x++) {
+				for (c = 0; c < COLOR_BYTES; c++) {
+					imag[z][y][x][c] = 255;
+					swapAndWait(200);
+				}
+			}
+		}
+	}
+}
+
+void brightnesTest() {
+// Written by Michael Psarros, just test all the possible brightness values
+  unsigned char x, y, z; // the position
+  unsigned char offset, rund; // 255 bright values but only 125 leds, so
+							  // we need 2 runds for showing all the values
+  unsigned char color, tmp;   // actual colors
+
+  for (color = R; color <= B; color++) { // iterate over all three colors
+    offset = 1; // first run: brightness 1-126
+    for (rund = 0; rund <= 1; rund++) {
+      for (x = 0; x < MAX_X; x++) {
+	    for (y = 0; y < MAX_Y; y++) {
+		  for (z = 0; z < MAX_Z; z++) {
+            for (tmp = 0; tmp <= 2; tmp++) { // set all the color values
+			  if (tmp == color)
+                imag[x][y][z][tmp] = offset + z;
+ 			  else
+				imag[x][y][z][tmp] = 0;
+			} //tmp
+			swapAndWait(200);
+		  } //z
+		  offset += MAX_Z; // update the offset after every column
+		} //y
+      } //x
+      offset = 130; // in the second run get values 130-255
+	} //rund
+  } //color
+}
+
+void testShift() {
+	unsigned char z;
+	clearImage(black);
+	swapAndWait(1000);
+	setVoxel((voxel) {0, 0, 0}, white);
+	for (z = 0; z < 5; z++) {
+		shift(up);
+		swapAndWait(1000);
+	}
+}
+
 void testAnim() {
 	unsigned char x, y, z, i;
 	for (i = 0; i < 50; i++) {
@@ -761,92 +537,186 @@ void testAnim() {
 			}
 		}
 		if (i > 25) 
-			swapAndWait(300);
+			swapAndWait(250);
 		else 
-			fade(20, 50);	
+			fade(20, 40);	
 	}
 	clearImage(black);
 	fade(10, 50);
 }
 
-/*  4 2 2 2 2 2  
- *  3 2 1 1 1 2
- *  2 2 1 0 1 2
- *  1 2 1 1 1 2
- *  0 2 2 2 2 2 
- *    0 1 2 3 4 
- */
-void movingArrows() {
-     unsigned char x, y, cnt, cnt2 = 0;
-	 color colors[4] = {{255, 0, 0}, {0, 255, 0}, {0, 0, 255}, {255, 255, 0}};
-     color curColor = {0,0,0};
-	 for (cnt = 0; cnt < 100; cnt++) {
-         shift(up);
-         for (x = 0; x < MAX_X; x++) {
-             for (y = 0; y < MAX_Y; y++) {
-				switch (cnt % 3) {
-					case 0:
-						if (x == 2 && y == 2) {
-							curColor = colors[cnt2++ % 4];
-							setVoxel((voxel) {x, y, 0}, curColor);
-						} 
-						break;
-					case 1:
-						if ((x == 1 || x == 3) && (y == 1 || y == 3)) {
-							setVoxel((voxel) {x, y, 0}, 
-									 (color) {curColor.r/2, curColor.g/2, 
-											  curColor.b/2});
-						}
-						break;
-					case 2:
-						if ((x == 0 || x == 4) && (y == 0 || y == 4)) {
-							setVoxel((voxel) {x, y, 0}, 
-									 (color) {curColor.r/4, curColor.g/4, 
-											  curColor.b/4});
-						}
-						break;
-				}
-			 }	
-         }
-         fade(10, 10);
-     }
-     clearImage(black);
-	 fade(10, 50);
-}
-
 void fnordLicht() {
-	unsigned char i, j;
+	unsigned char *im, i, j;
 	unsigned short k;
-	uint32_t * im;
-	clearImage(red);
-	fade(10, 40);
+
 	for (j = 0; j < 2; j++) {
 		for (i = 0; i < 255; i++) {
-			im = imag;
+			im = (unsigned char *) imag;
 			for (k = 0; k < MAX_Z*MAX_Y*MAX_X; k++) {
 				*im++ = 255 - i;
 				*im++ = i;
 				*im++ = 0;
 			}
-			swapAndWait(15);
+			swapAndWait(20);
 		}
 		for (i = 0; i < 255; i++) {
-			im = imag;
+			im = (unsigned char *) imag;
 			for (k = 0; k < MAX_Z*MAX_Y*MAX_X; k++) {
 				*im++;
 				*im++ = 255 - i;
 				*im++ = i;
 			}
-			swapAndWait(15);
+			swapAndWait(20);
 		}
 		for (i = 0; i < 255; i++) {
-			im = imag;
+			im = (unsigned char *) imag;
 			for (k = 0; k < MAX_Z*MAX_Y*MAX_X; k++) {
 				*im++ = i;
 				*im++;
 				*im++ = 255 - i;
 			}
-			swapAndWait(15);
+			swapAndWait(20);
+		}
+	}
+}
+
+typedef enum {
+	Black,
+	White,
+	Red,
+	Blue,
+	Green,
+	Yellow,
+	C1,
+	C2,
+	C3
+} beatColor;
+
+typedef enum {
+	chess,
+	chessInv,
+	all,
+	smallCube,
+	smallCubeInc,
+	fade10
+} beatPattern;
+
+typedef struct {
+	beatPattern pP;
+	beatColor bC;
+	unsigned char time; // 128 is a full note   32 is 1/4   16 is 1/8
+} beat;
+
+void funkyBeat() {
+	beat beats[31] = {// erster Takt
+					  {chess,      White,   8}, 
+				  	  {chessInv,   Green,  12},
+					  {all,        Black,   4},
+					  {all,        Red,     6},
+					  {all,        Black,  10},	
+					  {chess,      C1,     12},
+					  {all,        Black,  16},
+					  {chessInv,   C2,      8},
+					  {chess,      Black,   8},
+					  {chessInv,   Red,     8},
+					  {all,        Black,   8},
+					  {smallCube,  Red,     12},
+					  {chessInv,   Blue,    4},  
+					  {all,        Green,   6},
+					  {all,        Black,   2},
+					  {chess,      Yellow,  8}, 
+					  // zeiter Takt
+					  {all,        Black,   8},
+					  {smallCube,  White,  10},
+					  {chess,      Black,   6},
+					  {chessInv,   Blue,    2},
+					  {all,        Green,   8},
+					  {smallCube,  Black,   8},
+					  {chess,      Red,     8},
+					  {all,        Black,   8},
+					  {smallCube,  Yellow,  8},
+					  {all,        Black,   8},
+					  {chess,      Yellow, 16},
+					  {smallCube,  White,   4},
+					  {chessInv,   Red,     6},
+					  {all,        Black,   2},
+					  {chess,      C1,      8}
+					  
+					};
+	unsigned char i, j, b, x, y, z;
+	color curColor;
+	unsigned char *im;
+	
+	for (j = 0; j < 10; j++) {
+		for (b = 0; b < 31; b++) {
+			switch (beats[b].bC) {
+				case Black:
+					curColor = black;
+					break;
+				case White:
+					curColor = white;
+					break;
+				case Red:
+					curColor = red;
+					break;
+				case Green:
+					curColor = green;
+					break;
+				case Blue:
+					curColor = blue;
+					break;
+				case Yellow:
+					curColor = (color) {255, 255,   0};
+					break;
+				case C1:
+					curColor = (color) {180, 120, 220};
+					break;
+				case C2:
+					curColor = (color) {100, 120, 220};
+					break;
+				case C3:
+					curColor = (color) {180,  60, 240};
+					break;
+			}
+			switch (beats[b].pP) {
+				case all:
+					clearImage(curColor);
+					break;
+				case chess:
+					im = (unsigned char *) imag;
+					for (i = 0; i < MAX_Z*MAX_Y*MAX_X; i++) {
+						if (i & 1) {
+							*im++ = curColor.r;
+							*im++ = curColor.g;
+							*im++ = curColor.b;
+						} else {
+							im += 3;
+						}
+					}
+					break;
+				case chessInv:
+					im = (unsigned char *) imag;
+					for (i = 0; i < MAX_Z*MAX_Y*MAX_X; i++) {
+						if (!(i & 1)) {
+							*im++ = curColor.r;
+							*im++ = curColor.g;
+							*im++ = curColor.b;
+						} else {
+							im += 3;
+						}
+					}
+					break;
+				case smallCube:
+					for (z = 1; z < 2; z++) {
+						for (y = 2; y < 3; y++) {
+							for (x = 1; x < 2; x++) {
+								setVoxel((voxel) {x, y, z}, curColor);
+							}
+						}
+					}
+					break;
+			}
+			swapAndWait(beats[b].time*16);
 		}
 	}
 }
@@ -866,14 +736,14 @@ void symetricRandom() {
 			col.b = easyRandom();
 			setSymetricVoxel(pos, col);
 		}
-		swapAndWait(15);
+		swapAndWait(20);
 	}
 	clearScreen(black);
 }
 
 
 void symetricRoutes() {
-	color curColor = {160, 100, 170};
+	color curColor = {100, 100, 100};
 	voxel pos = {1, 1, 1}, help;
 	unsigned char i;
 	char addR = 3, addG = 1, addB = -2; 
@@ -902,11 +772,10 @@ void symetricRoutes() {
 
 void upgoingRandom() {
 	color curColor = {100, 100, 100};
-	unsigned char x, y, i;
-	unsigned short j;
+	unsigned char x, y, i, j;
 	signed char addR = 2, addG = -1, addB = 4; 
-	for (j = 0; j < 600; j++) {
-		for (i = 0; i < j%8 + 4; i++) {
+	for (j = 0; j <200; j++) {
+		for (i = 0; i < 6; i++) {
 			if (curColor.r < 8 || curColor.r > 248) 
 				addR = -addR;
 			if (curColor.g < 8 || curColor.g > 248) 
@@ -918,15 +787,13 @@ void upgoingRandom() {
 			curColor.b += addB;
 			setVoxel((voxel) {easyRandom()%5, easyRandom()%5, 0}, curColor);
 		}
-		swapAndWait(18);
+		swapAndWait(30);
 		shift(up);
 		addR = (easyRandom() % 16) - 8;
 		addG = (easyRandom() % 16) - 8;
 		addB = (easyRandom() % 16) - 8;
 	}
-	clearImage(black);
-	fade(10, 30);
-	swapAndWait(1000);
+
 }
 
 static void drawCube(voxel pos, unsigned char color) {
@@ -1005,10 +872,6 @@ void spirale() {
 		}
 		i++;
 	}
-	
-	clearImage(black);
-	fade(10, 30);
-	swapAndWait(1000);
 }
 
 /*
@@ -1026,7 +889,7 @@ void planeBall() {
 		           x, 4, 1, red);
 	}
 	fade(5, 10);
-	swapAndWait(1000);
+	swapAndWait(5000);
 	setVoxel((voxel) {2, 2, 5}, green);
 	swapAndWait(100);
 	setVoxel((voxel) {2, 2, 5}, black);
@@ -1103,7 +966,7 @@ void planeBall() {
 		drawLine3D(x, 0, 1, 
 		           x, 4, 1, red);
 	}
-	setVoxel((voxel) {2, 4, 2}, green);
+	setVoxel((voxel) {2, 0, 2}, green);
 	fade(5, 5);
 }
 
@@ -1194,8 +1057,6 @@ void movingCubes() {
 // a green Version of the Matrix of Borg 3D
 
 
-#define SNAKE_LEN 100
-
 void snake() {
 	voxel pixels[SNAKE_LEN]; 
 	voxel *head = &pixels[1];
@@ -1258,7 +1119,7 @@ void snake() {
 			if (easyRandom() < 80) {
 				dir = 1 + (direction) (easyRandom() % 6);
 			}
-			if ((apple_num < 10) && (easyRandom() < 10)) {
+			if ((apple_num<10) && (easyRandom()<10)) {
 				voxel new_apple = (voxel) {easyRandom() % MAX_X,
 										   easyRandom() % MAX_Y,
 										   easyRandom() % MAX_Z};
@@ -1304,6 +1165,53 @@ void glowingBobbles() {
 	
 }
 
+/*  4 2 2 2 2 2  
+ *  3 2 1 1 1 2
+ *  2 2 1 0 1 2
+ *  1 2 1 1 1 2
+ *  0 2 2 2 2 2 
+ *    0 1 2 3 4 
+ */
+void movingArrows() {
+     unsigned char x, y, cnt, cnt2 = 0;
+	 color colors[4] = {{255, 0, 0}, {0, 255, 0}, {0, 0, 255}, {0, 255, 255}};
+     color curColor = {0,0,0};
+	 for (cnt = 0; cnt < 100; cnt++) {
+         shift(up);
+         for (x = 0; x < MAX_X; x++) {
+             for (y = 0; y < MAX_Y; y++) {
+				switch (cnt % 3) {
+					case 0:
+						if (x == 2 && y == 2) {
+							curColor = colors[cnt2++ % 4];
+							setVoxel((voxel) {x, y, 0}, curColor);
+						} 
+						break;
+					case 1:
+						if ((x == 1 || x == 3) && (y == 1 || y == 3)) {
+							setVoxel((voxel) {x, y, 0}, 
+									 (color) {curColor.r/2, curColor.g/2, 
+											  curColor.b/2});
+						}
+						break;
+					case 2:
+						if ((x == 0 || x == 4) && (y == 0 || y == 4)) {
+							setVoxel((voxel) {x, y, 0}, 
+									 (color) {curColor.r/4, curColor.g/4, 
+											  curColor.b/4});
+						}
+						break;
+				}
+			 }	
+         }
+         fade(10, 10);
+     }
+     clearImage(black);
+	 fade(10, 50);
+}
+
+
+
 void wobbeln() {
 	unsigned char i, j, z, y, x;
 	color colors[5] = {{0,   0,  250},
@@ -1331,7 +1239,7 @@ void wobbeln() {
 								setVoxel((voxel) {4-x, 4-y, z}, green);
 								break;
 							case 4: 
-								setVoxel((voxel) {x, y, 4-z}, white);
+								setVoxel((voxel) {x, y, 4-z}, colors[j%5]);
 								break;
 							case 5:
 								setVoxel((voxel) {4-x, y, 4-z}, red);
@@ -1347,13 +1255,13 @@ void wobbeln() {
 					}
 				}
 			}
-			fade(5, 9);
+			fade(10, 9);
 		}
 		swapAndWait(300);
 		if (j < 20)
 			clearImage(black);	
 	}
-	clearImage(black);
-	fade(10, 30);
-	swapAndWait(1000);
+	clearImage(black);	
+	
 }
+

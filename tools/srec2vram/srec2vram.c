@@ -8,20 +8,21 @@
 uint32_t rambase;
 uint32_t ramsize;
 uint8_t  *ram;
+uint8_t  bytesPerWord;
 
-#define HAVE_STRNDUP
-#ifndef HAVE_STRNDUP
+//#define HAVE_STRNDUP
+//#ifndef HAVE_STRNDUP
 char* strndup(const char* s, size_t n) {
        char* ret = malloc(n + 1);
        if (ret == NULL) return(ret);
        ret[n] = '\0';
        return(memcpy(ret, s, n));
 }
-#endif
+//#endif
 
 void help()
 {
-	printf( "\nUsage: srec2vram <srect-file> <bram-base> <bram-size>\n\n" );
+	printf( "\nUsage: srec2vram <bytes-per-word> <srect-file> <bram-base> <bram-size>\n\n" );
 	printf( " <bram-base> \t \n" );
 	printf( " <bram-size> \t \n\n" );
 };
@@ -63,20 +64,26 @@ int main(int argc, char **argv)
 	int err;
 	FILE *infile;
 
-	if (argc != 4) {
+	if (argc != 5) {
 		help();
+		exit(1);
+	}
+	
+	err = sscanf(argv[1], "%i", &bytesPerWord);
+	if (err != 1) {
+		printf( "ERROR: Could not parse <bytes-per-word> (%s)\n", argv[1] );
 		exit(1);
 	}
 
 	//
-	err = sscanf(argv[2], "%x", &rambase);
+	err = sscanf(argv[3], "%x", &rambase);
 	if (err != 1) {
 		printf( "ERROR: Could not parse <bram-base> (%s)\n", argv[2] );
 		exit(1);
 	}
 		
 	
-	err = sscanf(argv[3], "%i", &ramsize);
+	err = sscanf(argv[4], "%i", &ramsize);
 	if (err != 1) {
 		printf( "ERROR: Could not parse <bram-size> (%s)\n", argv[3] );
 		exit(1);
@@ -87,7 +94,7 @@ int main(int argc, char **argv)
 		rambase, rambase+ramsize, ramsize );
 		
 	// Open SREC file
-	infile = fopen( argv[1], "r" );
+	infile = fopen( argv[2], "r" );
 	if (infile == NULL) {
 		perror( "Could not open infile" );
 		exit(1);
@@ -147,10 +154,12 @@ int main(int argc, char **argv)
 	fclose( infile );
 
 	// Write output
-	int i;
+	int i, j;
 
-	for(i = 0; i < ramsize; i+=4) {
-		printf( "%02x%02x%02x%02x\n", ram[i+0], ram[i+1], ram[i+2], ram[i+3] );
+	for (i = 0; i < ramsize; i+=bytesPerWord) {
+		for (j = 0; j < bytesPerWord; j++) 
+				printf( "%02x ", ram[i+j]);
+		printf( "\n");
 	}
 
 	return 0;

@@ -27,7 +27,7 @@ OUTPUT_FORMAT("elf32-lm32")
 ENTRY(_start)
 INPUT(crti.o crtbegin.o crtend.o crtn.o)
 /*INPUT(crti.o crtbegin.o crt0ram.o crtend.o crtn.o)*/
-GROUP(-lgloss -lnosys -lc -lgcc)
+GROUP(-lgloss -lnosys -lm -lc -lgcc)
 
 /* Peripherals */
 _uart = 0x80000000;

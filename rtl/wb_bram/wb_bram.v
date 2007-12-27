@@ -4,7 +4,7 @@
 
 module wb_bram #(
 	parameter mem_file_name = "none",
-	parameter adr_width = 11
+	parameter adr_width = 14
 ) (
 	input             clk_i, 
 	input             rst_i,
@@ -25,39 +25,39 @@ module wb_bram #(
 parameter word_width = adr_width - 2;
 parameter word_depth = (1 << word_width);
 
-
 //-----------------------------------------------------------------
 // 
 //-----------------------------------------------------------------
-reg            [31:0] ram [0:word_depth-1];    // actual RAM
+reg            [15:0] ram0 [0:word_depth-1];    // actual RAM
+reg            [15:0] ram1 [0:word_depth-1];
 reg                   ack;
+wire                  ram_sel;
 wire [word_width-1:0] adr;
 
-
-assign adr        = wb_adr_i[adr_width-1:2];      // 
+assign adr        = wb_adr_i[adr_width-1:2];
 assign wb_ack_o   = wb_stb_i & ack;
 
 always @(posedge clk_i)
 begin
 	if (wb_stb_i && wb_cyc_i) 
 	begin
-		if (wb_we_i) 
-			ram[ adr ] <= wb_dat_i;
-
-		wb_dat_o <= ram[ adr ];
+		if (wb_we_i) begin
+			ram0[ adr ] <= wb_dat_i[15:0];
+			ram1[ adr ] <= wb_dat_i[31:16];
+		end
+		wb_dat_o <= {ram1[ adr ], ram0[ adr ] };
 		ack <= ~ack;
 	end else
-		ack <= 0;
-    
+		ack <= 0; 
 end
 
 initial 
 begin
 	if (mem_file_name != "none")
 	begin
-		$readmemh("../../firmware/bootloader/image.ram", ram);
+		$readmemh("../../firmware/bootloader-sd/image0.ram", ram0);
+		$readmemh("../../firmware/bootloader-sd/image1.ram", ram1);
 	end
 end
 
 endmodule
-
