@@ -9,7 +9,7 @@ CFLAGS=-MMD -O2 -ffunction-sections -g2 -Wall -D__lm32__ -fomit-frame-pointer $(
 LDFLAGS=$(CPU_FLAGS) -Tram.ld -lm -lc -lgcc -Wl,--gc-sections
 SEGMENTS = -j .text -j .data -j .rodata
 
-all: image.bin image.lst image.srec linker.ld Makefile
+all: image.bin image.lst image.srec Makefile
 
 %.o: %.S
 	$(LM32_CC) $(CFLAGS) -c $<

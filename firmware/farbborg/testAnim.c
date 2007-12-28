@@ -16,6 +16,7 @@ typedef struct
     float f[3];
 }farbe;
 
+void flashLight();
 void fadeTest();
 void plasmaTest();
 void plasmaSnake();
@@ -30,8 +31,8 @@ void *display_loop(void * unused)  {
 		colorSnake();
 		uart_putstr("colorMatrix()\n");
 		colorMatrix();
-
-		
+		uart_putstr("flashLight()\n");
+		flashLight();
 		uart_putstr("plasmaTest()\n");
 		plasmaTest();
 		uart_putstr("plasmaSnake()\n");
@@ -82,6 +83,38 @@ void *display_loop(void * unused)  {
 		
 	}
 	return 0;
+}
+
+/***
+ * Simple FlashLight: ways some time... and suddenly ... *FLASH* 
+ */
+void flashLight()
+{
+	clearScreen(black);
+
+	for(int i=0; i<10; i++) {
+
+		// choose color
+		color c = {0,0,0};
+		switch (rand() % 3) {
+			case 0: c.r = 255; break;
+			case 1: c.g = 255; break;
+			case 2: c.b = 255; break;
+		}
+
+		// wait 1 upto 3 sec
+		wait( 1000 + 100*(rand()%20) );
+
+		int count = rand() % 6; // flash-sequence: 0 upto 5
+		for(int j=0; j<count; j++) {
+			wait(50); clearScreen(white);
+			wait(50); clearScreen(c);
+			wait(50); clearScreen(black);
+
+			// 0.0 upto 0.3 sec
+			wait( 10 * (rand()%30) );
+		}
+	}
 }
 
 void shiftTest() {
