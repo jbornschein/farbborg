@@ -1,3 +1,6 @@
+#ifndef API_H
+#define API_H
+
 #include "config.h"
 
 #define R 0
@@ -11,7 +14,6 @@ typedef struct {
 typedef struct {
 	unsigned char r, g, b;
 } color; 
-
 
 typedef enum {
 	noDirection = 0,
@@ -37,25 +39,23 @@ direction direction_r(direction dir);
 
 void shift(direction dir);
 
-void fade(unsigned char msProStep, unsigned char steps);
-void swapAndWait(unsigned char ms);
+void fade(unsigned int msProStep, unsigned int steps);
+void swapAndWait(unsigned int ms);
 
 unsigned char easyRandom();
 
+color getColor(voxel pos);
+
 void drawLine3D(char px1, char py1, char pz1, 
- 			    char px2, char py2, char pz2, color value);
+		char px2, char py2, char pz2, color value);
 
 char Sin(unsigned char a);
 #define Cos(a) Sin((a)+16)
 
 void rotate(char a, char b, char c, voxel* points, 
-			voxel* resPoints, int numPoint, voxel rotP);
+	    voxel* resPoints, int numPoint, voxel rotP);
 void scale(char sx, char sy, char sz, voxel* points, 
-			voxel* resPoints, int numPoint, voxel scaleP);	
-/* not jet implementet
+           voxel* resPoints, int numPoint, voxel scaleP);	
 
-void blurX(unsigned char filter[3]);
-void blurY(unsigned char filter[3]);
-void blurZ(unsigned char filter[3]);
+#endif // API_H
 
-*/

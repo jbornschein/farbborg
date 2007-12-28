@@ -3,7 +3,8 @@
 #include "api.h"
 #include "testAnim.h"
 #include "fileParser.h"
-
+#include "colorMatrix.h"
+#include "colorSnake.h"
 
 
 #define SNAKE_LEN 100
@@ -27,6 +28,11 @@ void *display_loop(void * unused)  {
 	offset = 0.0;
 	
 	while (1) {
+		colorSnake();
+		colorMatrix();
+	
+	
+		
      	//pyramide();
 		//fadeTest();
 		plasmaTest();
@@ -240,94 +246,61 @@ void plasmaTest()
 }
 
 
-farbe HSVtoRGB(farbe hsv)
+color HtoRGB(int h31bit)
 {
-    farbe rgb;
-    if(hsv.f[1] == 0)   //keine Farbe, nur Grau
-    {
-		rgb.f[0] = hsv.f[2];
-		rgb.f[1] = hsv.f[2];
-		rgb.f[2] = hsv.f[2];
-    }
-    else                //Farbsaettigung vorhanden
-    {
-		unsigned char sextant;
-		int         p,q;
-
-		hsv.f[0] = hsv.f[0]/60.0;
-		sextant  = (unsigned char) hsv.f[0];
-		hsv.f[0] = hsv.f[0]-sextant;
-		p        = hsv.f[2]*(1-hsv.f[1]);
-		q        = hsv.f[2]*(1-(hsv.f[1]*hsv.f[0]));
-		hsv.f[0] = hsv.f[2]*(1-(hsv.f[1]*(1-hsv.f[0])));
-
+	if (h31bit < 0)
+		h31bit += 49152;
+	
+	      color rgb;
+ 
+ 		unsigned char sextant;
+		int           q;
+		sextant  = h31bit / 8192;   // 60¡
+		
+		h31bit     = h31bit % 8192;
+		q          = 8192 - h31bit;	
+		//h31bit     = 8192 - (8192 - h31bit);
+		//printf("%d %d %d\n", h31bit, sextant, help);
 		switch(sextant)
 		{
 		    case 0:
-			rgb.f[0] = hsv.f[2];
-			rgb.f[1] = hsv.f[0];
-			rgb.f[2] = p;
-			break;
+				rgb.r = 255;
+				rgb.g = h31bit / 32; 
+				rgb.b = 0;
+				break;
 		    case 1:
-			rgb.f[0] = q;
-			rgb.f[1] = hsv.f[2];
-			rgb.f[2] = p;
-			break;
+				rgb.r = q / 32;
+				rgb.g = 255;
+				rgb.b = 0;
+				break;
 		    case 2:
-			rgb.f[0] = p;
-			rgb.f[1] = hsv.f[2];
-			rgb.f[2] = hsv.f[0];
-			break;
+				rgb.r = 0;
+				rgb.g = 255;
+				rgb.b = h31bit / 32;
+				break;
 		    case 3:
-			rgb.f[0] = p;
-			rgb.f[1] = q;
-			rgb.f[2] = hsv.f[2];
-			break;
+				rgb.r = 0;
+				rgb.g = q / 32;
+				rgb.b = 255;
+				break;
 		    case 4:
-			rgb.f[0] = hsv.f[0];
-			rgb.f[1] = p;
-			rgb.f[2] = hsv.f[2];
-			break;
+				rgb.r = h31bit / 32;
+				rgb.g = 0;
+				rgb.b = 255;
+				break;
 		    default:
-			rgb.f[0] = hsv.f[2];
-			rgb.f[1] = p;
-			rgb.f[2] = q;
-			break;
-		};
-    };
+				rgb.r = 255;
+				rgb.g = 0;
+				rgb.b = q / 32;
+				break;
+   };
     return(rgb);
 };
 
-void setVoxelHSV(int x, int y, int z, farbe hsv)
-{
-	farbe rgb;
-	color c;
-	voxel p;
-	
-	rgb = HSVtoRGB(hsv);
-	
-	c.r = rgb.f[1] ;
-	c.g = rgb.f[2];
-	c.b = rgb.f[0];
-	
-	p.x = x;
-	p.y = y;
-	p.z = z;
-	
-	setVoxel(p, c);
-}
-
 void setVoxelH(int x, int y, int z, double h)
 {
-	farbe f;
-	//cap to 1.0
 	h -= floor(h);
-
-	f.f[0] = h*360;
-	f.f[1] = 1;
-	f.f[2] = 1;
-
-	setVoxelHSV(x, y, z, f);
+	setVoxel((voxel) {x, y, z}, HtoRGB(h*49152));
 }
 
 void fadeTest() {

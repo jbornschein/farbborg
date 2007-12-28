@@ -40,6 +40,8 @@ voxel getNextVoxel(voxel pos, direction d);
 
 direction direction_r(direction dir);
 
+color getColor(voxel pos);
+
 void shift(direction dir);
 
 void fade(unsigned int msProStep, unsigned int steps);

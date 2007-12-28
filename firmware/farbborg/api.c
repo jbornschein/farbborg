@@ -25,6 +25,18 @@ void setVoxel(voxel pos, color c) {
 	}
 }
 
+color getColor(voxel pos) {
+	color result;
+	if (pos.x < MAX_X && pos.y < MAX_Y && pos.z < MAX_Z) {
+		result.r = imag[pos.z][pos.y][pos.x][R];
+		result.g = imag[pos.z][pos.y][pos.x][G];
+		result.b = imag[pos.z][pos.y][pos.x][B];
+	} else 
+		result = black;
+	return result;
+}
+
+
 void setSymetricVoxel(voxel pos, color c) {
 	uint32_t *im;
 	if (pos.x < (MAX_X+1)/2 && pos.y < (MAX_Y+1)/2 && pos.z < (MAX_Z+1)/2) {

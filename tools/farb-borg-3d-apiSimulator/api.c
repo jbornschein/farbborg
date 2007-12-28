@@ -108,9 +108,19 @@ direction direction_r(direction dir) {
 	}
 }
 
+color getColor(voxel pos) {
+	color result;
+	if (pos.x < MAX_X && pos.y < MAX_Y && pos.z < MAX_Z) {
+		result.r = imag[pos.z][pos.y][pos.x][R];
+		result.g = imag[pos.z][pos.y][pos.x][G];
+		result.b = imag[pos.z][pos.y][pos.x][B];
+	} else result = black;
+	return result;
+}
+
 
 // too big for a real avr
-void fade(unsigned char msProStep, unsigned char steps) {
+void fade(unsigned int msProStep, unsigned int steps) {
 	unsigned int s;
 	signed short addColor[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
 	signed short *aC = (signed short*) addColor;
@@ -144,7 +154,7 @@ void fade(unsigned char msProStep, unsigned char steps) {
 	myWait(msProStep);
 }
 
-void swapAndWait(unsigned char ms) {
+void swapAndWait(unsigned int ms) {
 	unsigned char *pix = (unsigned char *) pixmap, *im = (unsigned char *) imag;
 	unsigned short i;
 	for (i = 0; i < MAX_Z*MAX_Y*MAX_X*COLOR_BYTES; i++) {
@@ -383,6 +393,8 @@ void scale(char sx, char sy, char sz, voxel* points,
 		resPoints[i] = mulMatrixPoint(mat, &points[i]);
 	}			
 }					
+
+
 
 /*
 void blurX(unsigned char filter[3]) {
