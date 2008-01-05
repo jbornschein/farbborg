@@ -15,5 +15,6 @@ void planeBall();
 void movingArrows();
 void funkyBeat();
 void brightnesTest();
+void gameOfLife(unsigned char anim, unsigned int delay);
 
 void *display_loop(void * unused);

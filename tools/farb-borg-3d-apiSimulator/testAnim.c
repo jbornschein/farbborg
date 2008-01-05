@@ -5,7 +5,7 @@
 #include "fileParser.h"
 #include "colorMatrix.h"
 #include "colorSnake.h"
-
+#include <math.h>
 
 #define SNAKE_LEN 100
 
@@ -15,6 +15,7 @@ typedef struct
     unsigned char f[3];
 } farbe;
 
+color HtoRGB(int h31bit);
 void fadeTest();
 void plasmaTest();
 void plasmaSnake();
@@ -28,19 +29,19 @@ void *display_loop(void * unused)  {
 	offset = 0.0;
 	
 	while (1) {
-		colorSnake();
-		colorMatrix();
+		//gameOfLife(1, 1000);
+		//gameOfLife(0, 1000);
 	
-	
-		
+		//colorSnake();
+		//colorMatrix();
      	//pyramide();
 		//fadeTest();
-		plasmaTest();
-		plasmaSnake();
+		//plasmaTest();
+		//plasmaSnake();
 		//test1();
 		//brightnesTest();
-		//playPlaylist("playlist.apl");
-		//playAnimFile("sample.anim");
+		playPlaylist("playlist.apl");
+        //playAnimFile("sample.anim");
 		//funkyBeat();
 		//testShift();
 		//movingArrows(); 
@@ -55,6 +56,89 @@ void *display_loop(void * unused)  {
 		//testAnim();
 		//fnordLicht();
 	}
+}
+
+void gameOfLife(unsigned char anim, unsigned int delay) {
+	unsigned char gen, erg, seven = 0, maxGen = 0;
+	signed char x, y, z, neighC, r1 = 3, r2 = 4, r3 = 3, r4 = 2;
+	signed char i, j, k;
+	char neighs[MAX_Z][MAX_Y][MAX_X];
+	unsigned int count[MAX_Z][MAX_Y][MAX_X];
+	unsigned int *h = (unsigned int *) count;
+	for(i = 0; i < MAX_X*MAX_Y*MAX_Z; i++)
+		*h++ = 0;
+	
+	clearScreen(black);
+
+	switch (anim) {
+	case 0:	maxGen = 8;
+		setVoxel((voxel) {1, 2, 2}, red);
+		setVoxel((voxel) {2, 2, 2}, red);
+		setVoxel((voxel) {3, 2, 2}, red);
+		break;
+	case 1:	maxGen = 30; // other rules
+		r3 = 2;
+		r4 = 1;
+		setVoxel((voxel) {0, 2, 2}, red);		
+		setVoxel((voxel) {1, 2, 2}, red);
+		//setVoxel((voxel) {2, 2, 2}, red);
+		setVoxel((voxel) {3, 2, 2}, red);
+		setVoxel((voxel) {4, 2, 2}, red);
+		break;
+	}
+	for (gen = 0; gen < maxGen; gen++) {
+		fade(16, 32);
+		swapAndWait(delay);	
+		for (x = 0; x < MAX_X; x++) {	
+			for (y = 0; y < MAX_Y; y++) {
+				for (z = 0; z < MAX_Z; z++) {
+					neighC = 0;
+					for (i = -1; i < 2; i++) {
+						for (j = -1; j < 2; j++) {
+							for (k = -1; k < 2; k++) {
+								if (i != 0 || j != 0 || k != 0) {
+									if ((x+i >= seven && x+i < MAX_X) && 
+										(y+j >= seven && y+j < MAX_Y) && 
+										(z+k >= seven && z+k < MAX_Z)) {
+										erg = isVoxelSet((voxel) {x+i, y+j, z+k});
+										if (erg == 2) // outside image ?
+											erg = 0;
+									} else {
+										erg = 0;
+									}
+									if (erg) {
+										neighC++;	
+									}
+									//printf("- %d %d %d  neigh=%d erg=%d\n", x+i, y+j, z+k, neighC, erg);
+								}
+							}
+						}
+					}
+					neighs[x][y][z] = neighC;
+				}
+			}
+		}
+		for (x = 0; x < MAX_X; x++) {	
+			for (y = 0; y < MAX_Y; y++) {
+				for (z = 0; z < MAX_Z; z++) {
+					//if (neighs[x][y][z])			
+						//printf("%d %d %d neigh=%d %d\n", x, y, z, neighs[x][y][z], isVoxelSet((voxel){x, y, z}));
+					if (isVoxelSet((voxel) {x, y, z})) { // Feld gesetzt
+						if (neighs[x][y][z] > r3 || neighs[x][y][z] < r4) {
+							//count[x][y][z] = 0;
+							setVoxel((voxel) {x, y, z}, black);
+						} 
+					} else {
+						if (neighs[x][y][z] >= r1 && neighs[x][y][z] <= r2) {
+							setVoxel((voxel){x, y, z}, HtoRGB(count[x][y][z]*8192));
+							count[x][y][z]++;
+						}
+					}
+				}
+			}
+		}
+		//printf("============ Gerneration %d \n", gen);
+	}			
 }
 
 #define PI 3.14159265
@@ -74,7 +158,7 @@ void plasmaSnake()
 	double snakeColor;
 	voxel apples[10];
 	unsigned char apple_num = 0;
-	char addR = 2, addG = -1, addB = 1;
+	//	char addR = 2, addG = -1, addB = 1;
 	pixels[0].x = 1; 
 	pixels[0].y = 1;
 	pixels[0].z = 0;
@@ -104,7 +188,7 @@ void plasmaSnake()
 					(getNextVoxel(old_head, (direction)i).y == apples[j].y) &&
 				    (getNextVoxel(old_head, (direction)i).z == apples[j].z)) {
 					apple_found = 1;
-					dir = (direction)i+1; 
+					dir = (direction) (i+1); 
 					for(; j < apple_num-1; j++) {
 						apples[j] = apples[j+1];
 					}
@@ -129,7 +213,7 @@ void plasmaSnake()
 			snakeColor += 0.5 * sin(((double)head->x * (PI / (fMAX_X * scale))) + ((double)head->y * (PI / (fMAX_Y * scale))) + ((double)head->z * (PI / (fMAX_Z * scale))) + offset);
 			setVoxelH(head->x, head->y, head->z, snakeColor);
 			if (easyRandom() < 80) {
-				dir = 1 + (direction) (easyRandom() % 6);
+				dir = (direction) ((easyRandom() % 6) + 1);
 			}
 			if ((apple_num<10) && (easyRandom()<10)) {
 				voxel new_apple = (voxel) {easyRandom() % MAX_X,
@@ -250,7 +334,8 @@ color HtoRGB(int h31bit)
 {
 	if (h31bit < 0)
 		h31bit += 49152;
-	
+	if (h31bit > 49152)
+		h31bit -= 49152;
 	      color rgb;
  
  		unsigned char sextant;
@@ -300,7 +385,7 @@ color HtoRGB(int h31bit)
 void setVoxelH(int x, int y, int z, double h)
 {
 	h -= floor(h);
-	setVoxel((voxel) {x, y, z}, HtoRGB(h*49152));
+	setVoxel((voxel) {x, y, z}, HtoRGB((int) (h*49152)));
 }
 
 void fadeTest() {
@@ -949,7 +1034,7 @@ void movingCubes() {
 	direction way[] = {up, right, up, right, up, right, 
 					   forward, forward, forward,
 					   down, left, back, down, back, back,
-					   down, left, left, up,  right, down, left, 0}; 
+					   down, left, left, up,  right, down, left, (direction) 0}; 
 	unsigned char i, j; 
 	for (j = 0; j < 5; j++) {
 		i = 0;
@@ -1067,7 +1152,7 @@ void snake() {
 					(getNextVoxel(old_head, (direction)i).y == apples[j].y) &&
 				    (getNextVoxel(old_head, (direction)i).z == apples[j].z)) {
 					apple_found = 1;
-					dir = (direction)i+1; 
+					dir = (direction) (i+1); 
 					for(; j < apple_num-1; j++) {
 						apples[j] = apples[j+1];
 					}
@@ -1090,7 +1175,7 @@ void snake() {
 			*head = getNextVoxel(old_head, dir);
 			setVoxel(*head, snakeColor);
 			if (easyRandom() < 80) {
-				dir = 1 + (direction) (easyRandom() % 6);
+				dir = (direction) ((easyRandom() % 6) + 1);
 			}
 			if ((apple_num<10) && (easyRandom()<10)) {
 				voxel new_apple = (voxel) {easyRandom() % MAX_X,

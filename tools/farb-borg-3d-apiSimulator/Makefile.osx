@@ -17,7 +17,7 @@ all: Makefile.osx $(APP)
 $(APP): $(OBJ)
 	test -d $(PRG).app/Contents/MacOS/ || mkdir -p $(PRG).app/Contents/MacOS/
 	test -d $(PRG).app/Contents/Resources/ || mkdir -p $(PRG).app/Resources/
-	test $(PRG).app/Contents/Rescources/borg3d.icns || cp -f borg3d.icns $(PRG).app/Contents/Rescources/
+	test $(PRG).app/Contents/Rescources/borg3d.icns || cp -f borg3d.icns *.apl *.pr0n $(PRG).app/Contents/Rescources/
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 clean:

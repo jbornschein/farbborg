@@ -38,7 +38,7 @@ memcmp(const void* ab1, const void* ab2, size_t n)
 			return(*--b1 - *--b2);
 	return(0);
 }
-
+/*
 // prototypes 
 void writeint(uint8_t nibbles, uint32_t val);
 uint32_t readint(uint8_t nibbles, uint8_t* checksum);
@@ -74,7 +74,7 @@ void writeint(uint8_t nibbles, uint32_t val)
 		val <<= 4;
 	}
 }
-
+*/
 /*
 void memtest()
 {
@@ -119,7 +119,7 @@ int main()
 	//irq_set_mask( 0x00000002 );
 	//irq_enable();
 	
-	uart_putstr("init\n");
+	uart_putstr("init\n\r");
 		
 	memset(&fs, 0, sizeof(FATFS)); 	/* Clear file system object */
 	FatFs = &fs;	                /* Assign it to the FatFs module */	
@@ -144,13 +144,12 @@ int main()
 		goto uartmode;
 	}
 
-	uart_putstr("load\n");
+	uart_putstr("load\n\r");
 	
-	f_read (&fil, (uint8_t*)0x40000000, 64*1024 - 1, &fsize);
+	f_read (&fil, (uint8_t*) 0x40000000, 64*1024 - 1, &fsize);
 	
-	jump(0x40000000);
-		
-uartmode: 
+	jump(0x40000000);		
+uartmode: /*
 	uart_putstr("\r\n** SPIKE BOOTLOADER **\n");
 	for(;;) {
 		uint32_t start, size, checksum, help;
@@ -179,7 +178,7 @@ uartmode:
     			break;   
     		}
 	}
-
+*/
 	while (1);
 }
 

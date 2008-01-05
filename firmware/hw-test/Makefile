@@ -10,7 +10,7 @@ CFLAGS=-MMD -O2 -Wall -g -s -fomit-frame-pointer -mbarrel-shift-enabled   -mmult
 LDFLAGS=-nostdlib -nodefaultlibs -Tlinker.ld 
 SEGMENTS = -j .text -j .rodata -j .data
 
-all: image.srec $(VRAMFILE) 
+all: image.srec image.bin 
 
 crt0ram.o: crt0ram.S
 	$(LM32_CC) $(CFLAGS) -c crt0ram.S

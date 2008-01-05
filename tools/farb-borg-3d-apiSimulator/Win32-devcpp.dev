@@ -1,7 +1,7 @@
 [Project]
 FileName=Win32-devcpp.dev
 Name=borg-3d-apiSimulator
-UnitCount=19
+UnitCount=18
 Type=0
 Ver=1
 ObjFiles=
@@ -12,12 +12,12 @@ ResourceIncludes=
 MakeIncludes=
 Compiler=-D_WIN32_@@_
 CppCompiler=
-Linker=-lglut32 -lglu32 -lopengl32 -lwinmm -lgdi32_@@_
+Linker=-lglut32s -lglu32 -lopengl32 -lwinmm -lgdi32 -lm_@@_
 IsCpp=1
 Icon=
 ExeOutput=
 ObjectOutput=
-OverrideOutput=1
+OverrideOutput=0
 OverrideOutputName=borg-3d-apiSimulator.exe
 HostApplication=
 Folders=
@@ -31,7 +31,7 @@ CompilerSettings=0000000001001000000000
 
 [Unit1]
 FileName=main.c
-CompileCpp=1
+CompileCpp=0
 Folder=Projekt1
 Compile=1
 Link=1
@@ -40,8 +40,8 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit2]
-FileName=pixel3d.c
-CompileCpp=1
+FileName=config.h
+CompileCpp=0
 Folder=Projekt1
 Compile=1
 Link=1
@@ -50,8 +50,8 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit3]
-FileName=pixel3d.h
-CompileCpp=1
+FileName=util.c
+CompileCpp=0
 Folder=Projekt1
 Compile=1
 Link=1
@@ -60,19 +60,19 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit4]
-FileName=config.h
-CompileCpp=1
+FileName=util.h
+CompileCpp=0
 Folder=Projekt1
-Compile=1
-Link=1
+Compile=0
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit5]
-FileName=util.c
-CompileCpp=1
-Folder=Projekt1
+FileName=trackball.c
+CompileCpp=0
+Folder=borg-3d-apiSimulator
 Compile=1
 Link=1
 Priority=1000
@@ -98,18 +98,18 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit6]
-FileName=util.h
-CompileCpp=1
-Folder=Projekt1
-Compile=1
-Link=1
+FileName=trackball.h
+CompileCpp=0
+Folder=borg-3d-apiSimulator
+Compile=0
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=trackball.c
-CompileCpp=1
+FileName=colorMatrix.c
+CompileCpp=0
 Folder=borg-3d-apiSimulator
 Compile=1
 Link=1
@@ -118,18 +118,18 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit8]
-FileName=trackball.h
-CompileCpp=1
+FileName=colorMatrix.h
+CompileCpp=0
 Folder=borg-3d-apiSimulator
-Compile=1
-Link=1
+Compile=0
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit9]
-FileName=scrolltext2.c
-CompileCpp=1
+FileName=colorSnake.c
+CompileCpp=0
 Folder=borg-3d-apiSimulator
 Compile=1
 Link=1
@@ -138,18 +138,18 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=scrolltext2.h
-CompileCpp=1
+FileName=colorSnake.h
+CompileCpp=0
 Folder=borg-3d-apiSimulator
-Compile=1
-Link=1
+Compile=0
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=basicAnimations.c
-CompileCpp=1
+FileName=fileParser.c
+CompileCpp=0
 Folder=borg-3d-apiSimulator
 Compile=1
 Link=1
@@ -158,18 +158,18 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=programs.c
-CompileCpp=1
+FileName=fileParser.h
+CompileCpp=0
 Folder=borg-3d-apiSimulator
-Compile=1
-Link=1
+Compile=0
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=programs.h
-CompileCpp=1
+FileName=slh.c
+CompileCpp=0
 Folder=borg-3d-apiSimulator
 Compile=1
 Link=1
@@ -178,18 +178,18 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=randomAnmations.c
-CompileCpp=1
+FileName=slh.h
+CompileCpp=0
 Folder=borg-3d-apiSimulator
-Compile=1
-Link=1
+Compile=0
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=rotatedAnimations.c
-CompileCpp=1
+FileName=testAnim.c
+CompileCpp=0
 Folder=borg-3d-apiSimulator
 Compile=1
 Link=1
@@ -198,18 +198,18 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit16]
-FileName=testPrograms.c
-CompileCpp=1
+FileName=testAnim.h
+CompileCpp=0
 Folder=borg-3d-apiSimulator
-Compile=1
-Link=1
+Compile=0
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit17]
-FileName=tutorial.c
-CompileCpp=1
+FileName=api.c
+CompileCpp=0
 Folder=borg-3d-apiSimulator
 Compile=1
 Link=1
@@ -218,21 +218,21 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit18]
-FileName=joystick.c
-CompileCpp=1
+FileName=api.h
+CompileCpp=0
 Folder=borg-3d-apiSimulator
-Compile=1
-Link=1
+Compile=0
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit19]
 FileName=joystick.h
-CompileCpp=1
+CompileCpp=0
 Folder=borg-3d-apiSimulator
-Compile=1
-Link=1
+Compile=0
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=

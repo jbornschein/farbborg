@@ -394,8 +394,6 @@ void scale(char sx, char sy, char sz, voxel* points,
 	}			
 }					
 
-
-
 /*
 void blurX(unsigned char filter[3]) {
 	unsigned char  x, y, z, i;
