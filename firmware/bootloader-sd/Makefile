@@ -29,7 +29,7 @@ crt0ram.o: crt0ram.S
 zImage.c: convert zimage.zbin
 	./convert
 
-zimage.zbin: zimage.bin compress
+zimage.zbin: zimage.bin compress zimage.lst
 	./compress e zimage.bin zimage.zbin
 
 convert: convert-pc.c zimage.bin
