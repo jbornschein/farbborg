@@ -13,10 +13,10 @@ unsigned long int
 unsigned char
 		text_buf[N + F - 1];	/* ring buffer of size N,
 			with extra F-1 bytes to facilitate string comparison */
-int		match_position, match_length,  /* of longest match.  These are
-			set by the InsertNode() procedure. */
-		lson[N + 1], rson[N + 257], dad[N + 1];  /* left & right children &
-			parents -- These constitute binary search trees. */
+//int		match_position, match_length,  /* of longest match.  These are
+//			set by the InsertNode() procedure. 
+//		lson[N + 1], rson[N + 257], dad[N + 1];  /* left & right children &
+//			parents -- These constitute binary search trees.
 
 #define RAMSTART (0x40000000 + 1024*(512 - 16))
 
@@ -75,7 +75,7 @@ char * pOut = (char *) RAMSTART;
 	dad[p] = NIL; */  /* remove p */
 //}
 /*
-void DeleteNode(int p)  /* deletes node p from tree */
+void DeleteNode(int p)  *//* deletes node p from tree */
 /*{
 	int  q;
 	
@@ -141,6 +141,13 @@ void Decode(void)	/* Just the reverse of Encode(). */
 void jump(unsigned int addr);
 
 int main() {
+	textsize = 0;
+	codesize = 0;
+	printcount = 0;
+	pIn  = zImage;
+	pInEnd = zImage + Z_IMAGE_SIZE;
+	pOut = (char *) RAMSTART;
+	
 	Decode();
 	jump(RAMSTART);
 	return 0;
