@@ -1,6 +1,6 @@
 [size] 1440 853
 [pos] -1 -1
-*-16.000000 14630000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-27.000000 14630000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 @28
 system_tb.dut.clk
 system_tb.dut.rst
@@ -29,14 +29,6 @@ system_tb.dut.uart0_rxd
 system_tb.dut.sram_ce_n
 system_tb.dut.sram_oe_n
 system_tb.dut.sram_we_n
-@22
-system_tb.dut.farbborg0.pwm1.dpr1.dia[7:0]
-@28
-system_tb.dut.farbborg0.pwm1.dpr1.wea
-@22
-system_tb.dut.farbborg0.pwm1.dpr21.dia[7:0]
-@28
-system_tb.dut.farbborg0.pwm1.dpr21.wea
 system_tb.dut.farbborg0.lsr_c
 @22
 system_tb.dut.farbborg0.latch_data[7:0]
@@ -52,6 +44,4 @@ system_tb.dut.farbborg0.wb_ack_o
 system_tb.dut.farbborg0.wb_cyc_i
 system_tb.dut.farbborg0.wb_stb_i
 system_tb.dut.farbborg0.wb_we_i
-@22
-system_tb.dut.farbborg0.pwm1.dpr1.addra[8:0]
-system_tb.dut.farbborg0.pwm1.dpr21.addra[10:0]
+system_tb.dut.clk_pwm

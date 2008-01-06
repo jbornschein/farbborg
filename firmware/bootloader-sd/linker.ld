@@ -9,8 +9,8 @@ _BRAM_SIZE  = 0x2000;
 _BRAM_END   = _BRAM_START + _BRAM_SIZE;
 
 MEMORY {
-  bram    : ORIGIN = 0x00000000, LENGTH = 0x2000          /*  8k */
-  sram    : ORIGIN = 0x40010000, LENGTH = 0x8000          /*   k */
+/*  bram    : ORIGIN = 0x00000000, LENGTH = 0x2000 */         /*  8k */
+  sram    : ORIGIN = 0x40000000 + 1024*(512-16), LENGTH = 0x4000          /*  16 k */
   
 }
 
@@ -22,7 +22,7 @@ SECTIONS
     _ftext = .;
     *(.text .stub .text.* .gnu.linkonce.t.*)
     _etext = .;
-  } > bram
+  } > sram
 
   .rodata :
   {
@@ -31,7 +31,7 @@ SECTIONS
     *(.rodata .rodata.* .gnu.linkonce.r.*)
     *(.rodata1)
 	_erodata = .;
-  } > bram
+  } > sram
 
   .data : 
   {
@@ -42,7 +42,7 @@ SECTIONS
     _gp = ALIGN(16);
     *(.sdata .sdata.* .gnu.linkonce.s.*)
     _edata = .;
-  } > bram
+  } > sram
 
   .bss :
   {

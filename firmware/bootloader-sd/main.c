@@ -1,6 +1,7 @@
 /**
  * Bootloader for soc-lm32
  */
+
 #include <stddef.h>
 #include "spike_hw.h"
 #include "ff.h"
@@ -38,7 +39,7 @@ memcmp(const void* ab1, const void* ab2, size_t n)
 			return(*--b1 - *--b2);
 	return(0);
 }
-/*
+
 // prototypes 
 void writeint(uint8_t nibbles, uint32_t val);
 uint32_t readint(uint8_t nibbles, uint8_t* checksum);
@@ -74,7 +75,7 @@ void writeint(uint8_t nibbles, uint32_t val)
 		val <<= 4;
 	}
 }
-*/
+
 /*
 void memtest()
 {
@@ -96,7 +97,7 @@ void memtest()
 	}
 	uart_putstr("OK\n\r");
 }
- */
+*/
 
 FATFS fs;				/* File system object */
 FIL fil;
@@ -124,32 +125,35 @@ int main()
 	memset(&fs, 0, sizeof(FATFS)); 	/* Clear file system object */
 	FatFs = &fs;	                /* Assign it to the FatFs module */	
 
+	const char firmware[] = "sys/firmware.bin";
+
 	//scan_files("");
 
-	fresult = f_open(&fil, "sys/firmware.bin", FA_READ|FA_OPEN_EXISTING);
+	fresult = f_open(&fil, firmware,  FA_READ|FA_OPEN_EXISTING);
 		
 	if(fresult){
 		switch(fresult){
 			case FR_NO_FILE:
 			case FR_NO_PATH:
-				uart_putstr("file not found.\n");
+				uart_putstr(firmware);
+				uart_putstr(" not found.\n\r");
 				break;
 			case FR_NOT_READY:
-				uart_putstr("no card.\n");
+				uart_putstr("no card found.\n\r");
 				break;
 			case FR_NO_FILESYSTEM:
-				uart_putstr("no FAT.FS\n");
+				uart_putstr("no FAT-FS\n\r");
 				break;
 		}
 		goto uartmode;
 	}
 
-	uart_putstr("load\n\r");
+	uart_putstr("loading\n\r");
 	
 	f_read (&fil, (uint8_t*) 0x40000000, 64*1024 - 1, &fsize);
 	
 	jump(0x40000000);		
-uartmode: /*
+uartmode: 
 	uart_putstr("\r\n** SPIKE BOOTLOADER **\n");
 	for(;;) {
 		uint32_t start, size, checksum, help;
@@ -160,6 +164,7 @@ uartmode: /*
     		case 'r': // reset
     			jump(0x00000000);
     			break;
+
     		case 'u': // Upload programm
       			checksum = 0;
       			// read size 
@@ -178,7 +183,7 @@ uartmode: /*
     			break;   
     		}
 	}
-*/
+
 	while (1);
 }
 
