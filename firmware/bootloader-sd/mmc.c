@@ -42,7 +42,7 @@ static volatile
 DSTATUS Stat = STA_NOINIT;	/* Disk status */
 
 static volatile
-BYTE Timer1, Timer2;		/* 100Hz decrement timer */
+DWORD Timer1, Timer2;		/* 100Hz decrement timer */
 
 
 //void xputc(char);
@@ -82,7 +82,6 @@ static
 BYTE wait_ready (void)
 {
 	BYTE res;
-
 
 	Timer2 = 50;	/* Wait for ready in timeout of 500ms */
 	rcvr_spi();
@@ -163,11 +162,11 @@ BOOL xmit_datablock (
 
 static
 BYTE send_cmd (
-	BYTE cmd,		/* Command byte */
+	DWORD cmd,		/* Command byte */
 	DWORD arg		/* Argument */
 )
 {
-	BYTE n, res;
+	DWORD n, res;
 
 
 	if (wait_ready() != 0xFF) return 0xFF;
@@ -203,7 +202,7 @@ BYTE send_cmd (
 
 DSTATUS disk_initialize (void)
 {
-	BYTE n, f;
+	DWORD n, f;
 
 
 //	POWER_ON();					/* Socket power ON */
@@ -289,7 +288,7 @@ DSTATUS disk_status (void)
 DRESULT disk_read (
 	BYTE *buff,			/* Pointer to the data buffer to store read data */
 	DWORD sector,		/* Start sector number (LBA) */
-	BYTE count			/* Sector count (1..255) */
+	DWORD count			/* Sector count (1..255) */
 )
 {
 	if (Stat & STA_NOINIT) return RES_NOTRDY;

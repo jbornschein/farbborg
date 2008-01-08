@@ -9,7 +9,7 @@
 
 #ifndef _FATFS
 
-#define _BYTE_ACC
+//#define _BYTE_ACC
 /* The _BYTE_ACC enables byte-by-byte access for multi-byte variables. This
 /  MUST be defined when multi-byte variable is stored in big-endian and/or
 /  address miss-aligned access is prohibited.  */
@@ -18,13 +18,13 @@
 /* Read only configuration. This removes writing functions, f_write, f_sync,
 /  f_unlink, f_mkdir, f_chmod, f_rename and f_getfree. */
 
-#define _FS_MINIMIZE	1
+#define _FS_MINIMIZE	2
 /* The _FS_MINIMIZE defines minimization level to remove some functions.
 /  0: Not minimized.
 /  1: f_stat, f_getfree, f_unlink, f_mkdir, f_chmod and f_rename are removed.
 /  2: f_opendir and f_readdir are removed in addition to level 1. */
 
-#define	_USE_SJIS
+//#define	_USE_SJIS
 /* When _USE_SJIS is defined, Shift-JIS code transparency is enabled, otherwise
 /  only US-ASCII(7bit) code can be accepted as file/directory name. */
 
@@ -97,8 +97,8 @@ typedef struct _FILINFO {
 
 extern FATFS *FatFs;	/* Pointer to active file system object */
 
-FRESULT f_open (FIL*, const char*, BYTE);			/* Open or create a file */
-FRESULT f_read (FIL*, void*, WORD, WORD*);			/* Read file */
+FRESULT f_open (FIL*, const char*, DWORD);			/* Open or create a file */
+FRESULT f_read (FIL*, void*, DWORD, WORD*);			/* Read file */
 FRESULT f_close (FIL*);								/* Close file */
 FRESULT f_lseek (FIL*, DWORD);						/* Seek file pointer */
 FRESULT f_opendir (DIR*, const char*);				/* Open a directory */

@@ -108,7 +108,7 @@ int main()
 	WORD fsize;
 	FRESULT fresult;
 	int8_t  *p;
-	int32_t *p32, i, tmp;	
+//	int32_t *p32, i, tmp;	
 	
  	// Initialize stuff
 	//uart_init();
@@ -120,7 +120,7 @@ int main()
 	//irq_set_mask( 0x00000002 );
 	//irq_enable();
 	
-	uart_putstr("init\n\r");
+	uart_putstr("init\n\r"); //?
 		
 	memset(&fs, 0, sizeof(FATFS)); 	/* Clear file system object */
 	FatFs = &fs;	                /* Assign it to the FatFs module */	
@@ -158,7 +158,7 @@ uartmode:
 	for(;;) {
 		uint32_t start, size, checksum, help;
 		uart_putchar('>');
-		uint8_t c = uart_getchar();
+		uint32_t c = uart_getchar();
 
 		switch (c) {
     		case 'r': // reset
@@ -184,6 +184,6 @@ uartmode:
     		}
 	}
 
-	while (1);
+	//while (1);
 }
 

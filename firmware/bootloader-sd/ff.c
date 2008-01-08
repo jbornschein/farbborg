@@ -275,7 +275,7 @@ BOOL next_dir_entry (
 )
 {
 	DWORD clust;
-	WORD idx;
+	DWORD idx;
 	FATFS *fs = FatFs;
 
 
@@ -310,7 +310,7 @@ void get_fileinfo (
 	const BYTE *dir		/* Ptr to the directory entry */
 )
 {
-	BYTE n, c, a;
+	DWORD n, c, a;
 	char *p;
 
 
@@ -551,7 +551,7 @@ FRESULT check_mounted ()
 
 FRESULT f_mountdrv (void)
 {
-	BYTE fat;
+	DWORD fat;
 	DWORD sect, fatend, maxsect;
 	FATFS *fs = FatFs;
 
@@ -607,7 +607,7 @@ FRESULT f_mountdrv (void)
 FRESULT f_open (
 	FIL *fp,			/* Pointer to the buffer of new file object to create */
 	const char *path,	/* Pointer to the file name */
-	BYTE mode			/* Access mode and file open mode flags */
+	DWORD mode			/* Access mode and file open mode flags */
 )
 {
 	FRESULT res;
@@ -692,13 +692,14 @@ FRESULT f_open (
 FRESULT f_read (
 	FIL *fp, 		/* Pointer to the file object */
 	void *buff,		/* Pointer to data buffer */
-	WORD btr,		/* Number of bytes to read */
+	DWORD btr,		/* Number of bytes to read */
 	WORD *br		/* Pointer to number of bytes read */
 )
 {
 	DWORD clust, sect, ln;
-	WORD rcnt;
-	BYTE cc, *rbuff = buff;
+	DWORD rcnt;
+	DWORD cc;
+	BYTE *rbuff = buff;
 	FATFS *fs = FatFs;
 
 
@@ -708,7 +709,7 @@ FRESULT f_read (
 	if (fp->flag & FA__ERROR) return FR_RW_ERROR;	/* Check error flag */
 	if (!(fp->flag & FA_READ)) return FR_DENIED;	/* Check access mode */
 	ln = fp->fsize - fp->fptr;
-	if (btr > ln) btr = (WORD)ln;					/* Truncate read count by number of bytes left */
+	if (btr > ln) btr = ln;					/* Truncate read count by number of bytes left */
 
 	for ( ;  btr;									/* Repeat until all data transferred */
 		rbuff += rcnt, fp->fptr += rcnt, *br += rcnt, btr -= rcnt) {

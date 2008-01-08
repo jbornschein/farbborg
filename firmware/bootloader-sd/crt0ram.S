@@ -71,7 +71,7 @@ _crt0:
 	mvi     r2, 0
 	mvi     r3, 0
 	calli   main
-
+/*
 irq_enable:
 	mvi     r1, 1
 	wcsr	IE, r1
@@ -86,7 +86,7 @@ irq_disable:
 	mvi     r1, 0
 	wcsr	IE, r1
 	ret
-
+*/
 jump:
 	b       r1 
 
@@ -94,6 +94,7 @@ halt:
 	bi halt
 
 	/* Save all registers onto the stack */ 
+/*
 _save_all:
 	addi    sp, sp, -128
 	sw      (sp+4), r1
@@ -127,7 +128,6 @@ _save_all:
 #endif
 	sw      (sp+120), ea
 	sw      (sp+124), ba
-	/* ra and sp need special handling, as they have been modified */
 	lw      r1, (sp+128)
 	sw      (sp+116), r1
 	mv      r1, sp
@@ -135,7 +135,6 @@ _save_all:
 	sw      (sp+112), r1        
 	ret
 
-        /* Restore all registers and return from exception */
 _restore_all_and_return:
         lw      r1, (sp+4)
         lw      r2, (sp+8) 
@@ -169,8 +168,7 @@ _restore_all_and_return:
         lw      ra, (sp+116)
         lw      ea, (sp+120)
         lw      ba, (sp+124)
-        /* Stack pointer must be restored last, in case it has been updated */
         lw      sp, (sp+112)
         eret
-
+*/
 

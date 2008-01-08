@@ -4,7 +4,7 @@
 
 #ifndef _DISKIF
 
-//#define _READONLY	/* Define this for read-only use */
+#define _READONLY	/* Define this for read-only use */
 
 #include "integer.h"
 
@@ -18,7 +18,7 @@ typedef unsigned char	DRESULT;
 DSTATUS disk_initialize (void);
 DSTATUS disk_shutdown (void);
 DSTATUS disk_status (void);
-DRESULT disk_read (BYTE*, DWORD, BYTE);
+DRESULT disk_read (BYTE*, DWORD, DWORD);
 #ifndef	_READONLY
 DRESULT disk_write (const BYTE*, DWORD, BYTE);
 #endif
