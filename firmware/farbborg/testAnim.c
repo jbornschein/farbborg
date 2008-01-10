@@ -23,33 +23,34 @@ void plasmaSnake();
 void setVoxelH(int x, int y, int z, float h);
 
 float offset;
+unsigned int ioffset;
 
 // Playlist
 void *display_loop(void * unused)  {
 	while (1) {
+		uart_putstr("plasmaTest()\n");
+		plasmaTest();
 		uart_putstr("colorSnakle()\n");
 		colorSnake();
 		uart_putstr("colorMatrix()\n");
 		colorMatrix();
-		uart_putstr("flashLight()\n");
-		flashLight();
-		uart_putstr("plasmaTest()\n");
-		plasmaTest();
+		//uart_putstr("flashLight()\n");
+		//flashLight();
 		uart_putstr("plasmaSnake()\n");
 		plasmaSnake();
-		uart_putstr("funkyBeat()\n");
-		funkyBeat();
-		uart_putstr("symetricRoutes()\n");
-		symetricRoutes();	
+		//uart_putstr("funkyBeat()\n");
+		//funkyBeat();
+		//uart_putstr("symetricRoutes()\n");
+		//symetricRoutes();	
 
 		uart_putstr("plasmaSnake()\n");
 		plasmaSnake();
-	    //uart_putstr("shiftTest()\n");
+	    	//uart_putstr("shiftTest()\n");
 		//shiftTest();
 		uart_putstr("fadeTest()\n");
 		fadeTest();
-	    uart_putstr("symetricRoutes()\n");
-		symetricRoutes();
+	    	//uart_putstr("symetricRoutes()\n");
+		//symetricRoutes();
 		//uart_putstr("cubes()\n");
 		//cubes();
 		//uart_putstr("brightnesTest()\n");	
@@ -90,9 +91,10 @@ void *display_loop(void * unused)  {
  */
 void flashLight()
 {
+	int i, j;
 	clearScreen(black);
 
-	for(int i=0; i<10; i++) {
+	for(i=0; i<10; i++) {
 
 		// choose color
 		color c = {0,0,0};
@@ -106,7 +108,7 @@ void flashLight()
 		wait( 1000 + 100*(rand()%20) );
 
 		int count = rand() % 6; // flash-sequence: 0 upto 5
-		for(int j=0; j<count; j++) {
+		for(j=0; j<count; j++) {
 			wait(50); clearScreen(white);
 			wait(50); clearScreen(c);
 			wait(50); clearScreen(black);
@@ -408,7 +410,7 @@ void plasmaSnake()
 
 	unsigned char x = 0, dead = 0;
 	while (1) {
-		offset += 0.05;
+		offset += 0.09;
 		x++;
 		old_head = *head;
 		if (++head == pixels + SNAKE_LEN) 
@@ -493,10 +495,155 @@ void plasmaSnake()
 		snakeColor.g += addG;
 		snakeColor.b += addB;
 		*/
-		swapAndWait(60);
+		swapAndWait(90);
 	}
 }
 
+typedef signed short s16;
+typedef unsigned short u16;
+typedef signed int s32;
+typedef unsigned int u32;
+
+const static s16 sin_table[66] =
+{
+    0,  804, 1608, 2410, 3212, 4011, 4808, 5602,
+ 6393, 7179, 7962, 8739, 9512,10278,11039,11793,
+12539,13279,14010,14732,15446,16151,16846,17530,
+18204,18868,19519,20159,20787,21403,22005,22594,
+23170,23731,24279,24811,25329,25832,26319,26790,
+27245,27683,28105,28510,28898,29268,29621,29956,
+30273,30571,30852,31113,31356,31580,31785,31971,
+32137,32285,32412,32521,32609,32678,32728,32757,
+32767,32757
+};
+
+s32 Sine(s32 phase)
+{
+	s16 s0;
+	u16 tmp_phase, tmp_phase_hi;
+
+	tmp_phase = phase & 0x7fff;
+
+	if (tmp_phase & 0x4000) 
+		tmp_phase = 0x8000 - tmp_phase;
+
+	tmp_phase_hi = tmp_phase >> 8; // 0...64
+
+	s0 = sin_table[tmp_phase_hi];
+
+	s0 += ((s16)((((s32)(sin_table[tmp_phase_hi+1] - s0))*(tmp_phase&0xff))>>8));
+
+	if (phase & 0x8000) {
+		s0 = -s0;
+	}
+	
+	return s0;
+}
+
+s32 Cosi(u32 phase)
+{
+	return Sine(phase + 0x4000);
+}
+
+/* by Jim Ulery  http://www.azillionmonkeys.com/qed/ulerysqroot.pdf  */
+static unsigned isqrt(unsigned long val) {
+	unsigned long temp, g=0, b = 0x8000, bshft = 15;
+	do {
+		if (val >= (temp = (((g << 1) + b)<<bshft--))) {
+		   g += b;
+		   val -= temp;
+		}
+	} while (b >>= 1);
+	return g;
+}
+
+/*
+void testSin() {
+	float f, s, s2;
+	for (f = 0.0f; f < 3*PI; f += 0.023f) {
+		s = sin(f);
+		s2 = (float) Sine((s32)((f/PI)*32768.0)) / 32768.0;
+		printf("%f %f %f\n", s, s2, s-s2);
+	}
+}
+*/
+
+#define SQRT0x8000 181
+#define SQRT25x3   0x45483
+void plasmaTest()
+{
+	s32 color, oldOffset, scale;
+	s32 sqx, sqy, sqz;
+	u32 x, y, z;
+	
+	scale = 6*0x6000;
+	oldOffset = ioffset;
+	
+	while (1)
+	{
+		ioffset += 250; //700;
+		
+		for(x = 0; x < MAX_X; x++)
+		{
+			for(y = 0; y < MAX_Y; y++)
+			{
+				for(z = 0; z < MAX_Z; z++)
+				{
+					//reset color;
+					color = 0;
+					
+					//diagonal scrolling sine 
+					color += 0x4000 * Sine((x * (0x8000*0x8000 / (MAX_X * scale))) + 
+							               (y * (0x8000*0x8000 / (MAX_Y * scale))) + 
+										   (z * (0x8000*0x8000 / (MAX_Z * scale))) + 
+										   ioffset
+										   ) / 0x8000;
+				/*	
+					//polar sine
+					sqx  = x*0x8000 - (MAX_X*0x8000)/2;
+					sqx *= sqx;
+					sqx /= 0x8000;
+					sqy  = y*0x8000 - (MAX_Y*0x8000)/2;
+					sqy *= sqy;
+					sqy /= 0x8000;
+					sqz  = z*0x8000 - (MAX_Z*0x8000)/2;
+					sqz *= sqz;
+					sqz /= 0x8000; 
+					color += 0x8000/2 * Sine(
+						isqrt(sqx + sqy + sqz)*SQRT0x8000
+						//scale to borg resolution
+						 *(0x8000*0x8000 / ((scale * SQRT25x3)/0x8000
+										   )
+						  ) / 0x8000 
+						+ (ioffset * 0x2500)/0x8000
+						) / 0x8000;  //end of sine
+					*/	
+					//sum of x-sine and y-sine and z-sine
+					color +=  (
+							  (0x4000 * Sine((x * (0x8000*0x8000 / (MAX_X * scale))) + ioffset) / 0x8000) 
+							+ (0x4000 * Sine((y * (0x8000*0x8000 / (MAX_Y * scale))) + ioffset) / 0x8000)
+							+ (0x4000 * Sine((z * (0x8000*0x8000 / (MAX_Z * scale))) + ioffset) / 0x8000)
+							) / (2*0x8000);
+					
+					//divide by number of added sines, to re-scale to colorspace	
+					//color /= 1.0;
+					
+					//colorspace offset
+					color += 0x2000 + (ioffset/10);
+					
+					setVoxelH(x, y, z, color/32768.);
+				}
+			}
+		}
+		
+		swapAndWait(20);
+		
+		if ((ioffset - oldOffset) >= 4*0x8000)
+			break;
+	}
+}
+
+/*
 void plasmaTest()
 {
 	float color, oldOffset, scale;
@@ -535,7 +682,7 @@ void plasmaTest()
 					color += 0.5 * sinf((fx * scaleX) + (fy * scaleY) + (fz * scaleZ) + offset);
 					
 					//polar sinfe
-					/*color += 0.5 * sinf(
+					color += 0.5 * sinf(
 						sqrt(
 							SQUARE(fx - (fMAX_X / 2.0))
 							+ SQUARE(fy - (fMAX_Y / 2.0))
@@ -545,14 +692,14 @@ void plasmaTest()
 						* (PI / (scale * (sqrt(SQUARE(fMAX_X) + SQUARE(fMAX_Y) + SQUARE(fMAX_Z)))))
 						+ offset * 0.6
 						); //end of sinfe
-					*/	
+						
 					//sum of x-sinfe and y-sinfe and z-sinfe
-					/*color +=  (
-							(0.5 * sinf((fx * (PI / (fMAX_X * scale))) + offset)) 
-							+ (0.5 * sinf((fy * (PI / (fMAX_Y * scale))) + offset))
-							+ (0.5 * sinf((fz * (PI / (fMAX_Z * scale))) + offset))
-							) / 3.0;
-					*/
+					//color +=  (
+					//		(0.5 * sinf((fx * (PI / (fMAX_X * scale))) + offset)) 
+					//		+ (0.5 * sinf((fy * (PI / (fMAX_Y * scale))) + offset))
+					//		+ (0.5 * sinf((fz * (PI / (fMAX_Z * scale))) + offset))
+					//		) / 3.0;
+					
 					//divide by number of added sinfes, to re-scale to colorspace	
 					color /= 1.0;
 					
@@ -570,7 +717,7 @@ void plasmaTest()
 			break;
 	}
 }
-
+*/
 color HtoRGB(int h31bit)
 {
 	if (h31bit < 0)
@@ -925,7 +1072,7 @@ void upgoingRandom() {
 			curColor.b += addB;
 			setVoxel((voxel) {easyRandom()%5, easyRandom()%5, 0}, curColor);
 		}
-		swapAndWait(18);
+		fade(18, 5);
 		shift(up);
 		addR = (easyRandom() % 16) - 8;
 		addG = (easyRandom() % 16) - 8;

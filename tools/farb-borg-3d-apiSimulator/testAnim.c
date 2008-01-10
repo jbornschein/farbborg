@@ -9,25 +9,23 @@
 
 #define SNAKE_LEN 100
 
-typedef struct
-{
-    //entweder H S V oder R G B
-    unsigned char f[3];
-} farbe;
-
 color HtoRGB(int h31bit);
 void fadeTest();
 void plasmaTest();
 void plasmaSnake();
-void setVoxelHSV(int x, int y, int z, farbe hsv);
+//void setVoxelHSV(int x, int y, int z, farbe hsv);
 void setVoxelH(int x, int y, int z, double h);
-
+static unsigned isqrt(unsigned long val);
+//void testSin() ;
 double offset;
+unsigned int ioffset;
 
 // Playlist
 void *display_loop(void * unused)  {
 	offset = 0.0;
-	
+	ioffset = 0;
+	//testSin();
+	printf("%d", isqrt(32786));
 	while (1) {
 		//gameOfLife(1, 1000);
 		//gameOfLife(0, 1000);
@@ -36,11 +34,11 @@ void *display_loop(void * unused)  {
 		//colorMatrix();
      	//pyramide();
 		//fadeTest();
-		//plasmaTest();
+		plasmaTest();
 		//plasmaSnake();
 		//test1();
 		//brightnesTest();
-		playPlaylist("playlist.apl");
+		//playPlaylist("playlist.apl");
         //playAnimFile("sample.anim");
 		//funkyBeat();
 		//testShift();
@@ -143,8 +141,8 @@ void gameOfLife(unsigned char anim, unsigned int delay) {
 
 #define PI 3.14159265
 #define SQUARE(x) (x)*(x)
-#define fMAX_X (double)MAX_X
-#define fMAX_Y (double)MAX_Y
+#define fMAX_X (double) MAX_X
+#define fMAX_Y (double) MAX_Y
 #define fMAX_Z (double) MAX_Z
 
 void plasmaSnake()
@@ -261,70 +259,163 @@ void plasmaSnake()
 	}
 }
 
+/* fast implemntation of sine
+float sine(float x)
+{
+    const float B = 4/pi;
+    const float C = -4/(pi*pi);
+
+    float y = B * x + C * x * abs(x);
+
+    #ifdef EXTRA_PRECISION
+    //  const float Q = 0.775;
+        const float P = 0.225;
+
+        y = P * (y * abs(y) - y) + y;   // Q * y + P * y * abs(y)
+    #endif
+}
+*/
+
+typedef signed short s16;
+typedef unsigned short u16;
+typedef signed int s32;
+typedef unsigned int u32;
+
+const static s16 sin_table[66] =
+{
+    0,  804, 1608, 2410, 3212, 4011, 4808, 5602,
+ 6393, 7179, 7962, 8739, 9512,10278,11039,11793,
+12539,13279,14010,14732,15446,16151,16846,17530,
+18204,18868,19519,20159,20787,21403,22005,22594,
+23170,23731,24279,24811,25329,25832,26319,26790,
+27245,27683,28105,28510,28898,29268,29621,29956,
+30273,30571,30852,31113,31356,31580,31785,31971,
+32137,32285,32412,32521,32609,32678,32728,32757,
+32767,32757
+};
+
+s32 Sine(s32 phase)
+{
+	s16 s0;
+	u16 tmp_phase, tmp_phase_hi;
+
+	tmp_phase = phase & 0x7fff;
+
+	if (tmp_phase & 0x4000) 
+		tmp_phase = 0x8000 - tmp_phase;
+
+	tmp_phase_hi = tmp_phase >> 8; // 0...64
+
+	s0 = sin_table[tmp_phase_hi];
+
+	s0 += ((s16)((((s32)(sin_table[tmp_phase_hi+1] - s0))*(tmp_phase&0xff))>>8));
+
+	if (phase & 0x8000) {
+		s0 = -s0;
+	}
+	
+	return s0;
+}
+
+s32 Cosi(u32 phase)
+{
+	return Sine(phase + 0x4000);
+}
+
+/* by Jim Ulery  http://www.azillionmonkeys.com/qed/ulerysqroot.pdf  */
+static unsigned isqrt(unsigned long val) {
+	unsigned long temp, g=0, b = 0x8000, bshft = 15;
+	do {
+		if (val >= (temp = (((g << 1) + b)<<bshft--))) {
+		   g += b;
+		   val -= temp;
+		}
+	} while (b >>= 1);
+	return g;
+}
+
+/*
+void testSin() {
+	float f, s, s2;
+	for (f = 0.0f; f < 3*PI; f += 0.023f) {
+		s = sin(f);
+		s2 = (float) Sine((s32)((f/PI)*32768.0)) / 32768.0;
+		printf("%f %f %f\n", s, s2, s-s2);
+	}
+}
+*/
+
+#define SQRT0x8000 181
+#define SQRT25x3   0x45483
 void plasmaTest()
 {
-	double color, oldOffset, scale;
-	double fx, fy, fz;
-	int x, y, z;
+	s32 color, oldOffset, scale;
+	//s32 sqx, sqy, sqz;
+	u32 x, y, z;
 	
-	scale = 2.0;
+	scale = 6*0x6000;
 	oldOffset = offset;
 	
-	while(1)
+	while (1)
 	{
-		offset += 0.025;
+		offset += 200; //700;
 		
 		for(x = 0; x < MAX_X; x++)
 		{
-			fx = x;
-			
 			for(y = 0; y < MAX_Y; y++)
 			{
-				fy = y;
-				
 				for(z = 0; z < MAX_Z; z++)
 				{
-					fz = z;
-					
 					//reset color;
-					color = 0.0;
+					color = 0;
 					
 					//diagonal scrolling sine 
-					//color += 0.5 * sin((fx * (PI / (fMAX_X * scale))) + (fy * (PI / (fMAX_Y * scale))) + (fz * (PI / (fMAX_Z * scale))) + offset);;
-					
+					color += 0x4000 * Sine((x * (0x8000*0x8000 / (MAX_X * scale))) + 
+							               (y * (0x8000*0x8000 / (MAX_Y * scale))) + 
+										   (z * (0x8000*0x8000 / (MAX_Z * scale))) + 
+										   offset
+										   ) / 0x8000;
+					/*
 					//polar sine
-					/*color += 0.5 * sin(
-						sqrt(
-							SQUARE(fx - (fMAX_X / 2.0))
-							+ SQUARE(fy - (fMAX_Y / 2.0))
-							+ SQUARE(fz - (fMAX_Z / 2.0))
-						)
+					sqx  = x*0x8000 - (MAX_X*0x8000)/2;
+					sqx *= sqx;
+					sqx /= 0x8000;
+					sqy  = y*0x8000 - (MAX_Y*0x8000)/2;
+					sqy *= sqy;
+					sqy /= 0x8000;
+					sqz  = z*0x8000 - (MAX_Z*0x8000)/2;
+					sqz *= sqz;
+					sqz /= 0x8000; 
+					color += 0x8000/2 * Sine(
+						isqrt(sqx + sqy + sqz)*SQRT0x8000
 						//scale to borg resolution
-						* (PI / (scale * (sqrt(SQUARE(fMAX_X) + SQUARE(fMAX_Y) + SQUARE(fMAX_Z)))))
-						+ offset * 0.6
-						); //end of sine
-					*/	
+						 *(0x8000*0x8000 / ((scale * SQRT25x3)/0x8000
+										   )
+						  ) / 0x8000 
+						+ (offset * 0x2500)/0x8000
+						) / 0x8000;  //end of sine
+						*/
 					//sum of x-sine and y-sine and z-sine
 					color +=  (
-							(0.5 * sin((fx * (PI / (fMAX_X * scale))) + offset)) 
-							+ (0.5 * sin((fy * (PI / (fMAX_Y * scale))) + offset))
-							+ (0.5 * sin((fz * (PI / (fMAX_Z * scale))) + offset))
-							) / 3.0;
-
+							  (0x4000 * Sine((x * (0x8000*0x8000 / (MAX_X * scale))) + offset) / 0x8000) 
+							+ (0x4000 * Sine((y * (0x8000*0x8000 / (MAX_Y * scale))) + offset) / 0x8000)
+							+ (0x4000 * Sine((z * (0x8000*0x8000 / (MAX_Z * scale))) + offset) / 0x8000)
+							) / (2*0x8000);
+					
 					//divide by number of added sines, to re-scale to colorspace	
-					color /= 1.0;
+					//color /= 1.0;
 					
 					//colorspace offset
-					color += 0.5 + (offset *0.1);
+					color += 0x2000 + (offset/10);
 					
-					setVoxelH(x, y, z, color);
+					setVoxelH(x, y, z, color/32768.);
 				}
 			}
 		}
 		
-		swapAndWait(20);
+		swapAndWait(40);
 		
-		if((offset-oldOffset) >= 4*PI)
+		if((offset-oldOffset) >= 4*0x8000)
 			break;
 	}
 }

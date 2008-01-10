@@ -278,7 +278,7 @@ void shift(direction dir) {
 	
 	switch (dir) {
 		case up:
-			for (z = 5; z ; z--) {
+			for (z = 4; z > 0 ; z--) {
 				fromIm = &imag[z-1][0][0][0];
 				toIm   = &imag[z][0][0][0];
 				for (i = 0; i < MAX_Y*MAX_X*COLOR_BYTES; i++) {

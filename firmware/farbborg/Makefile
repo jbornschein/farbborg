@@ -30,6 +30,9 @@ image.srec: image image.lst
 	$(LM32_OBJCOPY) $(SEGMENTS) -O srec image image.srec
 
 
+sdcard: image.bin
+	cp image.bin /Volumes/NO\ NAME/sys/firmware.bin
+
 upload: image.srec
 	../../tools/uploader/upload.rb -s /dev/tty.usbserial -t $<
 
