@@ -345,20 +345,22 @@ void testSin() {
 }
 */
 
+//  braunt√∂ne    194 124 71    255 203 143
+
+
 #define SQRT0x8000 181
 #define SQRT25x3   0x45483
 void plasmaTest()
 {
 	s32 color, oldOffset, scale;
-	//s32 sqx, sqy, sqz;
-	u32 x, y, z;
-	
-	scale = 6*0x6000;
-	oldOffset = offset;
+	s32 sqx, sqy, sqz;
+	s32 x, y, z;
+	scale = 3*0x5000;
+	oldOffset = ioffset;
 	
 	while (1)
 	{
-		offset += 200; //700;
+		ioffset += 250; //700;
 		
 		for(x = 0; x < MAX_X; x++)
 		{
@@ -370,52 +372,48 @@ void plasmaTest()
 					color = 0;
 					
 					//diagonal scrolling sine 
-					color += 0x4000 * Sine((x * (0x8000*0x8000 / (MAX_X * scale))) + 
+					color += 0x2000 * Sine((-x * (0x8000*0x8000 / (MAX_X * scale))) + 
 							               (y * (0x8000*0x8000 / (MAX_Y * scale))) + 
-										   (z * (0x8000*0x8000 / (MAX_Z * scale))) + 
-										   offset
+										   (-z * (0x8000*0x8000 / (MAX_Z * scale))) + 
+										   ioffset
 										   ) / 0x8000;
-					/*
+					
 					//polar sine
-					sqx  = x*0x8000 - (MAX_X*0x8000)/2;
-					sqx *= sqx;
-					sqx /= 0x8000;
-					sqy  = y*0x8000 - (MAX_Y*0x8000)/2;
-					sqy *= sqy;
-					sqy /= 0x8000;
-					sqz  = z*0x8000 - (MAX_Z*0x8000)/2;
-					sqz *= sqz;
-					sqz /= 0x8000; 
-					color += 0x8000/2 * Sine(
-						isqrt(sqx + sqy + sqz)*SQRT0x8000
-						//scale to borg resolution
-						 *(0x8000*0x8000 / ((scale * SQRT25x3)/0x8000
-										   )
-						  ) / 0x8000 
-						+ (offset * 0x2500)/0x8000
-						) / 0x8000;  //end of sine
-						*/
+					sqx  = x - 2;
+					sqx *= sqx*0x8000;
+					sqy  = y - 2;
+					sqy *= sqy*0x8000;
+					sqz  = z - 2;
+					sqz *= sqz*0x8000;
+					color += 0x8000/5 * Sine(
+						isqrt(sqx + sqy + sqz)*SQRT0x8000/8 + ioffset + 
+					    (x*y*z*0x8000*20)/(scale*(1+x+y+z))
+				    ) / 0x8000;  //end of sine
+					//printf("%06d ", isqrt(sqx + sqy + sqz));
 					//sum of x-sine and y-sine and z-sine
 					color +=  (
-							  (0x4000 * Sine((x * (0x8000*0x8000 / (MAX_X * scale))) + offset) / 0x8000) 
-							+ (0x4000 * Sine((y * (0x8000*0x8000 / (MAX_Y * scale))) + offset) / 0x8000)
-							+ (0x4000 * Sine((z * (0x8000*0x8000 / (MAX_Z * scale))) + offset) / 0x8000)
-							) / (2*0x8000);
+							  (0x3200 * Sine((x * (0x8000*0x8000 / (MAX_X * scale))) + ioffset) / 0x8000) 
+							+ (0x4900 * Sine((-y * (0x8000*0x8000 / (MAX_Y * scale))) + ioffset) / 0x8000)
+							+ (0x4400 * Sine((-z * (0x8000*0x8000 / (MAX_Z * scale))) + ioffset) / 0x8000)
+							) / (0x13000);
 					
 					//divide by number of added sines, to re-scale to colorspace	
 					//color /= 1.0;
 					
 					//colorspace offset
-					color += 0x2000 + (offset/10);
+					color += 0x2500 + (ioffset/32);
 					
 					setVoxelH(x, y, z, color/32768.);
-				}
+				} 
+				//printf("\n");
 			}
+			//printf("\n");
 		}
+		//printf("\n");
 		
-		swapAndWait(40);
+		swapAndWait(30);
 		
-		if((offset-oldOffset) >= 4*0x8000)
+		if((ioffset-oldOffset) >= 4*0x8000)
 			break;
 	}
 }
@@ -431,7 +429,7 @@ color HtoRGB(int h31bit)
  
  		unsigned char sextant;
 		int           q;
-		sextant  = h31bit / 8192;   // 60�
+		sextant  = h31bit / 8192;   // 60¬∞
 		
 		h31bit     = h31bit % 8192;
 		q          = 8192 - h31bit;	
@@ -1413,4 +1411,5 @@ void wobbeln() {
 	clearImage(black);	
 	
 }
+
 

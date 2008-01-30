@@ -1260,7 +1260,6 @@ FRESULT f_rename (
 	char fn[8+3+1];
 	FATFS *fs = FatFs;
 
-
 	if ((res = check_mounted()) != FR_OK) return res;
 	if (disk_status() & STA_PROTECT) return FR_WRITE_PROTECTED;
 

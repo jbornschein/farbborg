@@ -93,6 +93,16 @@ void uart_init();
 void uart_putchar(char c);
 void uart_putstr(char *str);
 char uart_getchar();
+/***************************************************************************
+ *  * SPI0
+ *   */
+typedef struct{
+        volatile uint32_t data;
+        volatile uint32_t status;
+        volatile uint32_t cs;
+        volatile uint32_t dummy;
+	volatile uint32_t divisor;
+} spi_t;
 
 /****************************************************************************
  * Farborg
@@ -117,8 +127,6 @@ typedef struct {
 extern timer_t  *timer0;
 extern uart_t   *uart0; 
 extern gpio_t   *gpio0; 
-extern uint32_t *sram0; 
-
-char *memcpy (char *destaddr, const char *srcaddr, int len);
+extern spi_t	*spi0;
 
 #endif // SPIKEHW_H

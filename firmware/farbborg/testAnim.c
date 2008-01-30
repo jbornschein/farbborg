@@ -6,6 +6,7 @@
 #include <math.h>
 #include "colorMatrix.h"
 #include "colorSnake.h"
+#include "fileParser.h"
 
 
 #define SNAKE_LEN 100
@@ -28,8 +29,12 @@ unsigned int ioffset;
 // Playlist
 void *display_loop(void * unused)  {
 	while (1) {
+		playPlaylist("anims/playlist.apl");
+		
 		uart_putstr("plasmaTest()\n");
 		plasmaTest();
+		
+		playAnimFile("anim1.prn");
 		uart_putstr("colorSnakle()\n");
 		colorSnake();
 		uart_putstr("colorMatrix()\n");
@@ -574,14 +579,13 @@ void plasmaTest()
 {
 	s32 color, oldOffset, scale;
 	s32 sqx, sqy, sqz;
-	u32 x, y, z;
-	
-	scale = 6*0x6000;
+	s32 x, y, z;
+	scale = 3*0x5100;
 	oldOffset = ioffset;
 	
 	while (1)
 	{
-		ioffset += 250; //700;
+		ioffset += 290; //700;
 		
 		for(x = 0; x < MAX_X; x++)
 		{
@@ -593,52 +597,48 @@ void plasmaTest()
 					color = 0;
 					
 					//diagonal scrolling sine 
-					color += 0x4000 * Sine((x * (0x8000*0x8000 / (MAX_X * scale))) + 
+					color += 0x2000 * Sine((-x * (0x8000*0x8000 / (MAX_X * scale))) + 
 							               (y * (0x8000*0x8000 / (MAX_Y * scale))) + 
-										   (z * (0x8000*0x8000 / (MAX_Z * scale))) + 
+										   (-z * (0x8000*0x8000 / (MAX_Z * scale))) + 
 										   ioffset
 										   ) / 0x8000;
-				/*	
+					
 					//polar sine
-					sqx  = x*0x8000 - (MAX_X*0x8000)/2;
-					sqx *= sqx;
-					sqx /= 0x8000;
-					sqy  = y*0x8000 - (MAX_Y*0x8000)/2;
-					sqy *= sqy;
-					sqy /= 0x8000;
-					sqz  = z*0x8000 - (MAX_Z*0x8000)/2;
-					sqz *= sqz;
-					sqz /= 0x8000; 
-					color += 0x8000/2 * Sine(
-						isqrt(sqx + sqy + sqz)*SQRT0x8000
-						//scale to borg resolution
-						 *(0x8000*0x8000 / ((scale * SQRT25x3)/0x8000
-										   )
-						  ) / 0x8000 
-						+ (ioffset * 0x2500)/0x8000
-						) / 0x8000;  //end of sine
-					*/	
+					sqx  = x - 2;
+					sqx *= sqx*0x8000;
+					sqy  = y - 2;
+					sqy *= sqy*0x8000;
+					sqz  = z - 2;
+					sqz *= sqz*0x8000;
+					color += 0x8000/5 * Sine(
+						isqrt(sqx + sqy + sqz)*SQRT0x8000/8 + ioffset + 
+					    (x*y*z*0x8000*20)/(scale*(1+x+y+z))
+				    ) / 0x8000;  //end of sine
+					//printf("%06d ", isqrt(sqx + sqy + sqz));
 					//sum of x-sine and y-sine and z-sine
 					color +=  (
-							  (0x4000 * Sine((x * (0x8000*0x8000 / (MAX_X * scale))) + ioffset) / 0x8000) 
-							+ (0x4000 * Sine((y * (0x8000*0x8000 / (MAX_Y * scale))) + ioffset) / 0x8000)
-							+ (0x4000 * Sine((z * (0x8000*0x8000 / (MAX_Z * scale))) + ioffset) / 0x8000)
-							) / (2*0x8000);
+							  (0x3200 * Sine((x * (0x8000*0x8000 / (MAX_X * scale))) + ioffset) / 0x8000) 
+							+ (0x5300 * Sine((-y * (0x8000*0x8000 / (MAX_Y * scale))) + ioffset) / 0x8000)
+							+ (0x4400 * Sine((-z * (0x8000*0x8000 / (MAX_Z * scale))) + ioffset) / 0x8000)
+							) / (0x13000);
 					
 					//divide by number of added sines, to re-scale to colorspace	
 					//color /= 1.0;
 					
 					//colorspace offset
-					color += 0x2000 + (ioffset/10);
+					color += 0x2500 + (ioffset/32);
 					
 					setVoxelH(x, y, z, color/32768.);
-				}
+				} 
+				//printf("\n");
 			}
+			//printf("\n");
 		}
+		//printf("\n");
 		
-		swapAndWait(20);
+		fade(10,2);
 		
-		if ((ioffset - oldOffset) >= 4*0x8000)
+		if((ioffset-oldOffset) >= 4*0x8000)
 			break;
 	}
 }
@@ -1072,7 +1072,7 @@ void upgoingRandom() {
 			curColor.b += addB;
 			setVoxel((voxel) {easyRandom()%5, easyRandom()%5, 0}, curColor);
 		}
-		fade(18, 5);
+		fade(8, 16);
 		shift(up);
 		addR = (easyRandom() % 16) - 8;
 		addG = (easyRandom() % 16) - 8;
@@ -1511,3 +1511,4 @@ void wobbeln() {
 	fade(10, 30);
 	swapAndWait(1000);
 }
+	

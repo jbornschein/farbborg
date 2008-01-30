@@ -1,10 +1,11 @@
 #include "spike_hw.h"
 #include "testAnim.h"
+#include "fileParser.h"
+
 
 int main()
 {
     int i, tmp;
-	uint32_t t = 1;
 	
     // Initialize stuff
 	uart_init();
@@ -12,6 +13,8 @@ int main()
 	// Say Hello!
 	uart_putstr( "** Farborg **\n" );
 	//msleep( 3000 );
+
+	initFileReader();
 		
 	// Initialize TIC
 	isr_init();
