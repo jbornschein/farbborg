@@ -20,12 +20,19 @@ static unsigned isqrt(unsigned long val);
 double offset;
 unsigned int ioffset;
 
+#define PI 3.14159265
+#define SQUARE(x) (x)*(x)
+#define fMAX_X (double) MAX_X
+#define fMAX_Y (double) MAX_Y
+#define fMAX_Z (double) MAX_Z
+
+
 // Playlist
 void *display_loop(void * unused)  {
 	offset = 0.0;
 	ioffset = 0;
 	//testSin();
-	printf("%d", isqrt(32786));
+	//printf("%d", isqrt(32786));
 	while (1) {
 		//gameOfLife(1, 1000);
 		//gameOfLife(0, 1000);
@@ -34,7 +41,7 @@ void *display_loop(void * unused)  {
 		//colorMatrix();
      	//pyramide();
 		//fadeTest();
-		plasmaTest();
+		//plasmaTest();
 		//plasmaSnake();
 		//test1();
 		//brightnesTest();
@@ -47,7 +54,7 @@ void *display_loop(void * unused)  {
 		//planeBall();
 		//wobbeln();
 		//symetricRoutes();
-		//spirale(); 
+		spirale(); 
 		//snake(); 
 		//movingCubes();
 		//symetricRandom();
@@ -139,11 +146,6 @@ void gameOfLife(unsigned char anim, unsigned int delay) {
 	}			
 }
 
-#define PI 3.14159265
-#define SQUARE(x) (x)*(x)
-#define fMAX_X (double) MAX_X
-#define fMAX_Y (double) MAX_Y
-#define fMAX_Z (double) MAX_Z
 
 void plasmaSnake()
 {
@@ -345,7 +347,7 @@ void testSin() {
 }
 */
 
-//  braunt√∂ne    194 124 71    255 203 143
+//  braunt‚àö‚àÇne    194 124 71    255 203 143
 
 
 #define SQRT0x8000 181
@@ -429,7 +431,7 @@ color HtoRGB(int h31bit)
  
  		unsigned char sextant;
 		int           q;
-		sextant  = h31bit / 8192;   // 60¬∞
+		sextant  = h31bit / 8192;   // 60¬¨‚àû
 		
 		h31bit     = h31bit % 8192;
 		q          = 8192 - h31bit;	
@@ -975,50 +977,37 @@ static void drawLineZAngle(unsigned char angle, unsigned char z, color value) {
 }
 
 
+
 void spirale() {
-	unsigned char z, angle, count = 0, i = 0, index, value, angleAdd;
-	signed short help; 
-	color colors[5] = {{150,   0, 250},
-					   { 50, 150, 180},
-					   { 50, 220,  80},
-					   {250, 150, 180},
-					   {  0,   0,   0}
-					  };
-	color curColor;
-	for (angleAdd = 0; angleAdd < 12; count++) {
-		// Farbwerte interpolieren
-		index = i / 16; // (12*5)/4 = 15
-		value = i % 16;
-		help  = colors[index+1].r; 
-		help -= colors[index].r;
-		help *= value;
-		help /= 16;
-		curColor.r = help + colors[index].r;
-		help  = colors[index+1].g; 
-		help -= colors[index].g;
-		help *= value;
-		help /= 16;
-		curColor.g = help + colors[index].g;
-		help  = colors[index+1].b; 
-		help -= colors[index].b;
-		help *= value;
-		help /= 16;
-		curColor.b = help + colors[index].b;
+	unsigned char z, angle, count = 0, i = 0, angleAdd, angleAdd2;
+	s32 color, scale;
+	scale = 3*0x9000;
+	
+	for (angleAdd2 = 0; angleAdd2 < 17; count++) {
+		angleAdd = angleAdd2 < 9 ? angleAdd2 : 17 - angleAdd2; 
 		//printf("%d %d %d  %d %d \n", curColor.r, curColor.g, curColor.b, index, value);
 		for (angle = 0; angle < 8; angle++) {
+			ioffset += 200; //700;
 			for (z = 0; z < 5; z++) {
-				drawLineZAngle((angle+(angleAdd*z/4)) & 0x07, z, curColor);		
+				ioffset += 8;
+				color  = ioffset;
+				color += 0x3000 * Sine((4-z * (0x8000*0x8000 / (MAX_Y * scale))) + 
+										ioffset*4
+									   ) / 0x8000;
+	
+				drawLineZAngle((angle+(angleAdd*z/4)) & 0x07, z, HtoRGB(color*49152/32768));		
 			}
-			swapAndWait(30);
-			clearScreen(black);
+			swapAndWait(50);
+			clearImage(black);
 			
-			if (count > 5) { 
-				angleAdd++;
+			if (count > 4) { 
+				angleAdd2++;
 				count = 0;
 			}
 		}
 		i++;
 	}
+	fade(15, 100);
 }
 
 /*

@@ -29,6 +29,9 @@ unsigned int ioffset;
 // Playlist
 void *display_loop(void * unused)  {
 	while (1) {
+		uart_putstr("spirale()\n");
+		spirale();
+		
 		playPlaylist("anims/playlist.apl");
 		
 		uart_putstr("plasmaTest()\n");
@@ -70,12 +73,10 @@ void *display_loop(void * unused)  {
 		planeBall();
 		uart_putstr("wobbeln()\n");
 		wobbeln();
-		uart_putstr("spirale()\n");
-		spirale();
 		uart_putstr("plasmaSnake()\n");
 		plasmaSnake();
-		uart_putstr("snake()\n");
-		snake();
+		//uart_putstr("snake()\n");
+		//snake();
 		uart_putstr("movingCubes()\n");
 		movingCubes();
 		uart_putstr("plasmaSnake()\n");
@@ -84,8 +85,8 @@ void *display_loop(void * unused)  {
 		symetricRandom();
 		uart_putstr("testAnim()\n");
 		testAnim();
-		uart_putstr("fnordLicht()\n");
-		fnordLicht();
+		//uart_putstr("fnordLicht()\n");
+		//fnordLicht();
 		
 	}
 	return 0;
@@ -641,6 +642,8 @@ void plasmaTest()
 		if((ioffset-oldOffset) >= 4*0x8000)
 			break;
 	}
+	clearImage(black);
+	fade(15, 100);
 }
 
 /*
@@ -1061,15 +1064,15 @@ void upgoingRandom() {
 	signed char addR = 2, addG = -1, addB = 4; 
 	for (j = 0; j < 600; j++) {
 		for (i = 0; i < j%8 + 4; i++) {
-			if (curColor.r < 8 || curColor.r > 248) 
-				addR = -addR;
-			if (curColor.g < 8 || curColor.g > 248) 
-				addG = -addG;
-			if (curColor.b < 8 || curColor.b > 248) 
-				addB = -addB;
 			curColor.r += addR;
 			curColor.g += addG;
 			curColor.b += addB;
+			if (curColor.r < 10 || curColor.r > 245) 
+				addR = -addR;
+			if (curColor.g < 10 || curColor.g > 245) 
+				addG = -addG;
+			if (curColor.b < 10 || curColor.b > 245) 
+				addB = -addB;
 			setVoxel((voxel) {easyRandom()%5, easyRandom()%5, 0}, curColor);
 		}
 		fade(8, 16);
@@ -1116,54 +1119,37 @@ static void drawLineZAngle(unsigned char angle, unsigned char z, color value) {
 
 
 void spirale() {
-	unsigned char z, angle, count = 0, i = 0, index, value, angleAdd;
-	signed short help; 
-	color colors[5] = {{150,   0, 250},
-					   { 50, 150, 180},
-					   { 50, 220,  80},
-					   {250, 150, 180},
-					   {  0,   0,   0}
-					  };
-	color curColor;
-	for (angleAdd = 0; angleAdd < 12; count++) {
-		// Farbwerte interpolieren
-		index = i / 16; // (12*5)/4 = 15
-		value = i % 16;
-		help  = colors[index+1].r; 
-		help -= colors[index].r;
-		help *= value;
-		help /= 16;
-		curColor.r = help + colors[index].r;
-		help  = colors[index+1].g; 
-		help -= colors[index].g;
-		help *= value;
-		help /= 16;
-		curColor.g = help + colors[index].g;
-		help  = colors[index+1].b; 
-		help -= colors[index].b;
-		help *= value;
-		help /= 16;
-		curColor.b = help + colors[index].b;
+	unsigned char z, angle, count = 0, i = 0, angleAdd, angleAdd2;
+	s32 color, scale;
+	scale = 3*0x9000;
+	
+	for (angleAdd2 = 0; angleAdd2 < 17; count++) {
+		angleAdd = angleAdd2 < 9 ? angleAdd2 : 17 - angleAdd2; 
 		//printf("%d %d %d  %d %d \n", curColor.r, curColor.g, curColor.b, index, value);
 		for (angle = 0; angle < 8; angle++) {
+			ioffset += 200; //700;
 			for (z = 0; z < 5; z++) {
-				drawLineZAngle((angle+(angleAdd*z/4)) & 0x07, z, curColor);		
+				ioffset += 8;
+				color  = ioffset;
+				color += 0x3000 * Sine((4-z * (0x8000*0x8000 / (MAX_Y * scale))) + 
+										ioffset*4
+									   ) / 0x8000;
+	
+				drawLineZAngle((angle+(angleAdd*z/4)) & 0x07, z, HtoRGB(color*49152/32768));		
 			}
-			swapAndWait(30);
-			clearScreen(black);
+			swapAndWait(50);
+			clearImage(black);
 			
-			if (count > 5) { 
-				angleAdd++;
+			if (count > 4) { 
+				angleAdd2++;
 				count = 0;
 			}
 		}
 		i++;
 	}
-	
-	clearImage(black);
-	fade(10, 30);
-	swapAndWait(1000);
+	fade(15, 100);
 }
+
 
 /*
 static void drawPlane(uns) {
