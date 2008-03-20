@@ -303,7 +303,7 @@
 							<real>186</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>3 55 1440 819 0 0 1440 878 </string>
+						<string>2 55 1440 819 0 0 1440 878 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -333,7 +333,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>7335C1AA0D8F2905009F399B</string>
+										<string>7335C1B60D930B26009F399B</string>
 										<key>history</key>
 										<array>
 											<string>73E10C730D23281F005D39F9</string>
@@ -400,7 +400,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {1232, 541}}</string>
 								<key>RubberWindowFrame</key>
-								<string>3 55 1440 819 0 0 1440 878 </string>
+								<string>2 55 1440 819 0 0 1440 878 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
@@ -420,7 +420,7 @@
 								<key>Frame</key>
 								<string>{{0, 546}, {1232, 232}}</string>
 								<key>RubberWindowFrame</key>
-								<string>3 55 1440 819 0 0 1440 878 </string>
+								<string>2 55 1440 819 0 0 1440 878 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
@@ -601,7 +601,7 @@
 		<string>/Users/madex/develop/bzr/farbborg/tools/farb-borg-3d-apiSimulator/osx/osx.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>3 55 1440 819 0 0 1440 878 </string>
+	<string>2 55 1440 819 0 0 1440 878 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>

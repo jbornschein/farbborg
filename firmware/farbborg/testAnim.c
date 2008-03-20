@@ -29,14 +29,13 @@ unsigned int ioffset;
 // Playlist
 void *display_loop(void * unused)  {
 	while (1) {
+		uart_putstr("plasmaTest()\n");
+		plasmaTest();
 		uart_putstr("spirale()\n");
 		spirale();
 		
 		playPlaylist("anims/playlist.apl");
-		
-		uart_putstr("plasmaTest()\n");
-		plasmaTest();
-		
+				
 		playAnimFile("anim1.prn");
 		uart_putstr("colorSnakle()\n");
 		colorSnake();
@@ -774,7 +773,8 @@ color HtoRGB(int h31bit)
 
 void setVoxelH(int x, int y, int z, float h)
 {
-	h -= floor(h);
+	if (h > 1.)
+		h =  1 - h;
 	setVoxel((voxel) {x, y, z}, HtoRGB(h*49152));
 }
 

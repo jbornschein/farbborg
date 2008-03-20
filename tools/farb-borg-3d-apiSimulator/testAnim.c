@@ -26,7 +26,6 @@ unsigned int ioffset;
 #define fMAX_Y (double) MAX_Y
 #define fMAX_Z (double) MAX_Z
 
-
 // Playlist
 void *display_loop(void * unused)  {
 	offset = 0.0;
@@ -41,7 +40,7 @@ void *display_loop(void * unused)  {
 		//colorMatrix();
      	//pyramide();
 		//fadeTest();
-		//plasmaTest();
+		plasmaTest();
 		//plasmaSnake();
 		//test1();
 		//brightnesTest();
@@ -475,7 +474,8 @@ color HtoRGB(int h31bit)
 
 void setVoxelH(int x, int y, int z, double h)
 {
-	h -= floor(h);
+	if (h > 1.)
+		h =  1. - h;
 	setVoxel((voxel) {x, y, z}, HtoRGB((int) (h*49152)));
 }
 
