@@ -1,9 +1,11 @@
 #ifndef API_H
 #define API_H
 
+#include "spike_hw.h"
 #include <stdio.h>
 
-#include "spike_hw.h"
+typedef   signed short  int16_t;
+typedef unsigned short uint16_t;
 
 #define R 0
 #define G 1
@@ -16,7 +18,6 @@ typedef struct {
 typedef struct {
 	uint32_t r, g, b;
 } color; 
-
 
 typedef enum {
 	noDirection = 0,
@@ -33,7 +34,14 @@ void clearScreen(color c);
 void clearImage(color c);
 
 void setVoxel(voxel pos, color c);
+
+void setVoxelH_f(int x, int y, int z, float h);
+
+unsigned isqrt(unsigned long val) ;
+
 void setSymetricVoxel(voxel pos, color c);
+
+void setVoxelH(int x, int y, int z, int h);
 
 unsigned char isVoxelSet(voxel pos);
 voxel getNextVoxel(voxel pos, direction d);
@@ -49,9 +57,16 @@ void swapAndWait(unsigned int ms);
 
 unsigned char easyRandom();
 
+color HtoRGB(int h31bit);
+
 void drawLine3D(char px1, char py1, char pz1, 
  			    char px2, char py2, char pz2, color value);
 
+// Sinustabelle 
+// für plasma
+int32_t Sine(int32_t phase);
+int32_t Cosi(int32_t phase);
+// für 3D
 char Sin(unsigned char a);
 #define Cos(a) Sin((a)+16)
 

@@ -1,7 +1,7 @@
 #include "spike_hw.h"
 #include "testAnim.h"
+#include "displayLoop.h"
 #include "fileParser.h"
-
 
 int main()
 {

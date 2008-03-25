@@ -13,6 +13,10 @@ color HtoRGB(int h31bit);
 void fadeTest();
 void plasmaTest();
 void plasmaSnake();
+int plasmaDiag(int x, int y, int z, int scale, int ioff);
+void plasmaAniDiag();
+void plasmaBall();
+void plasmaAniPolar();
 //void setVoxelHSV(int x, int y, int z, farbe hsv);
 void setVoxelH(int x, int y, int z, double h);
 static unsigned isqrt(unsigned long val);
@@ -40,7 +44,10 @@ void *display_loop(void * unused)  {
 		//colorMatrix();
      	//pyramide();
 		//fadeTest();
-		plasmaTest();
+		//plasmaTest();
+		//plasmaAniDiag();
+		//plasmaAniPolar();
+		plasmaBall();
 		//plasmaSnake();
 		//test1();
 		//brightnesTest();
@@ -53,7 +60,7 @@ void *display_loop(void * unused)  {
 		//planeBall();
 		//wobbeln();
 		//symetricRoutes();
-		spirale(); 
+		//spirale(); 
 		//snake(); 
 		//movingCubes();
 		//symetricRandom();
@@ -346,11 +353,214 @@ void testSin() {
 }
 */
 
-//  braunt‚àö‚àÇne    194 124 71    255 203 143
-
+//  braunt‚Äö√†√∂‚Äö√†√áne    194 124 71    255 203 143
 
 #define SQRT0x8000 181
 #define SQRT25x3   0x45483
+
+int plasmaPolar(int x, int y, int z, int scale, int ioff)
+{
+	int sqx, sqy, sqz;
+	
+	sqx  = x - 2;
+	sqx *= sqx*0x8000;
+	sqy  = y - 2;
+	sqy *= sqy*0x8000;
+	sqz  = z - 2;
+	sqz *= sqz*0x8000;
+					
+	return Sine(isqrt(sqx + sqy + sqz)*SQRT0x8000/8 + ioff + (x*y*z*0x8000*20)/(scale*(1+x+y+z)));
+}
+
+int plasmaDiag(int x, int y, int z, int scale, int ioff)
+{
+	return Sine((-x * (0x8000*0x8000 / (MAX_X * scale))) + (y * (0x8000*0x8000 / (MAX_Y * scale))) + (-z * (0x8000*0x8000 / (MAX_Z * scale))) + ioff);
+}
+
+void plasmaBall()
+{
+	color col;
+	s32 color, oldOffset, scale;
+	s32 x, y, z;
+	int sqx, sqy;
+	unsigned int speed, dir, dist, distTmp, oldDist;
+	double dColor;
+	scale = 5*0x5000;
+	dist = 0; speed = 1; dir = 1;
+	oldDist = 1;
+	oldOffset = ioffset;
+	
+	while (1)
+	{
+		clearImage(black);
+		
+		if((speed++ % 128) == 0)
+		{
+			oldDist = dist;
+			dist += dir;
+			
+			if(dist > 1)
+			{
+				dir = -1;
+			}
+			else if(dist < 1)
+			{
+				dir = 1;
+			}
+		}
+		
+		
+		ioffset += 250; //700;
+		
+		for(x = 0; x < MAX_X; x++)
+		{
+			sqx = (x-2)*(x-2);
+	
+			for(y = 0; y < MAX_Y; y++)
+			{
+				sqy = (y-2)*(y-2);
+				
+				for(z = 0; z < MAX_Z; z++)
+				{
+					//calculate distance to center
+					distTmp = isqrt(sqx + sqy + (z-2)*(z-2));
+					
+					//check against desired distance
+					if(distTmp == dist)
+					{
+						//reset color;
+						color = 0;
+						
+						//diagonal scrolling sine 
+						color += plasmaDiag(x, y, z, scale, ioffset);
+					
+						//colorspace offset
+						color += 0x8000 + (ioffset/32);
+						
+						setVoxelH(x, y, z, color/32768.0);
+					}
+					//check against old distance
+					else if(distTmp == oldDist)
+					{
+						//reset color;
+						color = 0;
+						
+						//diagonal scrolling sine 
+						color += plasmaDiag(x, y, z, scale, ioffset);
+					
+						//colorspace offset
+						color += 0x8000 + (ioffset/32);
+						
+						dColor = color / 32768.0;
+						if (dColor > 1.0)
+						{
+							dColor =  1.0 - dColor;
+						}
+						
+						col = HtoRGB((int) (dColor*49152));
+						col.r = ((col.r - speed*2)>0)?(col.r - speed*2):0;
+						col.g = ((col.g - speed*2)>0)?(col.g - speed*2):0;
+						col.b = ((col.b - speed*2)>0)?(col.b - speed*2):0;
+						
+						setVoxel((voxel) {x, y, z}, col);
+					}
+
+				} 
+				//printf("\n");
+			}
+			//printf("\n");
+		}
+		//printf("\n");
+		
+		swapAndWait(30);
+		
+		if((ioffset-oldOffset) >= 4*0x8000)
+			break;
+	}
+}
+
+void plasmaAniPolar()
+{
+	s32 color, oldOffset, scale;
+	s32 x, y, z;
+	scale = 10*0x5000;
+	oldOffset = ioffset;
+	
+	while (1)
+	{
+		ioffset += 250; //700;
+		
+		for(x = 0; x < MAX_X; x++)
+		{
+			for(y = 0; y < MAX_Y; y++)
+			{
+				for(z = 0; z < MAX_Z; z++)
+				{
+					//reset color;
+					color = 0;
+					
+					//diagonal scrolling sine 
+					color += plasmaPolar(x, y, z, scale, ioffset);
+					
+					//colorspace offset
+					color += 0x8000 + (ioffset/32);
+					
+					setVoxelH(x, y, z, color/32768.0);
+				} 
+				//printf("\n");
+			}
+			//printf("\n");
+		}
+		//printf("\n");
+		
+		swapAndWait(30);
+		
+		if((ioffset-oldOffset) >= 4*0x8000)
+			break;
+	}
+}
+
+void plasmaAniDiag()
+{
+	s32 color, oldOffset, scale;
+	s32 x, y, z;
+	scale = 10*0x5000;
+	oldOffset = ioffset;
+	
+	while (1)
+	{
+		ioffset += 250; //700;
+		
+		for(x = 0; x < MAX_X; x++)
+		{
+			for(y = 0; y < MAX_Y; y++)
+			{
+				for(z = 0; z < MAX_Z; z++)
+				{
+					//reset color;
+					color = 0;
+					
+					//diagonal scrolling sine 
+					color += plasmaDiag(x, y, z, scale, ioffset);
+					
+					//colorspace offset
+					color += 0x8000 + (ioffset/32);
+					
+					setVoxelH(x, y, z, color/32768.0);
+				} 
+				//printf("\n");
+			}
+			//printf("\n");
+		}
+		//printf("\n");
+		
+		swapAndWait(30);
+		
+		if((ioffset-oldOffset) >= 4*0x8000)
+			break;
+	}
+}
+
 void plasmaTest()
 {
 	s32 color, oldOffset, scale;
@@ -430,7 +640,7 @@ color HtoRGB(int h31bit)
  
  		unsigned char sextant;
 		int           q;
-		sextant  = h31bit / 8192;   // 60¬¨‚àû
+		sextant  = h31bit / 8192;   // 60¬¨¬®‚Äö√†√ª
 		
 		h31bit     = h31bit % 8192;
 		q          = 8192 - h31bit;	
@@ -1397,8 +1607,5 @@ void wobbeln() {
 		if (j < 20)
 			clearImage(black);	
 	}
-	clearImage(black);	
-	
+	clearImage(black);		
 }
-
-

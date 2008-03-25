@@ -1,3 +1,5 @@
+#include <math.h>
+#include <stdio.h>
 #include "spike_hw.h"
 #include "config.h"
 #include "util.h"
@@ -23,6 +25,17 @@ void setVoxel(voxel pos, color c) {
 		*im++ = c.g;
 		*im   = c.b;
 	}
+}
+
+void setVoxelH_f(int x, int y, int z, float h)
+{
+	h -= floor(h);
+	setVoxel((voxel) {x, y, z}, HtoRGB(h*49152));
+}
+
+void setVoxelH(int x, int y, int z, int h)
+{
+	setVoxel((voxel) {x, y, z}, HtoRGB((h*49152)/32768));
 }
 
 color getColor(voxel pos) {
@@ -120,59 +133,15 @@ direction direction_r(direction dir) {
 	}
 }
 
-// too big for a real avr
-/*void fade(unsigned int msProStep, unsigned int steps) {
-	int32_t s;
-	int32_t addColor[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
-	int32_t *aC = addColor;
-	int32_t helpColor[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
-	int32_t *help = helpColor;
-	int32_t z, i;
-	uint32_t *pixr = pixmap_readback;
-	uint32_t *pix;
-	uint32_t *im  = (uint32_t *) imag;
-	unsigned char val;
- 	
-	for (z = 0; z < MAX_Z; z++) {
-		for (i = 0; i < MAX_Y*MAX_X*COLOR_BYTES; i++) {
-			*help = *pixr * 1024;
-			*aC   = ((int32_t) (*im * 1024) - *help)/steps;
-			aC++;
-			pixr++;
-			help++;
-			im++;
-		}
-	}
-	
- 	for (s = 0; s < steps; s++) {
-		aC   = addColor;
-		help = helpColor;
-		im   = imag;
-		pixr = pixmap_readback;
-		for (z = 0; z < MAX_Z; z++) {
-			pix = (uint32_t *) &PIXMAP[128*z];
-			for (i = 0; i < MAX_Y*MAX_X*COLOR_BYTES; i++) {
-				*help += *aC++; 
-				val  = (*help++ + 512) / 1024;
-				*pix++  = val;
-				*pixr++ = val;
-			}
-		}
-		myWait(msProStep);
-	}
-	swapAndWait(msProStep);
-}*/
-
 void fade(unsigned int msProStep, unsigned int steps) {
 	uint32_t s;
-	int32_t addColor[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
-	int32_t *aC = addColor;
-	int32_t i, z, j, helpColor[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
-	int32_t *help = helpColor, temp;
+	int32_t  addColor[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
+	int32_t  *aC = (int32_t *) addColor;
+	int32_t  i, z, helpColor[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
+	int32_t  *help = (int32_t *) helpColor, temp;
 	uint32_t *pix, val; 
-	uint32_t  *im  = imag, *pixr = pixmap_readback;
-	char buffer[80];
-	
+	uint32_t *im  = (uint32_t *) imag; 
+	uint32_t *pixr = (uint32_t *) pixmap_readback;
 	
 	for (i = 0; i < MAX_Z*MAX_Y*MAX_X*COLOR_BYTES; i++) {
 		*help = *pixr * 1024;
@@ -190,10 +159,10 @@ void fade(unsigned int msProStep, unsigned int steps) {
 	}
 
  	for (s = 0; s < steps; s++) {
-		aC   = addColor;
-		help = helpColor;
-		pixr = pixr = pixmap_readback;
-		im   = imag;
+		aC   = (int32_t *) addColor;
+		help = (int32_t *) helpColor;
+		pixr = (uint32_t *) pixmap_readback;
+		im   = (uint32_t *) imag;
 		for (z = 0; z < MAX_Z; z++) {
 			pix = &PIXMAP[128*z];
 			for (i = 0; i < MAX_Y*MAX_X*COLOR_BYTES; i++) {
@@ -209,8 +178,8 @@ void fade(unsigned int msProStep, unsigned int steps) {
 }
 
 void swapAndWait(unsigned int ms) {
-	uint32_t *pix, *im = imag;
-	uint32_t *pixr = pixmap_readback;
+	uint32_t *pix, *im = (uint32_t *) imag;
+	uint32_t *pixr = (uint32_t *) pixmap_readback;
 	uint32_t i, z, help;
 	for (z = 0; z < MAX_Z; z++) {
 		pix = (uint32_t *) &PIXMAP[128*z];
@@ -224,11 +193,11 @@ void swapAndWait(unsigned int ms) {
 }
 
 void clearScreen(color c) {
-	uint32_t *im = imag, *pixr = pixmap_readback;
+	uint32_t *im = (uint32_t *) imag, *pixr = (uint32_t *) pixmap_readback;
 	uint32_t  *pix;
 	unsigned char i, z;
 	for (z = 0; z < MAX_Z; z++) {
-		pix = &PIXMAP[128*z];
+		pix = (uint32_t *) &PIXMAP[128*z];
 		for (i = 0; i < MAX_Y*MAX_X; i++) {
 			*pix++ = c.r;
 			*pixr++ = c.r; 
@@ -244,7 +213,7 @@ void clearScreen(color c) {
 }
 
 void clearImage(color c) {
-	uint32_t *im = imag;
+	uint32_t *im = (uint32_t *) imag;
 	unsigned short i;
 	for (i = 0; i < MAX_Z*MAX_Y*MAX_X; i++) {
 		*im++  = c.r;
@@ -272,6 +241,107 @@ unsigned char get_next_voxel(voxel p, direction dir);
 voxel next_voxel(voxel pix, direction dir);
 */
 
+color HtoRGB(int h31bit)
+{
+    color rgb;
+	unsigned char sextant;
+	int   q;
+	
+	h31bit %= 49152;
+	if (h31bit < 0)
+		h31bit += 49152;
+	sextant    = h31bit / 8192;	
+	h31bit     = h31bit % 8192;
+	q          = 8191 - h31bit;	
+	
+	switch(sextant) {
+	    case 0:
+			rgb.r = 255;
+			rgb.g = h31bit / 32; 
+			rgb.b = 0;
+			break;
+	    case 1:
+			rgb.r = q / 32;
+			rgb.g = 255;
+			rgb.b = 0;
+			break;
+	    case 2:
+			rgb.r = 0;
+			rgb.g = 255;
+			rgb.b = h31bit / 32;
+			break;
+	    case 3:
+			rgb.r = 0;
+			rgb.g = q / 32;
+			rgb.b = 255;
+			break;
+	    case 4:
+			rgb.r = h31bit / 32;
+			rgb.g = 0;
+			rgb.b = 255;
+			break;
+	    default:
+			rgb.r = 255;
+			rgb.g = 0;
+			rgb.b = q / 32;
+			break;
+   	}
+    return rgb;
+}
+
+const int16_t sin_table[66] =
+{
+      0,   804,  1608,  2410,  3212,  4011,  4808,  5602,
+   6393,  7179,  7962,  8739,  9512, 10278, 11039, 11793,
+  12539, 13279, 14010, 14732, 15446, 16151, 16846, 17530,
+  18204, 18868, 19519, 20159, 20787, 21403, 22005, 22594,
+  23170, 23731, 24279, 24811, 25329, 25832, 26319, 26790,
+  27245, 27683, 28105, 28510, 28898, 29268, 29621, 29956,
+  30273, 30571, 30852, 31113, 31356, 31580, 31785, 31971, 
+  32137, 32285, 32412, 32521, 32609, 32678, 32728, 32757,
+  32767, 32757
+};
+
+int32_t Sine(int32_t phase)
+{
+	int16_t s0;
+	uint16_t tmp_phase, tmp_phase_hi;
+
+	tmp_phase = phase & 0x7fff;
+
+	if (tmp_phase & 0x4000) 
+		tmp_phase = 0x8000 - tmp_phase;
+
+	tmp_phase_hi = tmp_phase >> 8; // 0...64
+
+	s0 = sin_table[tmp_phase_hi];
+
+	s0 += ((int16_t)((((int32_t)(sin_table[tmp_phase_hi+1] - s0))*(tmp_phase&0xff))>>8));
+
+	if (phase & 0x8000) {
+		s0 = -s0;
+	}
+	
+	return s0;
+}
+
+int32_t Cosi(int32_t phase)
+{
+	return Sine(phase + 0x4000);
+}
+
+/* by Jim Ulery  http://www.azillionmonkeys.com/qed/ulerysqroot.pdf  */
+unsigned isqrt(unsigned long val) {
+	unsigned long temp, g=0, b = 0x8000, bshft = 15;
+	do {
+		if (val >= (temp = (((g << 1) + b)<<bshft--))) {
+		   g += b;
+		   val -= temp;
+		}
+	} while (b >>= 1);
+	return g;
+}
+
 void shift(direction dir) {
 	uint32_t i, z;
 	uint32_t *fromIm, *toIm;
@@ -287,7 +357,7 @@ void shift(direction dir) {
 					toIm++; 
 				}
 			}
-			toIm = imag;
+			toIm = (uint32_t) imag;
 			for (i = 0; i < MAX_Y*MAX_X*COLOR_BYTES; i++) {
 				*toIm++ = 0; 
 			}

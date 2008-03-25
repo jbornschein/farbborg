@@ -3,93 +3,14 @@
 #include "api.h"
 #include "testAnim.h"
 #include "spike_hw.h"
-#include <math.h>
-#include "colorMatrix.h"
-#include "colorSnake.h"
-#include "fileParser.h"
-
+#include "plasmaAnims.h"
 
 #define SNAKE_LEN 100
 
-typedef struct
-{
-    //entweder H S V oder R G B
-    float f[3];
-}farbe;
-
 void flashLight();
 void fadeTest();
-void plasmaTest();
-void plasmaSnake();
-void setVoxelH(int x, int y, int z, float h);
 
-float offset;
-unsigned int ioffset;
 
-// Playlist
-void *display_loop(void * unused)  {
-	while (1) {
-		uart_putstr("plasmaTest()\n");
-		plasmaTest();
-		uart_putstr("spirale()\n");
-		spirale();
-		
-		playPlaylist("anims/playlist.apl");
-				
-		playAnimFile("anim1.prn");
-		uart_putstr("colorSnakle()\n");
-		colorSnake();
-		uart_putstr("colorMatrix()\n");
-		colorMatrix();
-		//uart_putstr("flashLight()\n");
-		//flashLight();
-		uart_putstr("plasmaSnake()\n");
-		plasmaSnake();
-		//uart_putstr("funkyBeat()\n");
-		//funkyBeat();
-		//uart_putstr("symetricRoutes()\n");
-		//symetricRoutes();	
-
-		uart_putstr("plasmaSnake()\n");
-		plasmaSnake();
-	    	//uart_putstr("shiftTest()\n");
-		//shiftTest();
-		uart_putstr("fadeTest()\n");
-		fadeTest();
-	    	//uart_putstr("symetricRoutes()\n");
-		//symetricRoutes();
-		//uart_putstr("cubes()\n");
-		//cubes();
-		//uart_putstr("brightnesTest()\n");	
-		//brightnesTest();
-		uart_putstr("movingArrows()\n");
-		movingArrows();
-		uart_putstr("plasmaSnake()\n");
-		plasmaSnake();
-		uart_putstr("upgoingRandom()\n");
-		upgoingRandom();
-		uart_putstr("planeBall()\n");
-		planeBall();
-		uart_putstr("wobbeln()\n");
-		wobbeln();
-		uart_putstr("plasmaSnake()\n");
-		plasmaSnake();
-		//uart_putstr("snake()\n");
-		//snake();
-		uart_putstr("movingCubes()\n");
-		movingCubes();
-		uart_putstr("plasmaSnake()\n");
-		plasmaSnake();
-		uart_putstr("symetricRandom()\n");
-		symetricRandom();
-		uart_putstr("testAnim()\n");
-		testAnim();
-		//uart_putstr("fnordLicht()\n");
-		//fnordLicht();
-		
-	}
-	return 0;
-}
 
 /***
  * Simple FlashLight: ways some time... and suddenly ... *FLASH* 
@@ -103,23 +24,23 @@ void flashLight()
 
 		// choose color
 		color c = {0,0,0};
-		switch (rand() % 3) {
+		switch (easyRandom() % 3) {
 			case 0: c.r = 255; break;
 			case 1: c.g = 255; break;
 			case 2: c.b = 255; break;
 		}
 
 		// wait 1 upto 3 sec
-		wait( 1000 + 100*(rand()%20) );
+		wait( 1000 + 100*(easyRandom()%20) );
 
-		int count = rand() % 6; // flash-sequence: 0 upto 5
+		int count = easyRandom() % 6; // flash-sequence: 0 upto 5
 		for(j=0; j<count; j++) {
 			wait(50); clearScreen(white);
 			wait(50); clearScreen(c);
 			wait(50); clearScreen(black);
 
 			// 0.0 upto 0.3 sec
-			wait( 10 * (rand()%30) );
+			wait( 10 * (easyRandom()%30) );
 		}
 	}
 }
@@ -148,7 +69,6 @@ void fadeTest() {
 	clearImage(green);
 	fade(5, 255);
 }
-
 
 void brightnesTest() {
   unsigned char x, y, z, offset, rund, color, tmp;
@@ -299,7 +219,7 @@ void funkyBeat() {
 					break;
 					
 				case chess:
-					im = imag;
+					im = (uint32_t *) imag;
 					for (i = 0; i < MAX_Z*MAX_Y*MAX_X; i++) {
 						if (i & 1) {
 							*im++ = curColor.r;
@@ -312,7 +232,7 @@ void funkyBeat() {
 					break;
 					
 				case chessInv:
-					im = imag;
+					im = (uint32_t *) imag;
 					for (i = 0; i < MAX_Z*MAX_Y*MAX_X; i++) {
 						if (!(i & 1)) {
 							*im++ = curColor.r;
@@ -384,399 +304,6 @@ void funkyBeat() {
 	}
 }
 
-#define PI 3.14159265
-#define SQUARE(x) (x)*(x)
-#define fMAX_X (float)MAX_X
-#define fMAX_Y (float)MAX_Y
-#define fMAX_Z (float) MAX_Z
-
-void plasmaSnake()
-{
-	float scale = 4.0;
-	
-	voxel pixels[SNAKE_LEN]; 
-	voxel *head = &pixels[1];
-	voxel *tail = &pixels[0];
-	voxel old_head;
-	float snakeColor;
-	voxel apples[10];
-	unsigned char apple_num = 0;
-	char addR = 2, addG = -1, addB = 1;
-	pixels[0].x = 1; 
-	pixels[0].y = 1;
-	pixels[0].z = 0;
-	pixels[1].x = 1; 
-	pixels[1].y = 2;
-	pixels[1].z = 0;
-	
-	direction dir = forward;
-
-	clearScreen(black);
-
-	unsigned char x = 0, dead = 0;
-	while (1) {
-		offset += 0.09;
-		x++;
-		old_head = *head;
-		if (++head == pixels + SNAKE_LEN) 
-			head = pixels;
-		
-		unsigned char dead_cnt=0;
-		
-		unsigned char apple_found = 0, j;
-		for (j = 0; j < apple_num; j++) {
-			unsigned char i;
-			for (i = 1; i < 7; i++) {
-				if ((getNextVoxel(old_head, (direction)i).x == apples[j].x) && 
-					(getNextVoxel(old_head, (direction)i).y == apples[j].y) &&
-				    (getNextVoxel(old_head, (direction)i).z == apples[j].z)) {
-					apple_found = 1;
-					dir = (direction)i+1; 
-					for(; j < apple_num-1; j++) {
-						apples[j] = apples[j+1];
-					}
-					apple_num--;
-					goto apple_se;
-				}
-			}
-		}
-		apple_se:
-		if (!apple_found) {
-			while (isVoxelSet(getNextVoxel(old_head, dir))) {
-				if ((dead_cnt++) == 4) {
-					dead = 1;
-					break;
-				}
-				dir = direction_r(dir);
-			}
-		}
-		if (!dead) {
-			*head = getNextVoxel(old_head, dir);
-			snakeColor = 0.5;
-			snakeColor += 0.5 * sinf(((float)head->x * (PI / (fMAX_X * scale))) + ((float)head->y * (PI / (fMAX_Y * scale))) + ((float)head->z * (PI / (fMAX_Z * scale))) + offset);
-			setVoxelH(head->x, head->y, head->z, snakeColor);
-			if (easyRandom() < 80) {
-				dir = 1 + (direction) (easyRandom() % 6);
-			}
-			if ((apple_num<10) && (easyRandom()<10)) {
-				voxel new_apple = (voxel) {easyRandom() % MAX_X,
-										   easyRandom() % MAX_Y,
-										   easyRandom() % MAX_Z};
-				if (!isVoxelSet(new_apple)){
-					apples[apple_num++] = new_apple;
-				}
-			}
-			if (!apple_found) {
-				setVoxel(*tail, black);
-				if (++tail == pixels + SNAKE_LEN) 
-					tail = pixels;
-			}
-		} else {
-			while (tail != head) {
-				setVoxel(*tail, black);
-				if ((++tail) > pixels + SNAKE_LEN) 
-					tail = pixels;
-				wait(60);
-			}
-			break;
-		}
-		for (j = 0; j < apple_num; j++) {
-			if (x & 1) { // let the apples blink
-				snakeColor = 0.5;
-				snakeColor += 0.5 * sinf(((float)apples[j].x * (PI / (fMAX_X * scale))) + ((float)apples[j].y * (PI / (fMAX_Y * scale))) + ((float)apples[j].z * (PI / (fMAX_Z * scale))) + offset);
-				setVoxelH(apples[j].x, apples[j].y, apples[j].z, snakeColor);
-			} else {
-				setVoxel(apples[j], black);
-			}
-		}
-		/*if (snakeColor.r < 5 || snakeColor.r > 250) 
-			addR = -addR;
-		if (snakeColor.g < 5 || snakeColor.g > 250) 
-			addG = -addG;
-		if (snakeColor.b < 5 || snakeColor.b > 250) 
-			addB = -addB;
-			
-		snakeColor.r += addR;
-		snakeColor.g += addG;
-		snakeColor.b += addB;
-		*/
-		swapAndWait(90);
-	}
-}
-
-typedef signed short s16;
-typedef unsigned short u16;
-typedef signed int s32;
-typedef unsigned int u32;
-
-const static s16 sin_table[66] =
-{
-    0,  804, 1608, 2410, 3212, 4011, 4808, 5602,
- 6393, 7179, 7962, 8739, 9512,10278,11039,11793,
-12539,13279,14010,14732,15446,16151,16846,17530,
-18204,18868,19519,20159,20787,21403,22005,22594,
-23170,23731,24279,24811,25329,25832,26319,26790,
-27245,27683,28105,28510,28898,29268,29621,29956,
-30273,30571,30852,31113,31356,31580,31785,31971,
-32137,32285,32412,32521,32609,32678,32728,32757,
-32767,32757
-};
-
-s32 Sine(s32 phase)
-{
-	s16 s0;
-	u16 tmp_phase, tmp_phase_hi;
-
-	tmp_phase = phase & 0x7fff;
-
-	if (tmp_phase & 0x4000) 
-		tmp_phase = 0x8000 - tmp_phase;
-
-	tmp_phase_hi = tmp_phase >> 8; // 0...64
-
-	s0 = sin_table[tmp_phase_hi];
-
-	s0 += ((s16)((((s32)(sin_table[tmp_phase_hi+1] - s0))*(tmp_phase&0xff))>>8));
-
-	if (phase & 0x8000) {
-		s0 = -s0;
-	}
-	
-	return s0;
-}
-
-s32 Cosi(u32 phase)
-{
-	return Sine(phase + 0x4000);
-}
-
-/* by Jim Ulery  http://www.azillionmonkeys.com/qed/ulerysqroot.pdf  */
-static unsigned isqrt(unsigned long val) {
-	unsigned long temp, g=0, b = 0x8000, bshft = 15;
-	do {
-		if (val >= (temp = (((g << 1) + b)<<bshft--))) {
-		   g += b;
-		   val -= temp;
-		}
-	} while (b >>= 1);
-	return g;
-}
-
-/*
-void testSin() {
-	float f, s, s2;
-	for (f = 0.0f; f < 3*PI; f += 0.023f) {
-		s = sin(f);
-		s2 = (float) Sine((s32)((f/PI)*32768.0)) / 32768.0;
-		printf("%f %f %f\n", s, s2, s-s2);
-	}
-}
-*/
-
-#define SQRT0x8000 181
-#define SQRT25x3   0x45483
-void plasmaTest()
-{
-	s32 color, oldOffset, scale;
-	s32 sqx, sqy, sqz;
-	s32 x, y, z;
-	scale = 3*0x5100;
-	oldOffset = ioffset;
-	
-	while (1)
-	{
-		ioffset += 290; //700;
-		
-		for(x = 0; x < MAX_X; x++)
-		{
-			for(y = 0; y < MAX_Y; y++)
-			{
-				for(z = 0; z < MAX_Z; z++)
-				{
-					//reset color;
-					color = 0;
-					
-					//diagonal scrolling sine 
-					color += 0x2000 * Sine((-x * (0x8000*0x8000 / (MAX_X * scale))) + 
-							               (y * (0x8000*0x8000 / (MAX_Y * scale))) + 
-										   (-z * (0x8000*0x8000 / (MAX_Z * scale))) + 
-										   ioffset
-										   ) / 0x8000;
-					
-					//polar sine
-					sqx  = x - 2;
-					sqx *= sqx*0x8000;
-					sqy  = y - 2;
-					sqy *= sqy*0x8000;
-					sqz  = z - 2;
-					sqz *= sqz*0x8000;
-					color += 0x8000/5 * Sine(
-						isqrt(sqx + sqy + sqz)*SQRT0x8000/8 + ioffset + 
-					    (x*y*z*0x8000*20)/(scale*(1+x+y+z))
-				    ) / 0x8000;  //end of sine
-					//printf("%06d ", isqrt(sqx + sqy + sqz));
-					//sum of x-sine and y-sine and z-sine
-					color +=  (
-							  (0x3200 * Sine((x * (0x8000*0x8000 / (MAX_X * scale))) + ioffset) / 0x8000) 
-							+ (0x5300 * Sine((-y * (0x8000*0x8000 / (MAX_Y * scale))) + ioffset) / 0x8000)
-							+ (0x4400 * Sine((-z * (0x8000*0x8000 / (MAX_Z * scale))) + ioffset) / 0x8000)
-							) / (0x13000);
-					
-					//divide by number of added sines, to re-scale to colorspace	
-					//color /= 1.0;
-					
-					//colorspace offset
-					color += 0x2500 + (ioffset/32);
-					
-					setVoxelH(x, y, z, color/32768.);
-				} 
-				//printf("\n");
-			}
-			//printf("\n");
-		}
-		//printf("\n");
-		
-		fade(10,2);
-		
-		if((ioffset-oldOffset) >= 4*0x8000)
-			break;
-	}
-	clearImage(black);
-	fade(15, 100);
-}
-
-/*
-void plasmaTest()
-{
-	float color, oldOffset, scale;
-	float fx, fy, fz;
-	int x, y, z;
-	
-	float scaleX, scaleY, scaleZ;
-	
-	scale = 4.0;
-	oldOffset = offset = 0.0;
-	
-	scaleX = (PI / (fMAX_X * scale));
-	scaleY = (PI / (fMAX_Y * scale));
-	scaleZ = (PI / (fMAX_Z * scale));
-	
-	while(1)
-	{
-		offset += 0.12;
-		
-		for(x = 0; x < MAX_X; x++)
-		{
-			fx = x;
-			
-			for(y = 0; y < MAX_Y; y++)
-			{
-				fy = y;
-				
-				for(z = 0; z < MAX_Z; z++)
-				{
-					fz = z;
-					
-					//reset color;
-					color = 0.0;
-					
-					//diagonal scrolling sinfe 
-					color += 0.5 * sinf((fx * scaleX) + (fy * scaleY) + (fz * scaleZ) + offset);
-					
-					//polar sinfe
-					color += 0.5 * sinf(
-						sqrt(
-							SQUARE(fx - (fMAX_X / 2.0))
-							+ SQUARE(fy - (fMAX_Y / 2.0))
-							+ SQUARE(fz - (fMAX_Z / 2.0))
-						)
-						//scale to borg resolution
-						* (PI / (scale * (sqrt(SQUARE(fMAX_X) + SQUARE(fMAX_Y) + SQUARE(fMAX_Z)))))
-						+ offset * 0.6
-						); //end of sinfe
-						
-					//sum of x-sinfe and y-sinfe and z-sinfe
-					//color +=  (
-					//		(0.5 * sinf((fx * (PI / (fMAX_X * scale))) + offset)) 
-					//		+ (0.5 * sinf((fy * (PI / (fMAX_Y * scale))) + offset))
-					//		+ (0.5 * sinf((fz * (PI / (fMAX_Z * scale))) + offset))
-					//		) / 3.0;
-					
-					//divide by number of added sinfes, to re-scale to colorspace	
-					color /= 1.0;
-					
-					//colorspace offset
-					color += 0.5 + (offset *0.1);
-					
-					setVoxelH(x, y, z, color);
-				}
-			}
-		}
-		
-		fade(16,24);
-		
-		if((offset-oldOffset) >= 4*PI)
-			break;
-	}
-}
-*/
-color HtoRGB(int h31bit)
-{
-	if (h31bit < 0)
-		h31bit += 49152;
-	
-	      color rgb;
- 
- 		unsigned char sextant;
-		int           q;
-		sextant  = h31bit / 8192;   // 60°
-		
-		h31bit     = h31bit % 8192;
-		q          = 8192 - h31bit;	
-		//h31bit     = 8192 - (8192 - h31bit);
-		//printf("%d %d %d\n", h31bit, sextant, help);
-		switch(sextant)
-		{
-		    case 0:
-				rgb.r = 255;
-				rgb.g = h31bit / 32; 
-				rgb.b = 0;
-				break;
-		    case 1:
-				rgb.r = q / 32;
-				rgb.g = 255;
-				rgb.b = 0;
-				break;
-		    case 2:
-				rgb.r = 0;
-				rgb.g = 255;
-				rgb.b = h31bit / 32;
-				break;
-		    case 3:
-				rgb.r = 0;
-				rgb.g = q / 32;
-				rgb.b = 255;
-				break;
-		    case 4:
-				rgb.r = h31bit / 32;
-				rgb.g = 0;
-				rgb.b = 255;
-				break;
-		    default:
-				rgb.r = 255;
-				rgb.g = 0;
-				rgb.b = q / 32;
-				break;
-   };
-    return(rgb);
-};
-
-void setVoxelH(int x, int y, int z, float h)
-{
-	if (h > 1.)
-		h =  1 - h;
-	setVoxel((voxel) {x, y, z}, HtoRGB(h*49152));
-}
 
 #define NPOINTS 9
 #define NLINES 12
@@ -974,12 +501,12 @@ void movingArrows() {
 void fnordLicht() {
 	unsigned char i, j;
 	unsigned short k;
-	uint32_t * im;
+	uint32_t *im;
 	clearImage(red);
 	fade(10, 40);
 	for (j = 0; j < 2; j++) {
 		for (i = 0; i < 255; i++) {
-			im = imag;
+			im = (uint32_t *) imag;
 			for (k = 0; k < MAX_Z*MAX_Y*MAX_X; k++) {
 				*im++ = 255 - i;
 				*im++ = i;
@@ -988,7 +515,7 @@ void fnordLicht() {
 			swapAndWait(15);
 		}
 		for (i = 0; i < 255; i++) {
-			im = imag;
+			im = (uint32_t *) imag;
 			for (k = 0; k < MAX_Z*MAX_Y*MAX_X; k++) {
 				*im++;
 				*im++ = 255 - i;
@@ -997,7 +524,7 @@ void fnordLicht() {
 			swapAndWait(15);
 		}
 		for (i = 0; i < 255; i++) {
-			im = imag;
+			im = (uint32_t *) imag;
 			for (k = 0; k < MAX_Z*MAX_Y*MAX_X; k++) {
 				*im++ = i;
 				*im++;
@@ -1059,7 +586,7 @@ void symetricRoutes() {
 
 void upgoingRandom() {
 	color curColor = {100, 100, 100};
-	unsigned char x, y, i;
+	unsigned char i;
 	unsigned short j;
 	signed char addR = 2, addG = -1, addB = 4; 
 	for (j = 0; j < 600; j++) {
@@ -1097,59 +624,6 @@ static void drawCube(voxel pos, unsigned char color) {
 	imag[pos.x+1][pos.y+1][pos.z+1][color] = 255;
 }
  
-/* ^
- * | 4   6 7 0 1 2
- * | 3   5   |>  3
- * y 2   4   +   4
- * | 1   3  <|   5
- * | 0   2 1 0 7 6
- * | 
- * |     0 1 2 3 4
- * +-------- x ------->
- */
-static void drawLineZAngle(unsigned char angle, unsigned char z, color value) {
-	// could be optimised in programcode
-	unsigned char x1[8] = {2, 1, 0, 0, 0, 0, 0, 1};
-	unsigned char y1[8] = {0, 0, 0, 1, 2, 3, 4, 4};
-	unsigned char x2[8] = {2, 3, 4, 4, 4, 4, 4, 3};
-	unsigned char y2[8] = {4, 4, 4, 3, 2, 1, 0, 0};
-	angle &= 0x07;
-	drawLine3D(x1[angle], y1[angle], z, x2[angle], y2[angle], z, value);	
-}
-
-
-void spirale() {
-	unsigned char z, angle, count = 0, i = 0, angleAdd, angleAdd2;
-	s32 color, scale;
-	scale = 3*0x9000;
-	
-	for (angleAdd2 = 0; angleAdd2 < 17; count++) {
-		angleAdd = angleAdd2 < 9 ? angleAdd2 : 17 - angleAdd2; 
-		//printf("%d %d %d  %d %d \n", curColor.r, curColor.g, curColor.b, index, value);
-		for (angle = 0; angle < 8; angle++) {
-			ioffset += 200; //700;
-			for (z = 0; z < 5; z++) {
-				ioffset += 8;
-				color  = ioffset;
-				color += 0x3000 * Sine((4-z * (0x8000*0x8000 / (MAX_Y * scale))) + 
-										ioffset*4
-									   ) / 0x8000;
-	
-				drawLineZAngle((angle+(angleAdd*z/4)) & 0x07, z, HtoRGB(color*49152/32768));		
-			}
-			swapAndWait(50);
-			clearImage(black);
-			
-			if (count > 4) { 
-				angleAdd2++;
-				count = 0;
-			}
-		}
-		i++;
-	}
-	fade(15, 100);
-}
-
 
 /*
 static void drawPlane(uns) {
@@ -1331,119 +805,6 @@ void movingCubes() {
 	}
 }
 
-// a green Version of the Matrix of Borg 3D
-
-
-#define SNAKE_LEN 100
-
-void snake() {
-	voxel pixels[SNAKE_LEN]; 
-	voxel *head = &pixels[1];
-	voxel *tail = &pixels[0];
-	voxel old_head;
-	color snakeColor = {100, 50, 220};
-	voxel apples[10];
-	unsigned char apple_num = 0;
-	char addR = 2, addG = -1, addB = 1;
-	pixels[0].x = 1; 
-	pixels[0].y = 1;
-	pixels[0].z = 0;
-	pixels[1].x = 1; 
-	pixels[1].y = 2;
-	pixels[1].z = 0;
-	
-	direction dir = forward;
-
-	clearScreen(black);
-
-	unsigned char x = 0, dead = 0;
-	while (1) {
-		x++;
-		old_head = *head;
-		if (++head == pixels + SNAKE_LEN) 
-			head = pixels;
-		
-		unsigned char dead_cnt=0;
-		
-		unsigned char apple_found = 0, j;
-		for (j = 0; j < apple_num; j++) {
-			unsigned char i;
-			for (i = 1; i < 7; i++) {
-				if ((getNextVoxel(old_head, (direction)i).x == apples[j].x) && 
-					(getNextVoxel(old_head, (direction)i).y == apples[j].y) &&
-				    (getNextVoxel(old_head, (direction)i).z == apples[j].z)) {
-					apple_found = 1;
-					dir = (direction)i+1; 
-					for(; j < apple_num-1; j++) {
-						apples[j] = apples[j+1];
-					}
-					apple_num--;
-					goto apple_se;
-				}
-			}
-		}
-		apple_se:
-		if (!apple_found) {
-			while (isVoxelSet(getNextVoxel(old_head, dir))) {
-				if ((dead_cnt++) == 4) {
-					dead = 1;
-					break;
-				}
-				dir = direction_r(dir);
-			}
-		}
-		if (!dead) {
-			*head = getNextVoxel(old_head, dir);
-			setVoxel(*head, snakeColor);
-			if (easyRandom() < 80) {
-				dir = 1 + (direction) (easyRandom() % 6);
-			}
-			if ((apple_num < 10) && (easyRandom() < 10)) {
-				voxel new_apple = (voxel) {easyRandom() % MAX_X,
-										   easyRandom() % MAX_Y,
-										   easyRandom() % MAX_Z};
-				if (!isVoxelSet(new_apple)){
-					apples[apple_num++] = new_apple;
-				}
-			}
-			if (!apple_found) {
-				setVoxel(*tail, black);
-				if (++tail == pixels + SNAKE_LEN) 
-					tail = pixels;
-			}
-		} else {
-			while (tail != head) {
-				setVoxel(*tail, black);
-				if ((++tail) > pixels + SNAKE_LEN) 
-					tail = pixels;
-				wait(60);
-			}
-			break;
-		}
-		for (j = 0; j < apple_num; j++) {
-			if (x & 1) { // let the apples blink
-				setVoxel(apples[j], snakeColor);
-			} else {
-				setVoxel(apples[j], black);
-			}
-		}
-		if (snakeColor.r < 5 || snakeColor.r > 250) 
-			addR = -addR;
-		if (snakeColor.g < 5 || snakeColor.g > 250) 
-			addG = -addG;
-		if (snakeColor.b < 5 || snakeColor.b > 250) 
-			addB = -addB;
-		snakeColor.r += addR;
-		snakeColor.g += addG;
-		snakeColor.b += addB;
-		swapAndWait(60);
-	}
-}
-
-void glowingBobbles() {
-	
-}
-
 void wobbeln() {
 	unsigned char i, j, z, y, x;
 	color colors[5] = {{0,   0,  250},
@@ -1497,4 +858,3 @@ void wobbeln() {
 	fade(10, 30);
 	swapAndWait(1000);
 }
-	
