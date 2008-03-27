@@ -1,18 +1,19 @@
 #ifndef API_H
 #define API_H
 
-#include "config.h"
+#include <stdio.h>
+#include <stdint.h>
 
 #define R 0
 #define G 1
 #define B 2
 
 typedef struct {
-	unsigned char x, y, z;
+	uint8_t x, y, z;
 } voxel; 
 
 typedef struct {
-	unsigned char r, g, b;
+	uint32_t r, g, b;
 } color; 
 
 typedef enum {
@@ -24,18 +25,30 @@ typedef enum {
 
 extern color black, white, red, green, blue;
 
-extern unsigned char imag[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
+extern uint32_t imag[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
+
+void uart_putchar(char c);
+void uart_putstr(char *str);
 
 void clearScreen(color c);
 void clearImage(color c);
 
 void setVoxel(voxel pos, color c);
+
+void setVoxelH_f(int x, int y, int z, float h);
+
+unsigned isqrt(unsigned long val) ;
+
 void setSymetricVoxel(voxel pos, color c);
+
+void setVoxelH(int x, int y, int z, int h);
 
 unsigned char isVoxelSet(voxel pos);
 voxel getNextVoxel(voxel pos, direction d);
 
 direction direction_r(direction dir);
+
+color getColor(voxel pos);
 
 void shift(direction dir);
 
@@ -44,18 +57,29 @@ void swapAndWait(unsigned int ms);
 
 unsigned char easyRandom();
 
-color getColor(voxel pos);
+color HtoRGB(int h31bit);
 
 void drawLine3D(char px1, char py1, char pz1, 
-		char px2, char py2, char pz2, color value);
+ 			    char px2, char py2, char pz2, color value);
 
+// Sinustabelle 
+// für plasma
+int32_t Sine(int32_t phase);
+int32_t Cosi(int32_t phase);
+// für 3D
 char Sin(unsigned char a);
 #define Cos(a) Sin((a)+16)
 
 void rotate(char a, char b, char c, voxel* points, 
-	    voxel* resPoints, int numPoint, voxel rotP);
+			voxel* resPoints, int numPoint, voxel rotP);
 void scale(char sx, char sy, char sz, voxel* points, 
-           voxel* resPoints, int numPoint, voxel scaleP);	
+			voxel* resPoints, int numPoint, voxel scaleP);
 
+/* not jet implementet
+
+void blurX(unsigned char filter[3]);
+void blurY(unsigned char filter[3]);
+void blurZ(unsigned char filter[3]);
+
+*/
 #endif // API_H
-

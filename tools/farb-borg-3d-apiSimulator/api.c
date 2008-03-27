@@ -1,3 +1,6 @@
+#include <math.h>
+#include <stdio.h>
+#include "spike_hw.h"
 #include "config.h"
 #include "util.h"
 #include "api.h"
@@ -8,55 +11,85 @@ color red   = {255,   0,   0};
 color green = {  0, 255,   0};
 color blue  = {  0,   0, 255};
 
-unsigned char imag[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
+uint32_t imag[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
+extern unsigned int pixmap[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
+uint32_t pixmap_readback[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
 
-// Die pixmap soll au§erhalb dses avrs liegen 
-extern unsigned char pixmap[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
+void uart_putstr(char *str) {
+	puts(str);
+}
+
+void uart_putchar(char c) {
+	putchar(c);
+}
 
 // a voxel is compareabel to a pixel in 2D, with the differents, that it has 
 // a volume
 void setVoxel(voxel pos, color c) {
-	unsigned char *im;
+	uint32_t *im;
 	if (pos.x < MAX_X && pos.y < MAX_Y && pos.z < MAX_Z) {
-		im = (unsigned char *) &imag[pos.z][pos.y][pos.x][0];
+		im = &imag[pos.z][pos.y][pos.x][0];
 		*im++ = c.r;
 		*im++ = c.g;
 		*im   = c.b;
 	}
 }
 
+void setVoxelH_f(int x, int y, int z, float h)
+{
+	h -= floor(h);
+	setVoxel((voxel) {x, y, z}, HtoRGB(h*49152));
+}
+
+void setVoxelH(int x, int y, int z, int h)
+{
+	setVoxel((voxel) {x, y, z}, HtoRGB((h*49152)/32768));
+}
+
+color getColor(voxel pos) {
+	color result;
+	if (pos.x < MAX_X && pos.y < MAX_Y && pos.z < MAX_Z) {
+		result.r = imag[pos.z][pos.y][pos.x][R];
+		result.g = imag[pos.z][pos.y][pos.x][G];
+		result.b = imag[pos.z][pos.y][pos.x][B];
+	} else 
+		result = black;
+	return result;
+}
+
+
 void setSymetricVoxel(voxel pos, color c) {
-	unsigned char *im;
+	uint32_t *im;
 	if (pos.x < (MAX_X+1)/2 && pos.y < (MAX_Y+1)/2 && pos.z < (MAX_Z+1)/2) {
-		im = (unsigned char *) &imag[pos.z+2][pos.y+2][pos.x+2][0];
+		im = &imag[pos.z+2][pos.y+2][pos.x+2][0];
 		*im++ = c.r;
 		*im++ = c.g;
 		*im   = c.b;
-		im = (unsigned char *) &imag[2-pos.z][pos.y+2][pos.x+2][0];
+		im = &imag[2-pos.z][pos.y+2][pos.x+2][0];
 		*im++ = c.r;
 		*im++ = c.g;
 		*im   = c.b;
-		im = (unsigned char *) &imag[pos.z+2][2-pos.y][pos.x+2][0];
+		im = &imag[pos.z+2][2-pos.y][pos.x+2][0];
 		*im++ = c.r;
 		*im++ = c.g;
 		*im   = c.b;
-		im = (unsigned char *) &imag[2-pos.z][2-pos.y][pos.x+2][0];
+		im = &imag[2-pos.z][2-pos.y][pos.x+2][0];
 		*im++ = c.r;
 		*im++ = c.g;
 		*im   = c.b;
-		im = (unsigned char *) &imag[pos.z+2][pos.y+2][2-pos.x][0];
+		im = &imag[pos.z+2][pos.y+2][2-pos.x][0];
 		*im++ = c.r;
 		*im++ = c.g;
 		*im   = c.b;
-		im = (unsigned char *) &imag[2-pos.z][pos.y+2][2-pos.x][0];
+		im = &imag[2-pos.z][pos.y+2][2-pos.x][0];
 		*im++ = c.r;
 		*im++ = c.g;
 		*im   = c.b;
-		im = (unsigned char *) &imag[pos.z+2][2-pos.y][2-pos.x][0];
+		im = &imag[pos.z+2][2-pos.y][2-pos.x][0];
 		*im++ = c.r;
 		*im++ = c.g;
 		*im   = c.b;
-		im = (unsigned char *) &imag[2-pos.z][2-pos.y][2-pos.x][0];
+		im = &imag[2-pos.z][2-pos.y][2-pos.x][0];
 		*im++ = c.r;
 		*im++ = c.g;
 		*im   = c.b;
@@ -108,76 +141,81 @@ direction direction_r(direction dir) {
 	}
 }
 
-color getColor(voxel pos) {
-	color result;
-	if (pos.x < MAX_X && pos.y < MAX_Y && pos.z < MAX_Z) {
-		result.r = imag[pos.z][pos.y][pos.x][R];
-		result.g = imag[pos.z][pos.y][pos.x][G];
-		result.b = imag[pos.z][pos.y][pos.x][B];
-	} else result = black;
-	return result;
-}
-
-
-// too big for a real avr
 void fade(unsigned int msProStep, unsigned int steps) {
-	unsigned int s;
-	signed short addColor[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
-	signed short *aC = (signed short*) addColor;
-	signed short i, helpColor[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
-	signed short *help = (signed short *) helpColor;
-	unsigned char *pix = (unsigned char*) pixmap, 
-	              *im  = (unsigned char*) imag;
- 	
+	uint32_t s;
+	int32_t  addColor[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
+	int32_t  *aC = (int32_t *) addColor;
+	int32_t  i, z, helpColor[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
+	int32_t  *help = (int32_t *) helpColor, temp;
+	uint32_t *pix, val; 
+	uint32_t *im  = (uint32_t *) imag; 
+	uint32_t *pixr = (uint32_t *) pixmap_readback;
+	
 	for (i = 0; i < MAX_Z*MAX_Y*MAX_X*COLOR_BYTES; i++) {
-		*help = *pix++ << 7;
-		*aC++ = ((*im++ << 7) - *help++)/steps;
+		*help = *pixr * 1024;
+		temp = (*im * 1024) - *help;
+		*aC   = temp/(int32_t) steps;
+		pixr++;
+		help++;
+		aC++;
+		im++;
 	}
 
  	for (s = 0; s < steps; s++) {
-		aC =(signed short*) addColor;
-		help = (signed short *) helpColor;
-		pix = (unsigned char*) pixmap;
-		im = (unsigned char*) imag;
-
-		for (i = 0; i < MAX_Z*MAX_Y*MAX_X*COLOR_BYTES; i++) {
-			*help += *aC++;  
-			*pix++ = (*help++ + 64) >> 7;
+		aC   = (int32_t *) addColor;
+		help = (int32_t *) helpColor;
+		pix  = (uint32_t *) pixmap;
+		pixr = (uint32_t *) pixmap_readback;
+		im   = (uint32_t *) imag;
+		for (z = 0; z < MAX_Z; z++) {
+			//pix = &PIXMAP[128*z];
+			for (i = 0; i < MAX_Y*MAX_X*COLOR_BYTES; i++) {
+				*help += *aC++; 
+				val  = (*help++ + 512) / 1024;
+				*pix++  = val;
+				*pixr++ = val;
+			}
 		}
 		myWait(msProStep);
 	}
-	pix = (unsigned char*) pixmap;
-	im = (unsigned char*) imag;
-	for (i = 0; i < MAX_Z*MAX_Y*MAX_X*COLOR_BYTES; i++) {
-		*pix++ = *im++;
-	}
-	myWait(msProStep);
+	swapAndWait(msProStep);
 }
 
 void swapAndWait(unsigned int ms) {
-	unsigned char *pix = (unsigned char *) pixmap, *im = (unsigned char *) imag;
-	unsigned short i;
-	for (i = 0; i < MAX_Z*MAX_Y*MAX_X*COLOR_BYTES; i++) {
-		*pix++ = *im++;	
+	uint32_t *pix = (uint32_t* ) pixmap, *im = (uint32_t *) imag;
+	uint32_t *pixr = (uint32_t *) pixmap_readback;
+	uint32_t i, z, help;
+	for (z = 0; z < MAX_Z; z++) {
+		for (i = 0; i < MAX_Y*MAX_X*COLOR_BYTES; i++) {
+			help = *im++;
+			*pix++  = help;
+			*pixr++ = help;	
+		}
 	}
 	myWait(ms);
-} 
+}
 
 void clearScreen(color c) {
-	unsigned char *pix = (unsigned char *) pixmap, *im = (unsigned char *) imag;
-	unsigned short i;
-	for (i = 0; i < MAX_Z*MAX_Y*MAX_X; i++) {
-		*pix++ = c.r;
-		*im++  = c.r;
-		*pix++ = c.g;
-		*im++  = c.g;
-		*pix++ = c.b;
-		*im++  = c.b;
+	uint32_t *im = (uint32_t *) imag, *pixr = (uint32_t *) pixmap_readback;
+	uint32_t  *pix = (uint32_t *) pixmap;
+	unsigned char i, z;
+	for (z = 0; z < MAX_Z; z++) {
+		for (i = 0; i < MAX_Y*MAX_X; i++) {
+			*pix++ = c.r;
+			*pixr++ = c.r; 
+			*im++  = c.r;
+			*pix++ = c.g;
+			*pixr++ = c.g;
+			*im++  = c.g;
+			*pix++ = c.b;
+			*pixr++ = c.b;
+			*im++  = c.b;
+		}
 	}
 }
 
 void clearImage(color c) {
-	unsigned char *pix = (unsigned char *) pixmap, *im = (unsigned char *) imag;
+	uint32_t *im = (uint32_t *) imag;
 	unsigned short i;
 	for (i = 0; i < MAX_Z*MAX_Y*MAX_X; i++) {
 		*im++  = c.r;
@@ -191,7 +229,7 @@ void clearImage(color c) {
 unsigned char easyRandom() {
 	static unsigned int muh = 0xAA;
 	unsigned char x;
-	for(x = 0; x < 8; x++) {
+	for (x = 0; x < 8; x++) {
 		muh = (muh<<1) ^ BIT_S(muh,1) ^ BIT_S(muh,8) ^ BIT_S(muh,9) ^ 
 		      BIT_S(muh,13) ^ BIT_S(muh,15);
 	}
@@ -205,21 +243,125 @@ unsigned char get_next_voxel(voxel p, direction dir);
 voxel next_voxel(voxel pix, direction dir);
 */
 
+color HtoRGB(int h31bit)
+{
+    color rgb;
+	unsigned char sextant;
+	int   q;
+	
+	h31bit %= 49152;
+	if (h31bit < 0)
+		h31bit += 49152;
+	sextant    = h31bit / 8192;	
+	h31bit     = h31bit % 8192;
+	q          = 8191 - h31bit;	
+	
+	switch(sextant) {
+	    case 0:
+			rgb.r = 255;
+			rgb.g = h31bit / 32; 
+			rgb.b = 0;
+			break;
+	    case 1:
+			rgb.r = q / 32;
+			rgb.g = 255;
+			rgb.b = 0;
+			break;
+	    case 2:
+			rgb.r = 0;
+			rgb.g = 255;
+			rgb.b = h31bit / 32;
+			break;
+	    case 3:
+			rgb.r = 0;
+			rgb.g = q / 32;
+			rgb.b = 255;
+			break;
+	    case 4:
+			rgb.r = h31bit / 32;
+			rgb.g = 0;
+			rgb.b = 255;
+			break;
+	    default:
+			rgb.r = 255;
+			rgb.g = 0;
+			rgb.b = q / 32;
+			break;
+   	}
+    return rgb;
+}
+
+const int16_t sin_table[66] =
+{
+      0,   804,  1608,  2410,  3212,  4011,  4808,  5602,
+   6393,  7179,  7962,  8739,  9512, 10278, 11039, 11793,
+  12539, 13279, 14010, 14732, 15446, 16151, 16846, 17530,
+  18204, 18868, 19519, 20159, 20787, 21403, 22005, 22594,
+  23170, 23731, 24279, 24811, 25329, 25832, 26319, 26790,
+  27245, 27683, 28105, 28510, 28898, 29268, 29621, 29956,
+  30273, 30571, 30852, 31113, 31356, 31580, 31785, 31971, 
+  32137, 32285, 32412, 32521, 32609, 32678, 32728, 32757,
+  32767, 32757
+};
+
+int32_t Sine(int32_t phase)
+{
+	int16_t s0;
+	uint16_t tmp_phase, tmp_phase_hi;
+
+	tmp_phase = phase & 0x7fff;
+
+	if (tmp_phase & 0x4000) 
+		tmp_phase = 0x8000 - tmp_phase;
+
+	tmp_phase_hi = tmp_phase >> 8; // 0...64
+
+	s0 = sin_table[tmp_phase_hi];
+
+	s0 += ((int16_t)((((int32_t)(sin_table[tmp_phase_hi+1] - s0))*(tmp_phase&0xff))>>8));
+
+	if (phase & 0x8000) {
+		s0 = -s0;
+	}
+	
+	return s0;
+}
+
+int32_t Cosi(int32_t phase)
+{
+	return Sine(phase + 0x4000);
+}
+
+/* by Jim Ulery  http://www.azillionmonkeys.com/qed/ulerysqroot.pdf  */
+unsigned isqrt(unsigned long val) {
+	unsigned long temp, g=0, b = 0x8000, bshft = 15;
+	do {
+		if (val >= (temp = (((g << 1) + b)<<bshft--))) {
+		   g += b;
+		   val -= temp;
+		}
+	} while (b >>= 1);
+	return g;
+}
+
 void shift(direction dir) {
-	unsigned char z, y, x, c, i;
-	unsigned char *im  = (unsigned char*) imag;
+	uint32_t i, z;
+	uint32_t *fromIm, *toIm;
 	
 	switch (dir) {
 		case up:
-			for (z = 4; z < MAX_Z; z--) {
-				im = (unsigned char*) &imag[z][0][0][0];
+			for (z = 4; z > 0 ; z--) {
+				fromIm = &imag[z-1][0][0][0];
+				toIm   = &imag[z][0][0][0];
 				for (i = 0; i < MAX_Y*MAX_X*COLOR_BYTES; i++) {
-					im[MAX_Y*MAX_X*COLOR_BYTES] = *im++; 
+					*toIm = *fromIm;
+					fromIm++;
+					toIm++; 
 				}
 			}
-			im = (unsigned char*) imag;
+			toIm = (uint32_t) imag;
 			for (i = 0; i < MAX_Y*MAX_X*COLOR_BYTES; i++) {
-				*im++ = 0; 
+				*toIm++ = 0; 
 			}
 			break;
 		case down:
@@ -237,13 +379,14 @@ void shift(direction dir) {
 	}
 }
 
+
 /** Draws a thredimentional line with the bressenham 3d algrorthmus form the point
   * px1, py1, xz1 to the point px2, py2, pz2 with the brightness value.
   */
 void drawLine3D(char px1, char py1, char pz1, 
  			    char px2, char py2, char pz2, color value) {
-    char i, dx, dy, dz, l, m, n, x_inc, y_inc, z_inc, err_1, err_2, dx2, dy2, dz2;
-    char curx = px1, cury = py1, curz = pz1;
+    int8_t i, dx, dy, dz, l, m, n, x_inc, y_inc, z_inc, err_1, err_2, dx2, dy2, dz2;
+	int8_t curx = px1, cury = py1, curz = pz1;
     dx = (px2 - px1);
     dy = (py2 - py1);
     dz = (pz2 - pz1);
@@ -394,37 +537,3 @@ void scale(char sx, char sy, char sz, voxel* points,
 	}			
 }					
 
-/*
-void blurX(unsigned char filter[3]) {
-	unsigned char  x, y, z, i;
-	unsigned short zeile[MAX_X][3], div = filter[0] + filter[1] + filter[2];
-	for (z = 0; z < MAX_Z; z++) {
-		for (y = 0; y < MAX_Y; y++) {
-			// Filter auf Zeile anwenden
-			for (x = 0; x < MAX_X; x++) {
-				for (i = 0; i < 3; i++) {
-					if ((x+i-1) < MAX_X) {
-						zeile[x][0] = imag[z][y][x+i][0] * filter[i];
-						zeile[x][1] = imag[z][y][x+i][1] * filter[i];
-						zeile[x][2] = imag[z][y][x+i][2] * filter[i];
-					}
-				}
-			}
-			// Zeile zurŸck ins Bild kopieren
-			for (x = 0; x < MAX_X; x++) {
-				imag[z][y][x][0] = zeile[x][0]/div;
-				imag[z][y][x][1] = zeile[x][1]/div;
-				imag[z][y][x][2] = zeile[x][2]/div;
-			}
-		}
-	}
-}
-
-void blurY(unsigned char filter[3]) {
-	
-}
-
-void blurZ(unsigned char filter[3]) {
-	
-}
-*/

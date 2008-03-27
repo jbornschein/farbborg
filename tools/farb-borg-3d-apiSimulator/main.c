@@ -43,8 +43,7 @@ extern void *display_loop(void * unused);
 #  include <unistd.h>
 #endif
 
-//#include "pixel3d.h"
-//#include "programs.h"
+
 #include "trackball.h"
 #include "config.h"
 
@@ -54,7 +53,7 @@ int WindWidth, WindHeight;
 /** 
  *
  */
-unsigned char pixmap[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
+unsigned int pixmap[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
 
 
 // rotations variables for keyboardrotation
