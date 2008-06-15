@@ -35,7 +35,10 @@ SRC =	                                  \
 	../../rtl/wb_farbborg/dualportram.v   \
 	../../rtl/wb_farbborg/pwm.v           \
 	../../rtl/wb_spi/wb_spi.v             \
-	../../rtl/wb_sram/wb_sram16.v
+	../../rtl/wb_sram/wb_sram16.v         \
+	../../rtl/wb_i2c/i2c_master_top.v     \
+	../../rtl/wb_i2c/i2c_master_bit_ctrl.v  \
+	../../rtl/wb_i2c/i2c_master_byte_ctrl.v
 
 
 #############################################################################

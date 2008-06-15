@@ -10,7 +10,22 @@
 void flashLight();
 void fadeTest();
 
-
+void testBlur() {
+	int i, j;
+	for (i = 0; i < 10000; i++)
+	{
+		clearImage(black);
+		for (j = 0; j < 10; j++) {
+			setVoxel((voxel) {easyRandom()%5, easyRandom()%5, easyRandom()%5}, 
+			         (color) {easyRandom(),   easyRandom(),   easyRandom()});
+		}
+		blur();
+		blur();
+		fade(23, 50);
+	}
+	clearImage(black);
+	fade(23, 50);
+}
 
 /***
  * Simple FlashLight: ways some time... and suddenly ... *FLASH* 
