@@ -545,7 +545,7 @@ void blur() {
 									 {{0, 1, 0}, {1, 2, 1}, {0, 1, 0}}
 									}; 
 	uint32_t help_imag[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
-	uint32_t *im = (uint32_t *) imag, *hi = (uint32_t *) imag;									
+	uint32_t *im = (uint32_t *) imag, *hi = (uint32_t *) help_imag;									
 	int x, y, z, i, j, k, l, m, n, c, curVoxelColor;
 	for (z = 0; z < 5; z++) {
 		for (y = 0; y < 5; y ++) {

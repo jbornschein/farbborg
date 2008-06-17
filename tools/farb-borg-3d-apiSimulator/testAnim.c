@@ -15,11 +15,14 @@ void testBlur() {
 	for (i = 0; i < 10000; i++)
 	{
 		clearImage(black);
-		for (j = 0; j < 10; j++) {
+		for (j = 0; j < 20; j++) {
 			setVoxel((voxel) {easyRandom()%5, easyRandom()%5, easyRandom()%5}, 
 			         (color) {easyRandom(),   easyRandom(),   easyRandom()});
 		}
 		blur();
+		fade(23, 50);
+		blur();
+		fade(23, 50);
 		blur();
 		fade(23, 50);
 	}

@@ -535,3 +535,43 @@ void scale(char sx, char sy, char sz, voxel* points,
 	}			
 }					
 
+// Dreidimensionales weichzeichnen mittels Faltung
+// Dazu muss das bild weches weichgezeichnet werden soll zurerst ges
+void blur() {
+	unsigned char filter[3][3][3] = {{{0, 1, 0}, {1, 2, 1}, {0, 1, 0}}, 
+									 {{1, 2, 1}, {2, 8, 2}, {1, 2, 1}},
+									 {{0, 1, 0}, {1, 2, 1}, {0, 1, 0}}
+									}; 
+	uint32_t help_imag[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
+	uint32_t *im = (uint32_t *) imag, *hi = (uint32_t *) help_imag;									
+	int x, y, z, i, j, k, l, m, n, c, curVoxelColor;
+	for (z = 0; z < 5; z++) {
+		for (y = 0; y < 5; y ++) {
+			for (x = 0; x < 5; x++) {
+				for (c = 0; c < 3; c++) { // colors r, g, b
+					curVoxelColor = 0; // operate filter on one Voxelcolor
+					for (i = 0; i < 3; i++) {
+						for (j = 0; j < 3; j++) {
+							for (k = 0; k < 3; k++) {
+								l = x + i - 1;
+								m = y + j - 1;
+								n = z + k - 1;
+								if (l >= 0 && l < 5 && k >= 0 && k < 5 && m >= 0 && m < 5)
+								{
+								   curVoxelColor += imag[l][m][n][c] * filter[i][j][k];
+								}
+							}
+						}
+					}
+					help_imag[z][y][x][c] = curVoxelColor / 16;
+				}
+			}
+		}
+	}
+	// overide the old image with the new filtered one
+	for (i = MAX_Z*MAX_Y*MAX_X; i > 0; i--) {
+		*im++ = *hi++; // red
+		*im++ = *hi++; // green
+		*im++ = *hi++; // blue
+	}
+}

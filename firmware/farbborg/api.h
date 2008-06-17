@@ -75,11 +75,6 @@ void rotate(char a, char b, char c, voxel* points,
 void scale(char sx, char sy, char sz, voxel* points, 
 			voxel* resPoints, int numPoint, voxel scaleP);
 
-/* not jet implementet
+void blur();
 
-void blurX(unsigned char filter[3]);
-void blurY(unsigned char filter[3]);
-void blurZ(unsigned char filter[3]);
-
-*/
 #endif // API_H
