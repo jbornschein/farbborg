@@ -12,19 +12,19 @@ void fadeTest();
 
 void testBlur() {
 	int i, j;
-	for (i = 0; i < 10000; i++)
+	for (i = 0; i < 23; i++)
 	{
 		clearImage(black);
-		for (j = 0; j < 20; j++) {
+		for (j = 0; j < 23; j++) {
 			setVoxel((voxel) {easyRandom()%5, easyRandom()%5, easyRandom()%5}, 
-			         (color) {easyRandom(),   easyRandom(),   easyRandom()});
+			         HtoRGB((easyRandom() << 23)));
 		}
+		
 		blur();
-		fade(23, 50);
 		blur();
-		fade(23, 50);
-		blur();
-		fade(23, 50);
+		
+		swapAndWait(1000);
+		//fade(35, 70);
 	}
 	clearImage(black);
 	fade(23, 50);

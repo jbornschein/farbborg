@@ -12,9 +12,11 @@
 void *display_loop(void * unused)  {
 	while (1) {
 		testBlur();
+		plasmaBall();
+		
 		playPlaylist("anims/playlist.apl");
 		playAnimFile("anims/anim1.prn");
-		plasmaBall();
+		
 		uart_putstr("plasmaTest()\n");
 		plasmaTest();
 		uart_putstr("spirale()\n");

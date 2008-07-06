@@ -12,6 +12,8 @@ unsigned int ioffset;
 #define fMAX_Y (float)MAX_Y
 #define fMAX_Z (float) MAX_Z
 
+#define max(x, y) ((x > y)?x:y)
+
 #define SNAKE_LEN 100
 
 void plasmaSnake()
@@ -132,7 +134,7 @@ void plasmaSnake()
 #define SQRT25x3   0x45483
 void plasmaTest()
 {
-	int32_t color, scale;
+	int32_t col, scale;
 	int32_t sqx, sqy, sqz;
 	int32_t x, y, z;
 	scale = 3*0x5100;
@@ -149,10 +151,10 @@ void plasmaTest()
 				for(z = 0; z < MAX_Z; z++)
 				{
 					//reset color;
-					color = 0;
+					col = 0;
 					
 					//diagonal scrolling sine 
-					color += 0x2000 * Sine((-x * (0x8000*0x8000 / (MAX_X * scale))) + 
+					col += 0x2000 * Sine((-x * (0x8000*0x8000 / (MAX_X * scale))) + 
 							               (y * (0x8000*0x8000 / (MAX_Y * scale))) + 
 										   (-z * (0x8000*0x8000 / (MAX_Z * scale))) + 
 										   ioffset
@@ -165,20 +167,18 @@ void plasmaTest()
 					sqy *= sqy*0x8000;
 					sqz  = z - 2;
 					sqz *= sqz*0x8000;
-					color += 0x8000/5 * Sine(
+					col += 0x8000/5 * Sine(
 						isqrt(sqx + sqy + sqz)*SQRT0x8000/8 + ioffset + 
 					    (x*y*z*0x8000*20)/(scale*(1+x+y+z))
 				    ) / 0x8000;  //end of sine
-					color +=  (
+					col +=  (
 							  (0x3200 * Sine(( x * (0x8000*0x8000 / (MAX_X * scale))) + ioffset) / 0x8000) 
 							+ (0x5300 * Sine((-y * (0x8000*0x8000 / (MAX_Y * scale))) + ioffset) / 0x8000)
 							+ (0x4400 * Sine((-z * (0x8000*0x8000 / (MAX_Z * scale))) + ioffset) / 0x8000)
 							) / (0x13000);
 					
 					//colorspace offset
-					color += 0x2500 + (ioffset/32);
-					
-					setVoxelH(x, y, z, color);
+					col += 0x2500 + (ioffset/32);
 				} 
 				//printf("\n");
 			}
@@ -202,10 +202,12 @@ int plasmaDiag(int x, int y, int z, int scale, int ioff)
 
 void plasmaBall()
 {
-	int32_t color, scale;
+	int32_t col, scale;
 	int32_t x, y, z;
-	int sqx, sqy;
+	int sqx, sqy, distCalc;
 	unsigned int speed, dir, dist, fadenow;
+	color colRGB;
+	voxel pos;
 	scale = 10*0x5000;
 	dist = 0;
 	speed = 1;
@@ -246,18 +248,42 @@ void plasmaBall()
 				for(z = 0; z < MAX_Z; z++)
 				{
 					//calculate distance to center and check against desired distance
-					if(isqrt(sqx + sqy + (z-2)*(z-2)) == dist)
+					distCalc = isqrt(sqx + sqy + (z-2)*(z-2));
+					if(distCalc == dist)
 					{
 						//reset color;
-						color = 0;
+						col = 0;
 						
 						//diagonal scrolling sine 
-						color += plasmaDiag(x, y, z, scale, ioffset);
+						col += plasmaDiag(x, y, z, scale, ioffset);
 					
 						//colorspace offset
-						color += 0x8000 + (ioffset/32);
+						col += 0x8000 + (ioffset/32);
 						
-						setVoxelH(x, y, z, color);
+						setVoxelH(x, y, z, col);
+					}
+					else if(distCalc > dist)
+					{
+						//reset color;
+						col = 0;
+						
+						//diagonal scrolling sine 
+						col += plasmaDiag(x, y, z, scale, ioffset);
+					
+						//colorspace offset
+						col += 0x8000 + (ioffset/32);
+
+						int dingsVal = (int)(256 / (4 - (distCalc - dist))) * 2;
+						colRGB = HtoRGB(col);
+						colRGB.r = max((int)colRGB.r - dingsVal, 0);
+						colRGB.g = max((int)colRGB.g - dingsVal, 0);
+						colRGB.b = max((int)colRGB.b - dingsVal, 0);
+						//colRGB.r /= (dist - distCalc + 1);
+						//colRGB.g /= (dist - distCalc + 1);
+						//colRGB.b /= (dist - distCalc + 1);
+						
+						pos.x = x; pos.y = y; pos.z = z;
+						setVoxel(pos, colRGB);						
 					}
 				} 
 				//printf("\n");
@@ -269,11 +295,11 @@ void plasmaBall()
 		if(fadenow)
 		{
 			fadenow = 0;
-			fade(10,100);
+			fade(10,10);
 		}
 		else swapAndWait(30);
 		
-		if((ioffset) >= 4*0x8000)
+		if((ioffset) >= 8*0x8000)
 			break;
 	}
 }

@@ -1,5 +1,6 @@
 #include <math.h>
 #include <stdio.h>
+#include <string.h>
 #include "spike_hw.h"
 #include "config.h"
 #include "util.h"
@@ -214,7 +215,7 @@ void clearScreen(color c) {
 
 void clearImage(color c) {
 	uint32_t *im = (uint32_t *) imag;
-	unsigned short i;
+	uint32_t i;
 	for (i = 0; i < MAX_Z*MAX_Y*MAX_X; i++) {
 		*im++  = c.r;
 		*im++  = c.g;
@@ -533,7 +534,41 @@ void scale(char sx, char sy, char sz, voxel* points,
  	for (i = 0; i < numPoint; i++) {
 		resPoints[i] = mulMatrixPoint(mat, &points[i]);
 	}			
+}
+	char testAusgabe;
+void dP(char* txt, int32_t val) {
+	char buf[20];
+	if (!testAusgabe)
+		return;
+	uart_putstr(txt);
+	uart_putstr(" = ");
+	itoa(val, buf, 16);
+	uart_putstr(buf);
+	uart_putstr("\r\n");
 }					
+
+void normalize() {
+	int r, g, b, i, max_r = 1, max_g = 1, max_b = 1;
+	uint32_t *im = (uint32_t *) imag;
+	for (i = 0; i < MAX_Z*MAX_Y*MAX_X; i++) {
+		r = *im++;
+		g = *im++;
+		b = *im++;
+		if (r > max_r)
+			max_r = r;
+		if (g > max_g)
+			max_g = g;
+		if (b > max_b)
+			max_b = b;
+	}
+	im = (uint32_t *) imag;
+	for (i = 0; i < MAX_Z*MAX_Y*MAX_X; i++) {
+		*im++ = ((*im * 256) + max_r/2) / max_r;
+		*im++ = ((*im * 256) + max_g/2) / max_g;
+		*im++ = ((*im * 256) + max_b/2) / max_b;
+	}
+}
+
 
 // Dreidimensionales weichzeichnen mittels Faltung
 // Dazu muss das bild weches weichgezeichnet werden soll zurerst ges
@@ -542,13 +577,18 @@ void blur() {
 									 {{1, 2, 1}, {2, 8, 2}, {1, 2, 1}},
 									 {{0, 1, 0}, {1, 2, 1}, {0, 1, 0}}
 									}; 
-	uint32_t help_imag[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
+	static uint32_t help_imag[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
 	uint32_t *im = (uint32_t *) imag, *hi = (uint32_t *) help_imag;									
-	int x, y, z, i, j, k, l, m, n, c, curVoxelColor;
+	int32_t x, y, z, i, j, k, l, m, n, c, curVoxelColor, temp;
+
 	for (z = 0; z < 5; z++) {
 		for (y = 0; y < 5; y ++) {
 			for (x = 0; x < 5; x++) {
 				for (c = 0; c < 3; c++) { // colors r, g, b
+					if (z == 0 && y == 0 && x == 0)
+						testAusgabe = 1;
+					else
+						testAusgabe = 0;
 					curVoxelColor = 0; // operate filter on one Voxelcolor
 					for (i = 0; i < 3; i++) {
 						for (j = 0; j < 3; j++) {
@@ -556,22 +596,61 @@ void blur() {
 								l = x + i - 1;
 								m = y + j - 1;
 								n = z + k - 1;
-								if (l >= 0 && l < 5 && k >= 0 && k < 5 && m >= 0 && m < 5)
+								if (l >= 0 && l < 5 && m >= 0 && m < 5 && n >= 0 && n < 5)
 								{
-								   curVoxelColor += imag[l][m][n][c] * filter[i][j][k];
+								   temp = imag[l][m][n][c] * filter[i][j][k];
+								   /*dP("c", c);
+								   dP("l", l);
+								   dP("m", m);
+								   dP("n", n);
+								   dP("filter", filter[i][j][k]);	
+								   dP("imag", imag[l][m][n][c]);
+								   dP("add", temp);*/
+								   curVoxelColor += temp;
+								   //dP("curVoxelColor", curVoxelColor);
 								}
 							}
 						}
 					}
-					help_imag[z][y][x][c] = curVoxelColor / 16;
+					//curVoxelColor /= 12;
+					//if (curVoxelColor > 255)
+					//	curVoxelColor = 255;
+					//else if (curVoxelColor < 0)
+					//	curVoxelColor = 0;
+					help_imag[z][y][x][c] = curVoxelColor/32;
 				}
 			}
 		}
 	}
+	#define TEILER 12
 	// overide the old image with the new filtered one
-	for (i = MAX_Z*MAX_Y*MAX_X; i > 0; i--) {
-		*im++ = *hi++; // red
-		*im++ = *hi++; // green
-		*im++ = *hi++; // blue
+	int32_t strend, r, g, b;
+	for (i = 0; i < MAX_Z*MAX_Y*MAX_X; i++) {
+		*im++ = *hi++;
+		*im++ = *hi++;
+		*im++ = *hi++;
+		/*
+		if (r > (256*TEILER) && r >= g && g >= b) {
+			g = (g*r)/(256*TEILER);
+			b = (b*r)/(256*TEILER);
+			r = 255;
+		} else if (g > (256*TEILER) && g >= r && r >= b) {
+			r = (r*g)/(256*TEILER);
+			b = (b*g)/(256*TEILER);
+			g = 255;	
+		} else if (b > (256*TEILER) && b >= r && r >= g) {
+			r = (r*b)/(256*TEILER);
+			g = (b*b)/(256*TEILER);
+			b = 255;
+		} else {
+			r /= TEILER;
+			g /= TEILER;
+			b /= TEILER;
+		}
+		*im++ = r;
+		*im++ = g;
+		*im++ = b;
+		*/
 	}
 }
+

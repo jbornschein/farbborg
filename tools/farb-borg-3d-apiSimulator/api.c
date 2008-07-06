@@ -544,7 +544,7 @@ void blur() {
 									 {{1, 2, 1}, {2, 8, 2}, {1, 2, 1}},
 									 {{0, 1, 0}, {1, 2, 1}, {0, 1, 0}}
 									}; 
-	uint32_t help_imag[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
+	static uint32_t help_imag[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
 	uint32_t *im = (uint32_t *) imag, *hi = (uint32_t *) help_imag;									
 	int x, y, z, i, j, k, l, m, n, c, curVoxelColor;
 	for (z = 0; z < 5; z++) {
@@ -558,20 +558,27 @@ void blur() {
 								l = x + i - 1;
 								m = y + j - 1;
 								n = z + k - 1;
-								if (l >= 0 && l < 5 && k >= 0 && k < 5 && m >= 0 && m < 5)
+								if (l >= 0 && l < 5 && m >= 0 && m < 5 && n >= 0 && n < 5)
 								{
 								   curVoxelColor += imag[l][m][n][c] * filter[i][j][k];
 								}
 							}
 						}
 					}
-					help_imag[z][y][x][c] = curVoxelColor / 16;
+					
+					curVoxelColor /= 12;
+					if (curVoxelColor > 255)
+						curVoxelColor = 255;
+					else if (curVoxelColor < 0)
+						curVoxelColor = 0;
+						
+					help_imag[z][y][x][c] = curVoxelColor;
 				}
 			}
 		}
 	}
 	// overide the old image with the new filtered one
-	for (i = MAX_Z*MAX_Y*MAX_X; i > 0; i--) {
+	for (i = 0; i < MAX_Z*MAX_Y*MAX_X; i++) {
 		*im++ = *hi++; // red
 		*im++ = *hi++; // green
 		*im++ = *hi++; // blue

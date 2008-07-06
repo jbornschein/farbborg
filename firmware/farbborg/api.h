@@ -32,6 +32,7 @@ extern uint32_t imag[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
 
 void clearScreen(color c);
 void clearImage(color c);
+void normalize();
 
 void setVoxel(voxel pos, color c);
 
