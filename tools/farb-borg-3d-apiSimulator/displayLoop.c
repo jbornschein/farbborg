@@ -11,8 +11,8 @@
 // Playlist
 void *display_loop(void * unused)  {
 	while (1) {
-		testBlur();
 		plasmaBall();
+		testBlur();
 		
 		playPlaylist("anims/playlist.apl");
 		playAnimFile("anims/anim1.prn");

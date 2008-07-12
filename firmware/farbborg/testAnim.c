@@ -17,7 +17,7 @@ void testBlur() {
 		clearImage(black);
 		for (j = 0; j < 23; j++) {
 			setVoxel((voxel) {easyRandom()%5, easyRandom()%5, easyRandom()%5}, 
-			         HtoRGB((easyRandom() << 7)));
+			         HtoRGB((easyRandom() << 23) | (easyRandom() << 15) | (easyRandom() << 7)));
 		}
 		
 		blur();

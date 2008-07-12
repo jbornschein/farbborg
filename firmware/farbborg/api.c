@@ -146,7 +146,7 @@ void fade(unsigned int msProStep, unsigned int steps) {
 	
 	for (i = 0; i < MAX_Z*MAX_Y*MAX_X*COLOR_BYTES; i++) {
 		*help = *pixr * 1024;
-		temp = (*im * 1024) - *help;
+		temp = ((*im & 0xff) * 1024) - *help;
 		//sprintf(buffer, "%d \n", temp);
 		//uart_putstr(buffer);
 		//if (temp >= 0)
@@ -185,7 +185,7 @@ void swapAndWait(unsigned int ms) {
 	for (z = 0; z < MAX_Z; z++) {
 		pix = (uint32_t *) &PIXMAP[128*z];
 		for (i = 0; i < MAX_Y*MAX_X*COLOR_BYTES; i++) {
-			help = *im++;
+			help = *im++ & 0xff;
 			*pix++  = help;
 			*pixr++ = help;	
 		}
@@ -548,12 +548,16 @@ void dP(char* txt, int32_t val) {
 }					
 
 void normalize() {
-	int r, g, b, i, max_r = 1, max_g = 1, max_b = 1;
+	int r, g, b, i, max_r = 4, max_g = 4, max_b = 4;
 	uint32_t *im = (uint32_t *) imag;
 	for (i = 0; i < MAX_Z*MAX_Y*MAX_X; i++) {
 		r = *im++;
 		g = *im++;
 		b = *im++;
+		r = ((r & 0xff)*256) + (r >> 24);
+		g = ((g & 0xff)*256) + (g >> 24);
+		b = ((b & 0xff)*256) + (b >> 24);
+			
 		if (r > max_r)
 			max_r = r;
 		if (g > max_g)
@@ -561,25 +565,34 @@ void normalize() {
 		if (b > max_b)
 			max_b = b;
 	}
+	if (max_r >= max_g && max_g >= max_b) {
+		max_g = max_r;
+		max_b = max_r;
+	} else if (max_g >= max_r && max_r >= max_b) {
+		max_r = max_g;
+		max_b = max_g;
+	} else {
+		max_r = max_b;
+		max_g = max_b;
+	}
 	im = (uint32_t *) imag;
 	for (i = 0; i < MAX_Z*MAX_Y*MAX_X; i++) {
-		*im++ = ((*im * 256) + max_r/2) / max_r;
-		*im++ = ((*im * 256) + max_g/2) / max_g;
-		*im++ = ((*im * 256) + max_b/2) / max_b;
+		*im++ = (((*im & 0xff) * 256 + (*im>>24))*255) / max_r;
+		*im++ = (((*im & 0xff) * 256 + (*im>>24))*255) / max_g;
+		*im++ = (((*im & 0xff) * 256 + (*im>>24))*255) / max_b;
 	}
 }
 
 
-// Dreidimensionales weichzeichnen mittels Faltung
-// Dazu muss das bild weches weichgezeichnet werden soll zurerst ges
+
 void blur() {
 	unsigned char filter[3][3][3] = {{{0, 1, 0}, {1, 2, 1}, {0, 1, 0}}, 
 									 {{1, 2, 1}, {2, 8, 2}, {1, 2, 1}},
 									 {{0, 1, 0}, {1, 2, 1}, {0, 1, 0}}
 									}; 
-	static uint32_t help_imag[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
+	uint32_t help_imag[MAX_Z][MAX_Y][MAX_X][COLOR_BYTES];
 	uint32_t *im = (uint32_t *) imag, *hi = (uint32_t *) help_imag;									
-	int32_t x, y, z, i, j, k, l, m, n, c, curVoxelColor, temp;
+	int32_t x, y, z, i, j, k, l, m, n, c, curVoxelColor, temp, test;
 
 	for (z = 0; z < 5; z++) {
 		for (y = 0; y < 5; y ++) {
@@ -598,59 +611,34 @@ void blur() {
 								n = z + k - 1;
 								if (l >= 0 && l < 5 && m >= 0 && m < 5 && n >= 0 && n < 5)
 								{
-								   temp = imag[l][m][n][c] * filter[i][j][k];
+								   temp = ((imag[l][m][n][c]*256) + (imag[l][m][n][c] >> 24)) * filter[i][j][k];
+								   test = imag[l][m][n][c];
+								   if (test)
+									test++;
 								   /*dP("c", c);
 								   dP("l", l);
 								   dP("m", m);
 								   dP("n", n);
 								   dP("filter", filter[i][j][k]);	
 								   dP("imag", imag[l][m][n][c]);
-								   dP("add", temp);*/
+								   dP("add", temp); */
 								   curVoxelColor += temp;
+								   //printf("hb (imag[l][m][n][c]*256) = %x   ");
 								   //dP("curVoxelColor", curVoxelColor);
 								}
 							}
 						}
 					}
-					//curVoxelColor /= 12;
-					//if (curVoxelColor > 255)
-					//	curVoxelColor = 255;
-					//else if (curVoxelColor < 0)
-					//	curVoxelColor = 0;
-					help_imag[z][y][x][c] = curVoxelColor/32;
+					curVoxelColor /= 32;
+					help_imag[z][y][x][c]  =  curVoxelColor / 256;
+					help_imag[z][y][x][c] |= (curVoxelColor % 256) << 24; 
 				}
 			}
 		}
 	}
-	#define TEILER 12
-	// overide the old image with the new filtered one
-	int32_t strend, r, g, b;
 	for (i = 0; i < MAX_Z*MAX_Y*MAX_X; i++) {
 		*im++ = *hi++;
 		*im++ = *hi++;
 		*im++ = *hi++;
-		/*
-		if (r > (256*TEILER) && r >= g && g >= b) {
-			g = (g*r)/(256*TEILER);
-			b = (b*r)/(256*TEILER);
-			r = 255;
-		} else if (g > (256*TEILER) && g >= r && r >= b) {
-			r = (r*g)/(256*TEILER);
-			b = (b*g)/(256*TEILER);
-			g = 255;	
-		} else if (b > (256*TEILER) && b >= r && r >= g) {
-			r = (r*b)/(256*TEILER);
-			g = (b*b)/(256*TEILER);
-			b = 255;
-		} else {
-			r /= TEILER;
-			g /= TEILER;
-			b /= TEILER;
-		}
-		*im++ = r;
-		*im++ = g;
-		*im++ = b;
-		*/
 	}
 }
-

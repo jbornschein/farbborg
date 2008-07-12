@@ -11,8 +11,8 @@
 // Playlist
 void *display_loop(void * unused)  {
 	while (1) {
-		testBlur();
 		plasmaBall();
+		testBlur();
 		uart_putstr("plasmaTest()\n");
 		plasmaTest();
 		uart_putstr("spirale()\n");

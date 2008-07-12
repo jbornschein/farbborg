@@ -207,105 +207,67 @@ void plasmaBall()
 	int32_t col, scale;
 	int32_t x, y, z;
 	int sqx, sqy, distCalc;
-	unsigned int speed, dir, dist, fadenow;
+	unsigned int dist;
 	color colRGB;
 	voxel pos;
 	scale = 10*0x5000;
 	dist = 0;
-	speed = 1;
-	dir = 1;
-	fadenow = 0;
 	ioffset = 0;
 	
 	while (1)
 	{
 		clearImage(black);
 		
-		if((speed++ % 24)==0)
-		{
-			dist += dir;
-			if(dist > 1)
-			{
-				dir = -1;
-			}
-			else if(dist < 1)
-			{
-				dir = 1;
-			}
-			
-			fadenow = 1;
-		}
-		
-		
-		ioffset += 250; //700;
-		
+		ioffset += 48; //700;
+		dist = (ioffset / 128) % 80;
+		#define M_FILTER 15
 		for(x = 0; x < MAX_X; x++)
 		{
-			sqx = (x-2)*(x-2);
+			sqx = (x-2)*(x-2)*256;
 	
 			for(y = 0; y < MAX_Y; y++)
 			{
-				sqy = (y-2)*(y-2);
+				sqy = (y-2)*(y-2)*256;
 				
 				for(z = 0; z < MAX_Z; z++)
 				{
 					//calculate distance to center and check against desired distance
-					distCalc = isqrt(sqx + sqy + (z-2)*(z-2));
-					if(distCalc == dist)
-					{
-						//reset color;
-						col = 0;
-						
-						//diagonal scrolling sine 
-						col += plasmaDiag(x, y, z, scale, ioffset);
+					distCalc = isqrt(sqx + sqy + (z-2)*(z-2)*256);
 					
-						//colorspace offset
-						col += 0x8000 + (ioffset/32);
-						
-						setVoxelH(x, y, z, col);
-					}
-					else if(distCalc > dist)
-					{
-						//reset color;
-						col = 0;
-						
-						//diagonal scrolling sine 
-						col += plasmaDiag(x, y, z, scale, ioffset);
+					//reset color;
+					col = 0;
 					
-						//colorspace offset
-						col += 0x8000 + (ioffset/32);
+					//diagonal scrolling sine 
+					col += plasmaDiag(x, y, z, scale, ioffset);
+				
+					//colorspace offset
+					col += 0x8000 + (ioffset/32);
 
-						int dingsVal = (int)(256 / (4 - (distCalc - dist))) * 2;
-						colRGB = HtoRGB(col);
-						colRGB.r = max((int)colRGB.r - dingsVal, 0);
-						colRGB.g = max((int)colRGB.g - dingsVal, 0);
-						colRGB.b = max((int)colRGB.b - dingsVal, 0);
-						//colRGB.r /= (dist - distCalc + 1);
-						//colRGB.g /= (dist - distCalc + 1);
-						//colRGB.b /= (dist - distCalc + 1);
-						
-						pos.x = x; pos.y = y; pos.z = z;
-						setVoxel(pos, colRGB);						
-					}
+					int dingsVal = abs(dist - distCalc);
+					dingsVal *= 255 / M_FILTER;
+					if (dingsVal > 255)
+						dingsVal = 255;
+					
+					colRGB = HtoRGB(col);
+					colRGB.r = max((int)colRGB.r - dingsVal, 0);
+					colRGB.g = max((int)colRGB.g - dingsVal, 0);
+					colRGB.b = max((int)colRGB.b - dingsVal, 0);
+					
+					pos.x = x; pos.y = y; pos.z = z;
+					setVoxel(pos, colRGB);						
+				
 				} 
 				//printf("\n");
 			}
 			//printf("\n");
 		}
 		//printf("\n");
-		
-		if(fadenow)
-		{
-			fadenow = 0;
-			fade(10,10);
-		}
-		else swapAndWait(30);
+		swapAndWait(10);
 		
 		if((ioffset) >= 8*0x8000)
 			break;
 	}
 }
-
 
 /* ^
  * | 4   6 7 0 1 2

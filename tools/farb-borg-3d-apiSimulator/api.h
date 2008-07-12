@@ -47,7 +47,7 @@ unsigned char isVoxelSet(voxel pos);
 voxel getNextVoxel(voxel pos, direction d);
 
 direction direction_r(direction dir);
-
+void normalize();
 color getColor(voxel pos);
 
 void shift(direction dir);

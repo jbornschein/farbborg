@@ -103,9 +103,9 @@ void display(void){
 				/*printf("%f %f %f\n", pixmap[z][y][x][0]/64.0, 
 									 pixmap[z][y][x][1]/64.0, 
 									 pixmap[z][y][x][2]/64.0); */
-				glColor4f(pixmap[z][y][x][0]/255.0, 
-						  pixmap[z][y][x][1]/255.0, 
-						  pixmap[z][y][x][2]/255.0,
+				glColor4f((pixmap[z][y][x][0] & 0xff)/255.0, 
+						  (pixmap[z][y][x][1] & 0xff)/255.0, 
+						  (pixmap[z][y][x][2] & 0xff)/255.0,
 						  1);
 				// display the LEDs in a the original size grid
 				// in the real one are also 4cm beetween the LEDs
