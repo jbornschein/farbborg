@@ -18,8 +18,8 @@
 			73F3F5230E28C9A8003A423D /* testAnim.c:24 */,
 			73F3F5250E28CA61003A423D /* testAnim.c:27 */,
 			73F3F5370E28D1AD003A423D /* api.c:150 */,
-			73F3F54C0E28E77C003A423D /* plasmaAnims.c:241 */,
-			73F3F54E0E28E780003A423D /* plasmaAnims.c:241 */,
+			73F3F54C0E28E77C003A423D /* plasmaAnims.c:21 */,
+			73F3F54E0E28E780003A423D /* plasmaAnims.c:21 */,
 		);
 		codeSenseManager = 734968050B7BCF0900D4554C /* Code sense */;
 		executables = (
@@ -96,11 +96,11 @@
 				);
 			};
 			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
-				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
-				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnSortingDirectionKey = 1;
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_FiletypeID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					993,
+					906,
 					20,
 					48,
 					43,
@@ -136,7 +136,7 @@
 					16,
 					200,
 					50,
-					933,
+					846,
 				);
 				PBXFileTableDataSourceColumnsKey = (
 					PBXSymbolsDataSource_SymbolTypeIconID,
@@ -368,6 +368,41 @@
 			730343270E2A4CCD001C4004 /* PBXTextBookmark */ = 730343270E2A4CCD001C4004 /* PBXTextBookmark */;
 			730343290E2A4CF1001C4004 /* PBXTextBookmark */ = 730343290E2A4CF1001C4004 /* PBXTextBookmark */;
 			7303432A0E2A4CF1001C4004 /* PBXTextBookmark */ = 7303432A0E2A4CF1001C4004 /* PBXTextBookmark */;
+			730343410E2A63C0001C4004 /* PBXTextBookmark */ = 730343410E2A63C0001C4004 /* PBXTextBookmark */;
+			730343420E2A63C0001C4004 /* PBXTextBookmark */ = 730343420E2A63C0001C4004 /* PBXTextBookmark */;
+			730343440E2A63C2001C4004 /* PBXTextBookmark */ = 730343440E2A63C2001C4004 /* PBXTextBookmark */;
+			730343450E2A63C2001C4004 /* PBXTextBookmark */ = 730343450E2A63C2001C4004 /* PBXTextBookmark */;
+			730343460E2A63C2001C4004 /* PBXTextBookmark */ = 730343460E2A63C2001C4004 /* PBXTextBookmark */;
+			730343470E2A63C2001C4004 /* PBXTextBookmark */ = 730343470E2A63C2001C4004 /* PBXTextBookmark */;
+			730343490E2A63C2001C4004 /* PBXTextBookmark */ = 730343490E2A63C2001C4004 /* PBXTextBookmark */;
+			7303434A0E2A63C2001C4004 /* PBXTextBookmark */ = 7303434A0E2A63C2001C4004 /* PBXTextBookmark */;
+			7303434B0E2A63C2001C4004 /* XDModelBookmark */ = 7303434B0E2A63C2001C4004 /* XDModelBookmark */;
+			7303434D0E2A63C2001C4004 /* PBXTextBookmark */ = 7303434D0E2A63C2001C4004 /* PBXTextBookmark */;
+			7303434E0E2A63C2001C4004 /* PBXTextBookmark */ = 7303434E0E2A63C2001C4004 /* PBXTextBookmark */;
+			7303434F0E2A63C2001C4004 /* PBXTextBookmark */ = 7303434F0E2A63C2001C4004 /* PBXTextBookmark */;
+			730343500E2A63C2001C4004 /* PBXTextBookmark */ = 730343500E2A63C2001C4004 /* PBXTextBookmark */;
+			730343510E2A63C2001C4004 /* PBXTextBookmark */ = 730343510E2A63C2001C4004 /* PBXTextBookmark */;
+			730343520E2A63C2001C4004 /* PBXTextBookmark */ = 730343520E2A63C2001C4004 /* PBXTextBookmark */;
+			730343530E2A63C2001C4004 /* PBXTextBookmark */ = 730343530E2A63C2001C4004 /* PBXTextBookmark */;
+			730343540E2A63C2001C4004 /* PBXTextBookmark */ = 730343540E2A63C2001C4004 /* PBXTextBookmark */;
+			730343560E2A63C2001C4004 /* PBXTextBookmark */ = 730343560E2A63C2001C4004 /* PBXTextBookmark */;
+			730343570E2A63C2001C4004 /* PBXTextBookmark */ = 730343570E2A63C2001C4004 /* PBXTextBookmark */;
+			730343580E2A63C2001C4004 /* PBXTextBookmark */ = 730343580E2A63C2001C4004 /* PBXTextBookmark */;
+			730343590E2A63C2001C4004 /* XDModelBookmark */ = 730343590E2A63C2001C4004 /* XDModelBookmark */;
+			7303435B0E2A63C2001C4004 /* PBXTextBookmark */ = 7303435B0E2A63C2001C4004 /* PBXTextBookmark */;
+			7303435C0E2A63C2001C4004 /* PBXTextBookmark */ = 7303435C0E2A63C2001C4004 /* PBXTextBookmark */;
+			7303435D0E2A63C2001C4004 /* PBXTextBookmark */ = 7303435D0E2A63C2001C4004 /* PBXTextBookmark */;
+			730343600E2A6401001C4004 /* PBXTextBookmark */ = 730343600E2A6401001C4004 /* PBXTextBookmark */;
+			730343630E2A641E001C4004 /* PBXTextBookmark */ = 730343630E2A641E001C4004 /* PBXTextBookmark */;
+			730343660E2A6457001C4004 /* PBXTextBookmark */ = 730343660E2A6457001C4004 /* PBXTextBookmark */;
+			730343690E2A64B2001C4004 /* PBXTextBookmark */ = 730343690E2A64B2001C4004 /* PBXTextBookmark */;
+			7303436C0E2A64EF001C4004 /* PBXTextBookmark */ = 7303436C0E2A64EF001C4004 /* PBXTextBookmark */;
+			7303436F0E2A650F001C4004 /* PBXTextBookmark */ = 7303436F0E2A650F001C4004 /* PBXTextBookmark */;
+			730343730E2A65F8001C4004 /* PBXTextBookmark */ = 730343730E2A65F8001C4004 /* PBXTextBookmark */;
+			730343760E2A664D001C4004 /* PBXTextBookmark */ = 730343760E2A664D001C4004 /* PBXTextBookmark */;
+			730343790E2A6676001C4004 /* PBXTextBookmark */ = 730343790E2A6676001C4004 /* PBXTextBookmark */;
+			7303437C0E2A6687001C4004 /* PBXTextBookmark */ = 7303437C0E2A6687001C4004 /* PBXTextBookmark */;
+			7303437F0E2A66B2001C4004 /* PBXTextBookmark */ = 7303437F0E2A66B2001C4004 /* PBXTextBookmark */;
 			730A76A00E181DCC004F7B57 = 730A76A00E181DCC004F7B57 /* PBXTextBookmark */;
 			7316AB210E210035006927EF = 7316AB210E210035006927EF /* PBXTextBookmark */;
 			7317A5F60E22D6870052FD91 = 7317A5F60E22D6870052FD91 /* PBXTextBookmark */;
@@ -438,8 +473,8 @@
 		isa = PBXTextBookmark;
 		comments = "error: 'Y' undeclared (first use in this function)";
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
-		rLen = 1;
-		rLoc = 266;
+		rLen = 0;
+		rLoc = 20;
 		rType = 1;
 	};
 	730342270E2A366E001C4004 /* PBXTextBookmark */ = {
@@ -447,7 +482,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 301";
 		rLen = 0;
-		rLoc = 6576;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1158;
 		vrLoc = 6622;
@@ -460,8 +495,8 @@
 		isa = PBXTextBookmark;
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 225";
-		rLen = 16;
-		rLoc = 5525;
+		rLen = 0;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1036;
 		vrLoc = 5092;
@@ -510,8 +545,8 @@
 		isa = PBXTextBookmark;
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 225";
-		rLen = 16;
-		rLoc = 5525;
+		rLen = 0;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1036;
 		vrLoc = 5092;
@@ -571,7 +606,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 236";
 		rLen = 0;
-		rLoc = 5703;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 833;
 		vrLoc = 5709;
@@ -591,7 +626,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 236";
 		rLen = 0;
-		rLoc = 5703;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1182;
 		vrLoc = 4748;
@@ -611,7 +646,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 274";
 		rLen = 0;
-		rLoc = 6370;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 861;
 		vrLoc = 5947;
@@ -631,7 +666,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 274";
 		rLen = 0;
-		rLoc = 6370;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 862;
 		vrLoc = 5947;
@@ -651,7 +686,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 211";
 		rLen = 0;
-		rLoc = 5088;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1082;
 		vrLoc = 4633;
@@ -671,7 +706,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 274";
 		rLen = 0;
-		rLoc = 6370;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 830;
 		vrLoc = 5826;
@@ -691,7 +726,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 274";
 		rLen = 0;
-		rLoc = 6370;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 831;
 		vrLoc = 5826;
@@ -711,7 +746,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 216";
 		rLen = 0;
-		rLoc = 5246;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1027;
 		vrLoc = 4563;
@@ -731,7 +766,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 216";
 		rLen = 0;
-		rLoc = 5249;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1106;
 		vrLoc = 4781;
@@ -751,7 +786,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 274";
 		rLen = 0;
-		rLoc = 6370;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 789;
 		vrLoc = 5649;
@@ -771,7 +806,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 255";
 		rLen = 0;
-		rLoc = 6037;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 823;
 		vrLoc = 5650;
@@ -791,7 +826,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 255";
 		rLen = 0;
-		rLoc = 6037;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 823;
 		vrLoc = 5650;
@@ -811,7 +846,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 22";
 		rLen = 0;
-		rLoc = 415;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 836;
 		vrLoc = 0;
@@ -851,7 +886,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 249";
 		rLen = 0;
-		rLoc = 5932;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 759;
 		vrLoc = 5560;
@@ -880,8 +915,8 @@
 		isa = PBXTextBookmark;
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 225";
-		rLen = 16;
-		rLoc = 5525;
+		rLen = 0;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1011;
 		vrLoc = 5050;
@@ -891,7 +926,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 249";
 		rLen = 0;
-		rLoc = 5932;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 790;
 		vrLoc = 5560;
@@ -901,7 +936,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 22";
 		rLen = 0;
-		rLoc = 394;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 842;
 		vrLoc = 0;
@@ -910,8 +945,8 @@
 		isa = PBXTextBookmark;
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 225";
-		rLen = 16;
-		rLoc = 5525;
+		rLen = 0;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1011;
 		vrLoc = 5050;
@@ -921,7 +956,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 22";
 		rLen = 0;
-		rLoc = 394;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 842;
 		vrLoc = 0;
@@ -930,8 +965,8 @@
 		isa = PBXTextBookmark;
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 225";
-		rLen = 16;
-		rLoc = 5525;
+		rLen = 0;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1011;
 		vrLoc = 5048;
@@ -941,7 +976,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 22";
 		rLen = 0;
-		rLoc = 413;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 840;
 		vrLoc = 0;
@@ -950,8 +985,8 @@
 		isa = PBXTextBookmark;
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 225";
-		rLen = 16;
-		rLoc = 5525;
+		rLen = 0;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1011;
 		vrLoc = 5046;
@@ -961,7 +996,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 22";
 		rLen = 0;
-		rLoc = 415;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 838;
 		vrLoc = 0;
@@ -970,8 +1005,8 @@
 		isa = PBXTextBookmark;
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 225";
-		rLen = 16;
-		rLoc = 5525;
+		rLen = 0;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1011;
 		vrLoc = 5046;
@@ -981,7 +1016,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 22";
 		rLen = 0;
-		rLoc = 419;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 838;
 		vrLoc = 0;
@@ -990,8 +1025,8 @@
 		isa = PBXTextBookmark;
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 225";
-		rLen = 16;
-		rLoc = 5525;
+		rLen = 0;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1011;
 		vrLoc = 5048;
@@ -1001,7 +1036,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 22";
 		rLen = 0;
-		rLoc = 419;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 840;
 		vrLoc = 0;
@@ -1010,8 +1045,8 @@
 		isa = PBXTextBookmark;
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 225";
-		rLen = 16;
-		rLoc = 5525;
+		rLen = 0;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1011;
 		vrLoc = 5050;
@@ -1021,7 +1056,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 22";
 		rLen = 0;
-		rLoc = 421;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 842;
 		vrLoc = 0;
@@ -1030,8 +1065,8 @@
 		isa = PBXTextBookmark;
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 225";
-		rLen = 16;
-		rLoc = 5525;
+		rLen = 0;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1011;
 		vrLoc = 5050;
@@ -1041,7 +1076,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 22";
 		rLen = 0;
-		rLoc = 424;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 842;
 		vrLoc = 0;
@@ -1050,8 +1085,8 @@
 		isa = PBXTextBookmark;
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 225";
-		rLen = 16;
-		rLoc = 5525;
+		rLen = 0;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1011;
 		vrLoc = 5052;
@@ -1061,7 +1096,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 22";
 		rLen = 0;
-		rLoc = 394;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 844;
 		vrLoc = 0;
@@ -1070,8 +1105,8 @@
 		isa = PBXTextBookmark;
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 225";
-		rLen = 16;
-		rLoc = 5525;
+		rLen = 0;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1011;
 		vrLoc = 5052;
@@ -1081,7 +1116,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 22";
 		rLen = 0;
-		rLoc = 394;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 844;
 		vrLoc = 0;
@@ -1090,8 +1125,8 @@
 		isa = PBXTextBookmark;
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 225";
-		rLen = 16;
-		rLoc = 5525;
+		rLen = 0;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1011;
 		vrLoc = 5051;
@@ -1101,7 +1136,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 366";
 		rLen = 0;
-		rLoc = 8767;
+		rLoc = 9883;
 		rType = 0;
 		vrLen = 1167;
 		vrLoc = 8132;
@@ -1110,8 +1145,8 @@
 		isa = PBXTextBookmark;
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 225";
-		rLen = 16;
-		rLoc = 5525;
+		rLen = 0;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1011;
 		vrLoc = 5049;
@@ -1121,7 +1156,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 22";
 		rLen = 0;
-		rLoc = 425;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 841;
 		vrLoc = 0;
@@ -1130,8 +1165,8 @@
 		isa = PBXTextBookmark;
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 225";
-		rLen = 16;
-		rLoc = 5525;
+		rLen = 0;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1011;
 		vrLoc = 5049;
@@ -1141,7 +1176,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 326";
 		rLen = 0;
-		rLoc = 7921;
+		rLoc = 9037;
 		rType = 0;
 		vrLen = 1205;
 		vrLoc = 7215;
@@ -1150,8 +1185,8 @@
 		isa = PBXTextBookmark;
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 225";
-		rLen = 16;
-		rLoc = 5525;
+		rLen = 0;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1011;
 		vrLoc = 5049;
@@ -1161,7 +1196,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 367";
 		rLen = 0;
-		rLoc = 8747;
+		rLoc = 9863;
 		rType = 0;
 		vrLen = 1224;
 		vrLoc = 8094;
@@ -1170,8 +1205,8 @@
 		isa = PBXTextBookmark;
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 225";
-		rLen = 16;
-		rLoc = 5525;
+		rLen = 0;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1011;
 		vrLoc = 5049;
@@ -1181,7 +1216,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 371";
 		rLen = 0;
-		rLoc = 8872;
+		rLoc = 9988;
 		rType = 0;
 		vrLen = 1182;
 		vrLoc = 8143;
@@ -1190,8 +1225,8 @@
 		isa = PBXTextBookmark;
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 225";
-		rLen = 16;
-		rLoc = 5525;
+		rLen = 0;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1011;
 		vrLoc = 5049;
@@ -1201,7 +1236,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 367";
 		rLen = 0;
-		rLoc = 8773;
+		rLoc = 9889;
 		rType = 0;
 		vrLen = 1207;
 		vrLoc = 8094;
@@ -1211,7 +1246,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 368";
 		rLen = 0;
-		rLoc = 8767;
+		rLoc = 9883;
 		rType = 0;
 		vrLen = 999;
 		vrLoc = 7881;
@@ -1221,7 +1256,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 23";
 		rLen = 0;
-		rLoc = 429;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 858;
 		vrLoc = 0;
@@ -1271,7 +1306,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1043;
 		vrLoc = 472;
@@ -1281,7 +1316,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 215";
 		rLen = 0;
-		rLoc = 5246;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1111;
 		vrLoc = 4663;
@@ -1301,7 +1336,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 215";
 		rLen = 0;
-		rLoc = 5246;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1115;
 		vrLoc = 4658;
@@ -1321,7 +1356,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 215";
 		rLen = 0;
-		rLoc = 5246;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1115;
 		vrLoc = 4658;
@@ -1341,7 +1376,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1043;
 		vrLoc = 472;
@@ -1361,7 +1396,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 215";
 		rLen = 0;
-		rLoc = 5288;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1010;
 		vrLoc = 4682;
@@ -1391,7 +1426,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 22";
 		rLen = 0;
-		rLoc = 429;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 840;
 		vrLoc = 0;
@@ -1401,7 +1436,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 22";
 		rLen = 0;
-		rLoc = 429;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 840;
 		vrLoc = 0;
@@ -1431,7 +1466,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -1441,7 +1476,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 215";
 		rLen = 0;
-		rLoc = 5288;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1108;
 		vrLoc = 4682;
@@ -1461,7 +1496,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 215";
 		rLen = 0;
-		rLoc = 5288;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1108;
 		vrLoc = 4682;
@@ -1491,7 +1526,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -1541,7 +1576,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 273";
 		rLen = 0;
-		rLoc = 6370;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 991;
 		vrLoc = 5951;
@@ -1551,7 +1586,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -1561,7 +1596,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 273";
 		rLen = 0;
-		rLoc = 6370;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 992;
 		vrLoc = 5951;
@@ -1571,7 +1606,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -1581,7 +1616,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 273";
 		rLen = 0;
-		rLoc = 6370;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 991;
 		vrLoc = 5951;
@@ -1591,7 +1626,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -1601,7 +1636,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 273";
 		rLen = 0;
-		rLoc = 6370;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 991;
 		vrLoc = 5951;
@@ -1611,7 +1646,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -1621,7 +1656,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 254";
 		rLen = 0;
-		rLoc = 6037;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 990;
 		vrLoc = 5951;
@@ -1631,7 +1666,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -1641,7 +1676,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 254";
 		rLen = 0;
-		rLoc = 6037;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 990;
 		vrLoc = 5951;
@@ -1651,7 +1686,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -1661,7 +1696,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 273";
 		rLen = 0;
-		rLoc = 6370;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 981;
 		vrLoc = 6110;
@@ -1671,7 +1706,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -1691,7 +1726,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 276";
 		rLen = 0;
-		rLoc = 6507;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 813;
 		vrLoc = 5742;
@@ -1701,7 +1736,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 276";
 		rLen = 0;
-		rLoc = 6507;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 813;
 		vrLoc = 5742;
@@ -1721,7 +1756,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 278";
 		rLen = 0;
-		rLoc = 6507;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 970;
 		vrLoc = 6144;
@@ -1731,7 +1766,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -1741,7 +1776,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 278";
 		rLen = 0;
-		rLoc = 6506;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 976;
 		vrLoc = 6144;
@@ -1751,7 +1786,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -1761,7 +1796,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 278";
 		rLen = 0;
-		rLoc = 6489;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 876;
 		vrLoc = 5948;
@@ -1771,7 +1806,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -1791,7 +1826,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 277";
 		rLen = 0;
-		rLoc = 6461;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 784;
 		vrLoc = 5856;
@@ -1801,7 +1836,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 277";
 		rLen = 0;
-		rLoc = 6461;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 784;
 		vrLoc = 5856;
@@ -1821,7 +1856,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 277";
 		rLen = 0;
-		rLoc = 6477;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 795;
 		vrLoc = 5856;
@@ -1831,7 +1866,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -1841,7 +1876,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 289";
 		rLen = 0;
-		rLoc = 6576;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 956;
 		vrLoc = 6282;
@@ -1851,7 +1886,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -1861,7 +1896,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 289";
 		rLen = 0;
-		rLoc = 6576;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 944;
 		vrLoc = 6282;
@@ -1871,7 +1906,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -1881,7 +1916,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 233";
 		rLen = 0;
-		rLoc = 5674;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 727;
 		vrLoc = 5522;
@@ -1891,7 +1926,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -1901,7 +1936,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 292";
 		rLen = 0;
-		rLoc = 6576;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1007;
 		vrLoc = 6110;
@@ -1911,7 +1946,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -1921,7 +1956,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 293";
 		rLen = 0;
-		rLoc = 6576;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 941;
 		vrLoc = 6400;
@@ -1931,7 +1966,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -1941,7 +1976,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 287";
 		rLen = 0;
-		rLoc = 6576;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1227;
 		vrLoc = 6400;
@@ -1951,7 +1986,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -1961,7 +1996,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 289";
 		rLen = 0;
-		rLoc = 6576;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1228;
 		vrLoc = 6400;
@@ -1971,7 +2006,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -1981,7 +2016,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 287";
 		rLen = 0;
-		rLoc = 6658;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1344;
 		vrLoc = 6424;
@@ -1991,7 +2026,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -2001,7 +2036,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 288";
 		rLen = 0;
-		rLoc = 6658;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1251;
 		vrLoc = 6400;
@@ -2011,7 +2046,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -2021,7 +2056,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 288";
 		rLen = 0;
-		rLoc = 6690;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1368;
 		vrLoc = 6400;
@@ -2031,7 +2066,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -2041,7 +2076,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 288";
 		rLen = 0;
-		rLoc = 6678;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1372;
 		vrLoc = 6400;
@@ -2051,7 +2086,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -2061,7 +2096,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 288";
 		rLen = 0;
-		rLoc = 6689;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1372;
 		vrLoc = 6400;
@@ -2071,7 +2106,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -2081,7 +2116,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 290";
 		rLen = 0;
-		rLoc = 6741;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1376;
 		vrLoc = 6400;
@@ -2091,7 +2126,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -2101,7 +2136,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 290";
 		rLen = 0;
-		rLoc = 6742;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1376;
 		vrLoc = 6400;
@@ -2111,7 +2146,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -2121,7 +2156,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 288";
 		rLen = 0;
-		rLoc = 6678;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1377;
 		vrLoc = 6400;
@@ -2131,7 +2166,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
@@ -2141,7 +2176,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 290";
 		rLen = 0;
-		rLoc = 6742;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1376;
 		vrLoc = 6400;
@@ -2151,37 +2186,663 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 27";
 		rLen = 0;
-		rLoc = 473;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1039;
 		vrLoc = 472;
 	};
+	730343410E2A63C0001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		comments = "error: 'struct <anonymous>' has no member named 'x'";
+		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
+		rLen = 1;
+		rLoc = 317;
+		rType = 1;
+	};
+	730343420E2A63C0001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
+		name = "plasmaAnims.c: 334";
+		rLen = 0;
+		rLoc = 8263;
+		rType = 0;
+		vrLen = 1346;
+		vrLoc = 7498;
+	};
+	730343440E2A63C2001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 73E10D300D254810005D39F9 /* slh.h */;
+		name = "slh.h: 15";
+		rLen = 11;
+		rLoc = 220;
+		rType = 0;
+		vrLen = 520;
+		vrLoc = 0;
+	};
+	730343450E2A63C2001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7349680B0B7BCF2400D4554C /* main.c */;
+		name = "main.c: 56";
+		rLen = 55;
+		rLoc = 1583;
+		rType = 0;
+		vrLen = 623;
+		vrLoc = 1377;
+	};
+	730343460E2A63C2001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 734968060B7BCF2400D4554C /* api.c */;
+		name = "api.c: 4";
+		rLen = 0;
+		rLoc = 78;
+		rType = 0;
+		vrLen = 767;
+		vrLoc = 0;
+	};
+	730343470E2A63C2001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 730343480E2A63C2001C4004 /* api.s */;
+		name = "api.s: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 981;
+		vrLoc = 0;
+	};
+	730343480E2A63C2001C4004 /* api.s */ = {
+		isa = PBXFileReference;
+		name = api.s;
+		path = "/Users/madex/develop/bzr/farbborg/tools/farb-borg-3d-apiSimulator/osx/build/osx.build/Debug/farbborgSim.build/Objects-normal/i386/api.s";
+		sourceTree = "<absolute>";
+	};
+	730343490E2A63C2001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 730819280E044F7500B69D30 /* displayLoop.h */;
+		name = "displayLoop.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 105;
+		vrLoc = 0;
+	};
+	7303434A0E2A63C2001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 730819270E044F7500B69D30 /* displayLoop.c */;
+		name = "displayLoop.c: 14";
+		rLen = 0;
+		rLoc = 262;
+		rType = 0;
+		vrLen = 647;
+		vrLoc = 77;
+	};
+	7303434B0E2A63C2001C4004 /* XDModelBookmark */ = {
+		isa = XDModelBookmark;
+		fRef = 7303434C0E2A63C2001C4004 /* displayLoop.c_1.xcclassmodel */;
+		fallbackIsa = PBXBookmark;
+		uiCtxt = {
+			UIContextForClassArea = {
+				_indexOfSelectedView = 0;
+				chosenTableColumnns = (
+					"CT Class",
+					"CT Kind",
+					"CT Superclass",
+					"CT Documentation",
+				);
+				chosenTableColumnns_sortDirections = (
+				);
+				chosenTableColumnns_sortKeys = (
+				);
+				chosenTableColumnns_sortSelectors = (
+				);
+				chosenTableWidths = (
+					76.000000,
+					45.000000,
+					74.454102,
+					22.000000,
+				);
+			};
+			UIContextForDetailArea = {
+				_indexOfSelectedView = 1;
+			};
+			UIContextForLayoutManager = {
+				detailSplitGeometry = {
+					_collapsingFrameDimension = 0;
+					_indexOfCollapsedView = 0;
+					_percentageOfCollapsedView = 0;
+					isCollapsed = yes;
+					sizes = (
+						"{{0, 0}, {746, 179}}",
+						"{{751, 0}, {392, 179}}",
+					);
+				};
+				diagramSplitGeometry = {
+					_collapsingFrameDimension = 0;
+					_indexOfCollapsedView = 0;
+					_percentageOfCollapsedView = 0;
+					isCollapsed = yes;
+					sizes = (
+						"{{0, 0}, {1143, 179}}",
+						"{{0, 184}, {1143, 444}}",
+					);
+				};
+				tableSplitGeometry = {
+					_collapsingFrameDimension = 0;
+					_indexOfCollapsedView = 0;
+					_percentageOfCollapsedView = 0;
+					isCollapsed = yes;
+					sizes = (
+						"{{0, 0}, {245, 179}}",
+						"{{250, 0}, {496, 179}}",
+					);
+				};
+			};
+			UIContextForPropertyArea = {
+				_indexOfSelectedView = 0;
+				chosenTableColumnnsAT = (
+					"PR Type Icon",
+					"PR Member",
+					"PR Kind",
+					"PR Type",
+					"PR Visibility",
+					"PR Documentation",
+				);
+				chosenTableColumnnsAT_sortDirections = (
+				);
+				chosenTableColumnnsAT_sortKeys = (
+				);
+				chosenTableColumnnsAT_sortSelectors = (
+				);
+				chosenTableColumnnsPT = (
+					"AL Type Icon",
+					"AL Member",
+					"AL Kind",
+					"AL Type",
+					"AL Visibility",
+					"AL Documentation",
+				);
+				chosenTableColumnnsPT_sortDirections = (
+				);
+				chosenTableColumnnsPT_sortKeys = (
+				);
+				chosenTableColumnnsPT_sortSelectors = (
+				);
+				chosenTableColumnnsRT = (
+					"OP Type Icon",
+					"OP Member",
+					"OP Kind",
+					"OP Type",
+					"OP Visibility",
+					"OP Documentation",
+				);
+				chosenTableColumnnsRT_sortDirections = (
+				);
+				chosenTableColumnnsRT_sortKeys = (
+				);
+				chosenTableColumnnsRT_sortSelectors = (
+				);
+				chosenTableWidthsAT = (
+					22.000000,
+					122.000000,
+					66.000000,
+					82.000000,
+					44.000000,
+					22.000000,
+				);
+				chosenTableWidthsPT = (
+					22.000000,
+					122.000000,
+					61.000000,
+					87.000000,
+					147.000000,
+					22.000000,
+				);
+				chosenTableWidthsRT = (
+					22.000000,
+					122.000000,
+					62.000000,
+					86.000000,
+					44.000000,
+					22.000000,
+				);
+			};
+			"xdesign model browser state key - shown/hidden" = 1;
+			"xdesign model diagram view visible rect key" = "{{-215, -7}, {1128, 429}}";
+			"xdesign model selected entities key" = (
+			);
+			"xdesign model selected properties key" = (
+			);
+		};
+	};
+	7303434C0E2A63C2001C4004 /* displayLoop.c_1.xcclassmodel */ = {
+		isa = PBXFileReference;
+		path = displayLoop.c_1.xcclassmodel;
+		sourceTree = "<group>";
+	};
+	7303434D0E2A63C2001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7308192A0E044F7500B69D30 /* plasmaAnims.h */;
+		name = "plasmaAnims.h: 4";
+		rLen = 12;
+		rLoc = 52;
+		rType = 0;
+		vrLen = 165;
+		vrLoc = 0;
+	};
+	7303434E0E2A63C2001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 73E10D280D2546E6005D39F9 /* colorMatrix.c */;
+		name = "colorMatrix.c: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 962;
+		vrLoc = 0;
+	};
+	7303434F0E2A63C2001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
+		name = "plasmaAnims.c: 142";
+		rLen = 0;
+		rLoc = 382;
+		rType = 0;
+		vrLen = 753;
+		vrLoc = 0;
+	};
+	730343500E2A63C2001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
+		name = "plasmaAnims.c: 142";
+		rLen = 0;
+		rLoc = 382;
+		rType = 0;
+		vrLen = 572;
+		vrLoc = 0;
+	};
+	730343510E2A63C2001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 73E10D300D254810005D39F9 /* slh.h */;
+		name = "slh.h: 15";
+		rLen = 11;
+		rLoc = 220;
+		rType = 0;
+		vrLen = 520;
+		vrLoc = 0;
+	};
+	730343520E2A63C2001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7349680B0B7BCF2400D4554C /* main.c */;
+		name = "main.c: 56";
+		rLen = 55;
+		rLoc = 1583;
+		rType = 0;
+		vrLen = 623;
+		vrLoc = 1377;
+	};
+	730343530E2A63C2001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 734968060B7BCF2400D4554C /* api.c */;
+		name = "api.c: 4";
+		rLen = 0;
+		rLoc = 78;
+		rType = 0;
+		vrLen = 767;
+		vrLoc = 0;
+	};
+	730343540E2A63C2001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 730343550E2A63C2001C4004 /* api.s */;
+		name = "api.s: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 981;
+		vrLoc = 0;
+	};
+	730343550E2A63C2001C4004 /* api.s */ = {
+		isa = PBXFileReference;
+		name = api.s;
+		path = "/Users/madex/develop/bzr/farbborg/tools/farb-borg-3d-apiSimulator/osx/build/osx.build/Debug/farbborgSim.build/Objects-normal/i386/api.s";
+		sourceTree = "<absolute>";
+	};
+	730343560E2A63C2001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7308192A0E044F7500B69D30 /* plasmaAnims.h */;
+		name = "plasmaAnims.h: 4";
+		rLen = 12;
+		rLoc = 52;
+		rType = 0;
+		vrLen = 165;
+		vrLoc = 0;
+	};
+	730343570E2A63C2001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 730819280E044F7500B69D30 /* displayLoop.h */;
+		name = "displayLoop.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 105;
+		vrLoc = 0;
+	};
+	730343580E2A63C2001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 730819270E044F7500B69D30 /* displayLoop.c */;
+		name = "displayLoop.c: 14";
+		rLen = 0;
+		rLoc = 262;
+		rType = 0;
+		vrLen = 647;
+		vrLoc = 77;
+	};
+	730343590E2A63C2001C4004 /* XDModelBookmark */ = {
+		isa = XDModelBookmark;
+		fRef = 7303435A0E2A63C2001C4004 /* displayLoop.c_1.xcclassmodel */;
+		fallbackIsa = PBXBookmark;
+		uiCtxt = {
+			UIContextForClassArea = {
+				_indexOfSelectedView = 0;
+				chosenTableColumnns = (
+					"CT Class",
+					"CT Kind",
+					"CT Superclass",
+					"CT Documentation",
+				);
+				chosenTableColumnns_sortDirections = (
+				);
+				chosenTableColumnns_sortKeys = (
+				);
+				chosenTableColumnns_sortSelectors = (
+				);
+				chosenTableWidths = (
+					76.000000,
+					45.000000,
+					74.454102,
+					22.000000,
+				);
+			};
+			UIContextForDetailArea = {
+				_indexOfSelectedView = 1;
+			};
+			UIContextForLayoutManager = {
+				detailSplitGeometry = {
+					_collapsingFrameDimension = 0;
+					_indexOfCollapsedView = 0;
+					_percentageOfCollapsedView = 0;
+					isCollapsed = yes;
+					sizes = (
+						"{{0, 0}, {746, 179}}",
+						"{{751, 0}, {392, 179}}",
+					);
+				};
+				diagramSplitGeometry = {
+					_collapsingFrameDimension = 0;
+					_indexOfCollapsedView = 0;
+					_percentageOfCollapsedView = 0;
+					isCollapsed = yes;
+					sizes = (
+						"{{0, 0}, {1143, 179}}",
+						"{{0, 184}, {1143, 444}}",
+					);
+				};
+				tableSplitGeometry = {
+					_collapsingFrameDimension = 0;
+					_indexOfCollapsedView = 0;
+					_percentageOfCollapsedView = 0;
+					isCollapsed = yes;
+					sizes = (
+						"{{0, 0}, {245, 179}}",
+						"{{250, 0}, {496, 179}}",
+					);
+				};
+			};
+			UIContextForPropertyArea = {
+				_indexOfSelectedView = 0;
+				chosenTableColumnnsAT = (
+					"PR Type Icon",
+					"PR Member",
+					"PR Kind",
+					"PR Type",
+					"PR Visibility",
+					"PR Documentation",
+				);
+				chosenTableColumnnsAT_sortDirections = (
+				);
+				chosenTableColumnnsAT_sortKeys = (
+				);
+				chosenTableColumnnsAT_sortSelectors = (
+				);
+				chosenTableColumnnsPT = (
+					"AL Type Icon",
+					"AL Member",
+					"AL Kind",
+					"AL Type",
+					"AL Visibility",
+					"AL Documentation",
+				);
+				chosenTableColumnnsPT_sortDirections = (
+				);
+				chosenTableColumnnsPT_sortKeys = (
+				);
+				chosenTableColumnnsPT_sortSelectors = (
+				);
+				chosenTableColumnnsRT = (
+					"OP Type Icon",
+					"OP Member",
+					"OP Kind",
+					"OP Type",
+					"OP Visibility",
+					"OP Documentation",
+				);
+				chosenTableColumnnsRT_sortDirections = (
+				);
+				chosenTableColumnnsRT_sortKeys = (
+				);
+				chosenTableColumnnsRT_sortSelectors = (
+				);
+				chosenTableWidthsAT = (
+					22.000000,
+					122.000000,
+					66.000000,
+					82.000000,
+					44.000000,
+					22.000000,
+				);
+				chosenTableWidthsPT = (
+					22.000000,
+					122.000000,
+					61.000000,
+					87.000000,
+					147.000000,
+					22.000000,
+				);
+				chosenTableWidthsRT = (
+					22.000000,
+					122.000000,
+					62.000000,
+					86.000000,
+					44.000000,
+					22.000000,
+				);
+			};
+			"xdesign model browser state key - shown/hidden" = 1;
+			"xdesign model diagram view visible rect key" = "{{-215, -7}, {1128, 429}}";
+			"xdesign model selected entities key" = (
+			);
+			"xdesign model selected properties key" = (
+			);
+		};
+	};
+	7303435A0E2A63C2001C4004 /* displayLoop.c_1.xcclassmodel */ = {
+		isa = PBXFileReference;
+		path = displayLoop.c_1.xcclassmodel;
+		sourceTree = "<group>";
+	};
+	7303435B0E2A63C2001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7308192A0E044F7500B69D30 /* plasmaAnims.h */;
+		name = "plasmaAnims.h: 4";
+		rLen = 12;
+		rLoc = 52;
+		rType = 0;
+		vrLen = 165;
+		vrLoc = 0;
+	};
+	7303435C0E2A63C2001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 73E10D280D2546E6005D39F9 /* colorMatrix.c */;
+		name = "colorMatrix.c: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 962;
+		vrLoc = 0;
+	};
+	7303435D0E2A63C2001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
+		name = "plasmaAnims.c: 481";
+		rLen = 0;
+		rLoc = 11851;
+		rType = 0;
+		vrLen = 1077;
+		vrLoc = 10724;
+	};
+	730343600E2A6401001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
+		name = "plasmaAnims.c: 236";
+		rLen = 0;
+		rLoc = 5762;
+		rType = 0;
+		vrLen = 839;
+		vrLoc = 5649;
+	};
+	730343630E2A641E001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
+		name = "plasmaAnims.c: 284";
+		rLen = 0;
+		rLoc = 6935;
+		rType = 0;
+		vrLen = 793;
+		vrLoc = 6314;
+	};
+	730343660E2A6457001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
+		name = "plasmaAnims.c: 318";
+		rLen = 0;
+		rLoc = 7614;
+		rType = 0;
+		vrLen = 1112;
+		vrLoc = 7170;
+	};
+	730343690E2A64B2001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
+		name = "plasmaAnims.c: 281";
+		rLen = 0;
+		rLoc = 6860;
+		rType = 0;
+		vrLen = 1005;
+		vrLoc = 6004;
+	};
+	7303436C0E2A64EF001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
+		name = "plasmaAnims.c: 316";
+		rLen = 0;
+		rLoc = 7480;
+		rType = 0;
+		vrLen = 1123;
+		vrLoc = 7042;
+	};
+	7303436F0E2A650F001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
+		name = "plasmaAnims.c: 313";
+		rLen = 0;
+		rLoc = 7445;
+		rType = 0;
+		vrLen = 1124;
+		vrLoc = 7042;
+	};
+	730343730E2A65F8001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
+		name = "plasmaAnims.c: 256";
+		rLen = 0;
+		rLoc = 6232;
+		rType = 0;
+		vrLen = 899;
+		vrLoc = 5879;
+	};
+	730343760E2A664D001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
+		name = "plasmaAnims.c: 233";
+		rLen = 0;
+		rLoc = 5676;
+		rType = 0;
+		vrLen = 818;
+		vrLoc = 5560;
+	};
+	730343790E2A6676001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
+		name = "plasmaAnims.c: 237";
+		rLen = 0;
+		rLoc = 5796;
+		rType = 0;
+		vrLen = 818;
+		vrLoc = 5560;
+	};
+	7303437C0E2A6687001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
+		name = "plasmaAnims.c: 237";
+		rLen = 0;
+		rLoc = 5796;
+		rType = 0;
+		vrLen = 818;
+		vrLoc = 5560;
+	};
+	7303437F0E2A66B2001C4004 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
+		name = "plasmaAnims.c: 237";
+		rLen = 0;
+		rLoc = 5796;
+		rType = 0;
+		vrLen = 818;
+		vrLoc = 5560;
+	};
 	730819270E044F7500B69D30 /* displayLoop.c */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1171, 1296}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1084, 1312}}";
 			sepNavSelRange = "{262, 0}";
-			sepNavVisRange = "{77, 1059}";
+			sepNavVisRange = "{77, 647}";
 			sepNavWindowFrame = "{{15, -1}, {786, 874}}";
 		};
 	};
 	730819280E044F7500B69D30 /* displayLoop.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1171, 741}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1084, 486}}";
 			sepNavSelRange = "{0, 0}";
 			sepNavVisRange = "{0, 105}";
 		};
 	};
 	730819290E044F7500B69D30 /* plasmaAnims.c */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {727, 7344}}";
-			sepNavSelRange = "{473, 0}";
-			sepNavVisRange = "{472, 1039}";
-			sepNavWindowFrame = "{{15, -1}, {786, 874}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1084, 7776}}";
+			sepNavSelRange = "{5796, 0}";
+			sepNavVisRange = "{5560, 818}";
+			sepNavWindowFrame = "{{19, -6}, {786, 874}}";
 		};
 	};
 	7308192A0E044F7500B69D30 /* plasmaAnims.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {727, 746}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1084, 613}}";
 			sepNavSelRange = "{52, 12}";
 			sepNavVisRange = "{0, 165}";
 		};
@@ -2200,8 +2861,8 @@
 		isa = PBXTextBookmark;
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 135";
-		rLen = 12;
-		rLoc = 3238;
+		rLen = 0;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 654;
 		vrLoc = 2871;
@@ -2291,9 +2952,9 @@
 	};
 	734968060B7BCF2400D4554C /* api.c */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1171, 10736}}";
-			sepNavSelRange = "{5506, 5}";
-			sepNavVisRange = "{4987, 849}";
+			sepNavIntBoundsRect = "{{0, 0}, {1084, 10544}}";
+			sepNavSelRange = "{78, 0}";
+			sepNavVisRange = "{0, 767}";
 			sepNavVisRect = "{{0, 0}, {663, 472}}";
 			sepNavWindowFrame = "{{307, -20}, {809, 874}}";
 		};
@@ -2332,9 +2993,9 @@
 	};
 	7349680B0B7BCF2400D4554C /* main.c */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1171, 3896}}";
-			sepNavSelRange = "{2756, 0}";
-			sepNavVisRange = "{399, 907}";
+			sepNavIntBoundsRect = "{{0, 0}, {1171, 3836}}";
+			sepNavSelRange = "{1583, 55}";
+			sepNavVisRange = "{1377, 623}";
 			sepNavWindowFrame = "{{15, -1}, {786, 874}}";
 		};
 	};
@@ -2711,9 +3372,9 @@
 	};
 	73E10D280D2546E6005D39F9 /* colorMatrix.c */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1171, 820}}";
-			sepNavSelRange = "{24, 1}";
-			sepNavVisRange = "{0, 1029}";
+			sepNavIntBoundsRect = "{{0, 0}, {1084, 752}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 962}";
 			sepNavWindowFrame = "{{15, -1}, {809, 874}}";
 		};
 	};
@@ -2748,8 +3409,8 @@
 	};
 	73E10D300D254810005D39F9 /* slh.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1171, 703}}";
-			sepNavSelRange = "{0, 0}";
+			sepNavIntBoundsRect = "{{0, 0}, {1171, 486}}";
+			sepNavSelRange = "{220, 11}";
 			sepNavVisRange = "{0, 520}";
 			sepNavWindowFrame = "{{15, -1}, {809, 874}}";
 		};
@@ -2986,7 +3647,7 @@
 		modificationTime = 237652790.557204;
 		state = 2;
 	};
-	73F3F54C0E28E77C003A423D /* plasmaAnims.c:241 */ = {
+	73F3F54C0E28E77C003A423D /* plasmaAnims.c:21 */ = {
 		isa = PBXFileBreakpoint;
 		actions = (
 		);
@@ -2998,12 +3659,12 @@
 		functionName = "plasmaBall()";
 		hitCount = 0;
 		ignoreCount = 0;
-		lineNumber = 241;
+		lineNumber = 21;
 		location = farbborgSim;
 		modificationTime = 237652790.557214;
 		state = 2;
 	};
-	73F3F54E0E28E780003A423D /* plasmaAnims.c:241 */ = {
+	73F3F54E0E28E780003A423D /* plasmaAnims.c:21 */ = {
 		isa = PBXFileBreakpoint;
 		actions = (
 		);
@@ -3015,7 +3676,7 @@
 		functionName = "plasmaBall()";
 		hitCount = 0;
 		ignoreCount = 0;
-		lineNumber = 241;
+		lineNumber = 21;
 		location = farbborgSim;
 		modificationTime = 237652790.55752;
 		state = 2;
@@ -3154,8 +3815,8 @@
 		isa = PBXTextBookmark;
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 135";
-		rLen = 12;
-		rLoc = 3238;
+		rLen = 0;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 515;
 		vrLoc = 2871;
@@ -3205,7 +3866,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 251";
 		rLen = 0;
-		rLoc = 5487;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1074;
 		vrLoc = 5684;
@@ -3225,7 +3886,7 @@
 		comments = "error: 'distcalc' undeclared (first use in this function)";
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		rLen = 0;
-		rLoc = 240;
+		rLoc = 20;
 		rType = 1;
 	};
 	73F3F58F0E29AF13003A423D /* PBXTextBookmark */ = {
@@ -3233,7 +3894,7 @@
 		fRef = 730819290E044F7500B69D30 /* plasmaAnims.c */;
 		name = "plasmaAnims.c: 266";
 		rLen = 0;
-		rLoc = 6197;
+		rLoc = 382;
 		rType = 0;
 		vrLen = 1069;
 		vrLoc = 5379;

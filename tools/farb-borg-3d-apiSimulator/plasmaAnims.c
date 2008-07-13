@@ -18,7 +18,7 @@ unsigned int ioffset;
 //math :-)
 #define PI 3.14159265
 #define SQUARE(x) ((x)*(x))
-#define max(x, y) ((x > y)?x:y)
+#define max(x, y) (((x) > (y))?(x):(y))
 #define abs(x) (((x) < 0)?-(x):(x))
 
 void plasmaSnake()
@@ -221,29 +221,41 @@ int plasmaDiag(int x, int y, int z, int scale, int ioff)
 	return Sine((-x * (0x8000*0x8000 / (MAX_X * scale))) + (y * (0x8000*0x8000 / (MAX_Y * scale))) + (-z * (0x8000*0x8000 / (MAX_Z * scale))) + ioff);
 }
 
+
+//plasma sea support stuff
+typedef struct
+{
+	voxel vPos;
+	unsigned int zDist;
+	unsigned int speed;
+} plasmaSeaDrop;
+
+#define PLASSEA_MAXDROPS 4
+#define PLASSEA_ITERATIONS 8
+#define PLASSEA_M_FILTER 14
+#define PLASSEA_Z_HEADROOM 4
+#define PLASSEA_ZDIST_RESSCALE 24
+#define PLASSEA_ZDISTMAX ((PLASSEA_Z_HEADROOM + MAX_Z) * PLASSEA_ZDIST_RESSCALE)
+
 void plasmaSea()
 {
 	int32_t col, scale;
-	int32_t x, y, z;
+	int32_t x, y, z, i;
 	int sqx, sqy, dingsVal, borgDiameter;
 	color colRGB;
 
 	//drops
-	voxel drops[3];
-	unsigned int dropDists[3];
+	plasmaSeaDrop drops[PLASSEA_MAXDROPS];
 
-	scale = 1*0x5000;
+	scale = 16;
 	borgDiameter = BORGDIAMETER;
 	ioffset = 0;
 
-	drops[0].y = 0; drops[0].x = 2;
-	drops[1].y = 2; drops[1].x = 2;
-	drops[2].y = 4; drops[2].x = 2;
-	dropDists[0] = 0;
-	dropDists[1] = 0;
-	dropDists[2] = 0;
-
-	//easyRandom()
+	//init all drops as "fallen", so they'll get initialized by the usual pseudorandomness
+	for(i = 0; i < PLASSEA_MAXDROPS; i++)
+	{	
+		drops[i].zDist = PLASSEA_ZDISTMAX + 16; //overshoot zdistmax, to be sure
+	}
 	
 	while (!false)
 	{
@@ -251,10 +263,28 @@ void plasmaSea()
 		clearImage(black);
 		
 		//move plasma "forward"
-		ioffset += 32;
+		ioffset += 64;
 
-		//dist is the drop's advance
-		dropDists[0] = (ioffset / 128) % 64;
+		//advance the drops
+		for(i = 0; i < PLASSEA_MAXDROPS; i++)
+		{
+			//is the drop already fallen?
+			if(drops[i].zDist > PLASSEA_ZDISTMAX)
+			{
+				//yes, spawn a new one
+				drops[i].vPos.x = easyRandom() % MAX_X;
+				drops[i].vPos.y = easyRandom() % MAX_Z;
+				drops[i].speed = (easyRandom() % 2) + 1;
+				//put drop somewehere in the non-visible range
+				drops[i].zDist = easyRandom() % (PLASSEA_Z_HEADROOM * PLASSEA_ZDIST_RESSCALE);
+			}
+			else
+			{
+				//no, add speed
+				drops[i].zDist += drops[i].speed;
+			}
+		}
+		
 
 		for(x = 0; x < MAX_X; x++)
 		{
@@ -270,37 +300,42 @@ void plasmaSea()
 				col = 0;
 				
 				//diagonal scrolling sine 
-				col += plasmaPolarFlat(sqx, sqy, 16, borgDiameter, ioffset);
+				col += plasmaPolarFlat(sqx, sqy, scale, borgDiameter, ioffset);
 			
 				//colorspace offset
 				col += 0x8000;
 				col  = (col * 49152) / 0xFFFF;
 				
-				//col %= 1610612736;
-				
 				//finally draw the voxel
 				setVoxelH(x, y, 0, col);	
 
-				//drops z
-				int i = 0;
-				if((drops[i].x == x) && (drops[i].y == y))
-				{				
-					for(z = 0; z < MAX_Z; z++)
+				//for all drops
+				for(i = 0; i < PLASSEA_MAXDROPS; i++)
+				{
+				
+					printf("%i ", i);
+					//check if this drop is in our z-column
+					if((drops[i].vPos.x == x) && (drops[i].vPos.y == y))
 					{
-						dingsVal = abs((int)dropDists[i] - ((4-z) * 16));
-						dingsVal *= 255 / PLASBALL_M_FILTER;
-						printf("%i ", dingsVal);
-						if (dingsVal > 255)
-							continue;
-						
-						//alter the voxels brightness (?), without uint overflows ;-)
-						colRGB.r = 0;//max(0 - dingsVal, 0);
-						colRGB.g = max(128 - dingsVal, 0);
-						colRGB.b = max(255 - dingsVal, 0);
-						
-						//finally draw the voxel
-						drops[i].z = z;
-						setVoxel(drops[i], colRGB);					
+						printf("%i ", i);
+						//if so, walk the z-range and see if we have to light up the pixel
+						//see plasmaball for this technique
+						for(z = 0; z < MAX_Z; z++)
+						{
+							dingsVal = abs((int)drops[i].zDist - ((4 - z + PLASSEA_Z_HEADROOM) * PLASSEA_ZDIST_RESSCALE));
+							dingsVal *= 255 / PLASSEA_M_FILTER;
+							if (dingsVal > 255)
+								continue;
+							
+							//alter the voxels brightness (?), without uint overflows ;-)
+							colRGB.r = 0;//max(0 - dingsVal, 0);
+							colRGB.g = max(128 - dingsVal, 0);
+							colRGB.b = max(255 - dingsVal, 0);
+							
+							//finally draw the voxel
+							drops[i].vPos.z = z;
+							setVoxel(drops[i].vPos, colRGB);					
+						}
 					}
 				}
 			}
@@ -309,7 +344,7 @@ void plasmaSea()
 		//show frame
 		swapAndWait(10);
 		
-		if((ioffset) >= PLASBALL_ITERATIONS * 0x8000)
+		if((ioffset) >= PLASSEA_ITERATIONS * 0x8000)
 			break;
 	}
 }
