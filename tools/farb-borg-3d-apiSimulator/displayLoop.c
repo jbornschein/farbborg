@@ -11,6 +11,7 @@
 // Playlist
 void *display_loop(void * unused)  {
 	while (1) {
+		plasmaSea();
 		plasmaBall();
 		testBlur();
 		

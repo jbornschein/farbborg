@@ -6,15 +6,20 @@
 float offset;
 unsigned int ioffset;
 
-#define PI 3.14159265
-#define SQUARE(x) (x)*(x)
 #define fMAX_X (float)MAX_X
 #define fMAX_Y (float)MAX_Y
-#define fMAX_Z (float) MAX_Z
+#define fMAX_Z (float)MAX_Z
 
-#define max(x, y) ((x > y)?x:y)
-
+//anim specific
+#define PLASBALL_ITERATIONS 8
+#define PLASBALL_M_FILTER 15
 #define SNAKE_LEN 100
+
+//math :-)
+#define PI 3.14159265
+#define SQUARE(x) ((x)*(x))
+#define max(x, y) ((x > y)?x:y)
+#define abs(x) (((x) < 0)?-(x):(x))
 
 void plasmaSnake()
 {
@@ -179,6 +184,8 @@ void plasmaTest()
 					
 					//colorspace offset
 					col += 0x2500 + (ioffset/32);
+
+					setVoxelH(x,y,z,col);
 				} 
 				//printf("\n");
 			}
@@ -195,17 +202,122 @@ void plasmaTest()
 	fade(15, 100);
 }
 
+
+//polar coordinate sine
+//-> sine of distance from centerpoint (note the pythagoras to calc the distance)
+//here are some defines to calculate and precache the precacheable values
+#define BORGDIAMETER (isqrt(SQUARE(MAX_X) + SQUARE(MAX_Y)))
+#define ISQPX(x) (SQUARE(x - (MAX_X / 2)))
+#define ISQPY(y) (SQUARE(y - (MAX_Y / 2)))
+
+int plasmaPolarFlat(int sqpx, int sqpy, int scale, int borgDiameter, int ioff)
+{
+	return Sine(isqrt(sqpx + sqpy) * (0xFFFF / ((scale * borgDiameter) / 2)) + ioff);
+//end of sine
+}
+
 int plasmaDiag(int x, int y, int z, int scale, int ioff)
 {
 	return Sine((-x * (0x8000*0x8000 / (MAX_X * scale))) + (y * (0x8000*0x8000 / (MAX_Y * scale))) + (-z * (0x8000*0x8000 / (MAX_Z * scale))) + ioff);
 }
 
-int abs(int x) {
-	if (x < 0)
-		return -x;
-	return x;	
+void plasmaSea()
+{
+	int32_t col, scale;
+	int32_t x, y, z;
+	int sqx, sqy, dingsVal, borgDiameter;
+	color colRGB;
+
+	//drops
+	voxel drops[3];
+	unsigned int dropDists[3];
+
+	scale = 1*0x5000;
+	borgDiameter = BORGDIAMETER;
+	ioffset = 0;
+
+	drops[0].y = 0; drops[0].x = 2;
+	drops[1].y = 2; drops[1].x = 2;
+	drops[2].y = 4; drops[2].x = 2;
+	dropDists[0] = 0;
+	dropDists[1] = 0;
+	dropDists[2] = 0;
+
+	//easyRandom()
+	
+	while (!false)
+	{
+		//clear backbuffer
+		clearImage(black);
+		
+		//move plasma "forward"
+		ioffset += 32;
+
+		//dist is the drop's advance
+		dropDists[0] = (ioffset / 128) % 64;
+
+		for(x = 0; x < MAX_X; x++)
+		{
+			//cache squared polar X
+			sqx = ISQPX(x);
+	
+			//z = 0
+			for(y = 0; y < MAX_Y; y++)
+			{
+				sqy = ISQPY(y);
+				
+				//reset color;
+				col = 0;
+				
+				//diagonal scrolling sine 
+				col += plasmaPolarFlat(sqx, sqy, 16, borgDiameter, ioffset);
+			
+				//colorspace offset
+				col += 0x8000;
+				col  = (col * 49152) / 0xFFFF;
+				
+				//col %= 1610612736;
+				
+				//finally draw the voxel
+				setVoxelH(x, y, 0, col);	
+
+				//drops z
+				int i = 0;
+				if((drops[i].x == x) && (drops[i].y == y))
+				{				
+					for(z = 0; z < MAX_Z; z++)
+					{
+						dingsVal = abs((int)dropDists[i] - ((4-z) * 16));
+						dingsVal *= 255 / PLASBALL_M_FILTER;
+						printf("%i ", dingsVal);
+						if (dingsVal > 255)
+							continue;
+						
+						//alter the voxels brightness (?), without uint overflows ;-)
+						colRGB.r = 0;//max(0 - dingsVal, 0);
+						colRGB.g = max(128 - dingsVal, 0);
+						colRGB.b = max(255 - dingsVal, 0);
+						
+						//finally draw the voxel
+						drops[i].z = z;
+						setVoxel(drops[i], colRGB);					
+					}
+				}
+			}
+		}
+
+		//show frame
+		swapAndWait(10);
+		
+		if((ioffset) >= PLASBALL_ITERATIONS * 0x8000)
+			break;
+	}
 }
 
+//this asnimation features a nice plasmaball emerging from the borg's center
+//a hollowed sphere is drawn by altering a voxels color-brightness depending on it's distance to the sphere's radius
+//the color brightness weakening, and thus the sphere's hull thickness, which is in fact a gradient, is tuned by PLASBALL_M_FILTER, see top of file
+//in other words, voxels which are too distant from the sphere, are weakened till they reach zero, producing a nice sphere in the video ram
 void plasmaBall()
 {
 	int32_t col, scale;
@@ -214,24 +326,31 @@ void plasmaBall()
 	unsigned int dist;
 	color colRGB;
 	voxel pos;
+	int dingsVal;
+
 	scale = 10*0x5000;
 	dist = 0;
 	ioffset = 0;
 	
-	while (1)
+	while (!false)
 	{
+		//clear backbuffer
 		clearImage(black);
 		
-		ioffset += 48; //700;
+		//move plasma "forward"
+		ioffset += 48;
+
+		//dist is the ball's radius
 		dist = (ioffset / 128) % 80;
-		#define M_FILTER 15
+
 		for(x = 0; x < MAX_X; x++)
 		{
-			sqx = (x-2)*(x-2)*256;
+			//cache squared X
+			sqx = SQUARE(x-2) * 256;
 	
 			for(y = 0; y < MAX_Y; y++)
 			{
-				sqy = (y-2)*(y-2)*256;
+				sqy = SQUARE(y-2) * 256;
 				
 				for(z = 0; z < MAX_Z; z++)
 				{
@@ -247,31 +366,30 @@ void plasmaBall()
 					//colorspace offset
 					col += 0x8000 + (ioffset/32);
 
-					int dingsVal = abs(dist - distCalc);
-					dingsVal *= 255 / M_FILTER;
+					//calculate a voxel brightness (?) weakening value based on the distance to the balls outer hull
+					dingsVal = abs((int)dist - distCalc);
+					dingsVal *= 255 / PLASBALL_M_FILTER;
 					if (dingsVal > 255)
-						dingsVal = 255;
+						continue;
 					
+					//get the voxels rgb color value
 					colRGB = HtoRGB(col);
+					//alter the voxels brightness (?), without uint overflows ;-)
 					colRGB.r = max((int)colRGB.r - dingsVal, 0);
 					colRGB.g = max((int)colRGB.g - dingsVal, 0);
 					colRGB.b = max((int)colRGB.b - dingsVal, 0);
-					//colRGB.r /= (dist - distCalc + 1);
-					//colRGB.g /= (dist - distCalc + 1);
-					//colRGB.b /= (dist - distCalc + 1);
 					
+					//finally draw the voxel
 					pos.x = x; pos.y = y; pos.z = z;
-					setVoxel(pos, colRGB);						
-				
+					setVoxel(pos, colRGB);			
 				} 
-				//printf("\n");
 			}
-			//printf("\n");
 		}
-		//printf("\n");
+
+		//show frame
 		swapAndWait(10);
 		
-		if((ioffset) >= 8*0x8000)
+		if((ioffset) >= PLASBALL_ITERATIONS * 0x8000)
 			break;
 	}
 }
