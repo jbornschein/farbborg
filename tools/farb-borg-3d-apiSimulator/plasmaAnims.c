@@ -4,16 +4,27 @@
 #include <math.h>
 
 float offset;
-unsigned int ioffset;
+uint32_t ioffset;
 
 #define fMAX_X (float)MAX_X
 #define fMAX_Y (float)MAX_Y
 #define fMAX_Z (float)MAX_Z
 
-//anim specific
+//-- anim specific
+//plasmaball
 #define PLASBALL_ITERATIONS 8
 #define PLASBALL_M_FILTER 15
+//snake
 #define SNAKE_LEN 100
+//plasmasea
+#define PLASSEA_MAXDROPS 3
+#define PLASSEA_ITERATIONS 8
+#define PLASSEA_PLASMASPEED 64
+#define PLASSEA_M_FILTER 28
+#define PLASSEA_Z_HEADROOM 4
+#define PLASSEA_ZDIST_RESSCALE 24
+#define PLASSEA_ZDISTMAX ((PLASSEA_Z_HEADROOM + MAX_Z) * PLASSEA_ZDIST_RESSCALE)
+#define PLASSEA_PDISTMAX (MAX_Z * PLASSEA_ZDIST_RESSCALE)
 
 //math :-)
 #define PI 3.14159265
@@ -21,6 +32,13 @@ unsigned int ioffset;
 #define max(x, y) (((x) > (y))?(x):(y))
 #define min(x, y) (((x) < (y))?(x):(y))
 #define abs(x) (((x) < 0)?-(x):(x))
+
+//support
+#define rnd32 (((uint32_t)easyRandom() << 24) | ((uint32_t)easyRandom() << 16) | ((uint32_t)easyRandom() << 8) | (uint32_t)easyRandom())
+
+#ifndef false
+#define false 0
+#endif
 
 void plasmaSnake()
 {
@@ -232,9 +250,29 @@ typedef struct
 	voxel vPos;
 	unsigned int zDist;
 	unsigned int speed;
+<<<<<<< TREE
 	int spawnFlag;
+	unsigned int myIOff;
+=======
+	int spawnFlag;
+>>>>>>> MERGE-SOURCE
 } plasmaSeaDrop;
 
+<<<<<<< TREE
+typedef struct
+{
+	voxel center;
+	unsigned int pDist;
+	unsigned int speed;
+	unsigned int myIOff;
+} plasmaSeaWave;
+
+typedef struct
+{
+    plasmaSeaWave element;
+    void *next; //FIXME: howto forward declare this type, so we can use a proper pointer ?
+} plasmaSeaWaveList;
+=======
 typedef struct
 {
 	voxel center;
@@ -258,7 +296,6 @@ typedef struct
 #define PLASSEA_ZDISTMAX ((PLASSEA_Z_HEADROOM + MAX_Z) * PLASSEA_ZDIST_RESSCALE)
 #define PLASSEA_PDISTMAX (MAX_Z * PLASSEA_ZDIST_RESSCALE)
 
-#define false 0
 void plasmaSea()
 {
 	int32_t col, scale, tmpR, tmpG, tmpB;
@@ -311,8 +348,8 @@ void plasmaSea()
 				runner->element.center.z = 0;
 				runner->element.pDist = 0;			
 				//set a custom offset for the plasma colors
-				runner->element.myIOff = easyRandom();
-		        runner->element.speed = 1;
+				runner->element.myIOff = 0;//rnd32;
+		        runner->element.speed = drops[i].speed;
             }
 			//is the drop already fallen?
 			else if(drops[i].zDist > PLASSEA_ZDISTMAX)
@@ -348,7 +385,7 @@ void plasmaSea()
             else
     		{
                 //add speed, but half as fast
-                if(ioffset % (3*PLASSEA_PLASMASPEED) == 0)
+                if(ioffset % (2*PLASSEA_PLASMASPEED) == 0)
                    ltmp->element.pDist += ltmp->element.speed;
             }
         }
@@ -372,6 +409,7 @@ void plasmaSea()
          				//calculate distance to wave center
 	                    distCalc = isqrt(sqx*SQUARE(PLASSEA_ZDIST_RESSCALE) + sqy*SQUARE(PLASSEA_ZDIST_RESSCALE));
 			
+<<<<<<< TREE
         				//reset color;
         				col = 0;
         				
@@ -387,7 +425,7 @@ void plasmaSea()
         				
         				//calculate a voxel brightness (?) weakening value based on the distance to the balls outer hull
     					dingsVal = abs((int)runner->element.pDist - distCalc);
-    					dingsVal *= 255 / PLASBALL_M_FILTER;
+    					dingsVal *= 255 / PLASSEA_M_FILTER;
     					if (dingsVal > 255)
     						continue;
 						
@@ -411,7 +449,7 @@ void plasmaSea()
                 setVoxel((voxel) {x, y, 0}, colRGB);
                 
                 //normalize();
-                    
+
 				//for all drops
 				for(i = 0; i < PLASSEA_MAXDROPS; i++)
 				{                                     	

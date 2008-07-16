@@ -1,7 +1,7 @@
 [Project]
 FileName=Win32-devcpp.dev
 Name=borg-3d-apiSimulator
-UnitCount=18
+UnitCount=22
 Type=0
 Ver=1
 ObjFiles=
@@ -22,12 +22,12 @@ OverrideOutputName=borg-3d-apiSimulator.exe
 HostApplication=
 Folders=
 CommandLine=
-UseCustomMakefile=0
-CustomMakefile=
+UseCustomMakefile=1
+CustomMakefile=Makefile.win
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=0000000001001000000000
+CompilerSettings=0100000001100000000000
 
 [Unit1]
 FileName=main.c
@@ -228,12 +228,42 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit19]
-FileName=joystick.h
-CompileCpp=0
+FileName=plasmaAnims.h
+CompileCpp=1
 Folder=borg-3d-apiSimulator
-Compile=0
-Link=0
+Compile=1
+Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
+
+[Unit20]
+FileName=displayLoop.c
+CompileCpp=0
+Folder=borg-3d-apiSimulator
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=$(CC) -c displayLoop.c -o displayLoop.o $(CFLAGS)
+
+[Unit21]
+FileName=displayLoop.h
+CompileCpp=1
+Folder=borg-3d-apiSimulator
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit22]
+FileName=plasmaAnims.c
+CompileCpp=0
+Folder=borg-3d-apiSimulator
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=$(CC) -c plasmaAnims.c -o plasmaAnims.o $(CFLAGS)
 
