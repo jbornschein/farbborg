@@ -195,7 +195,48 @@
 	<key>Notifications</key>
 	<array/>
 	<key>OpenEditors</key>
-	<array/>
+	<array>
+		<dict>
+			<key>Content</key>
+			<dict>
+				<key>PBXProjectModuleGUID</key>
+				<string>730343B90E2E9E0A001C4004</string>
+				<key>PBXProjectModuleLabel</key>
+				<string>plasmaAnims.c</string>
+				<key>PBXSplitModuleInNavigatorKey</key>
+				<dict>
+					<key>Split0</key>
+					<dict>
+						<key>PBXProjectModuleGUID</key>
+						<string>730343BB0E2E9EEB001C4004</string>
+						<key>PBXProjectModuleLabel</key>
+						<string>plasmaAnims.c</string>
+						<key>_historyCapacity</key>
+						<integer>0</integer>
+						<key>bookmark</key>
+						<string>730344180E2EA40D001C4004</string>
+						<key>history</key>
+						<array>
+							<string>730343B80E2E9E0A001C4004</string>
+						</array>
+					</dict>
+					<key>SplitCount</key>
+					<string>1</string>
+				</dict>
+				<key>StatusBarVisibility</key>
+				<true/>
+			</dict>
+			<key>Geometry</key>
+			<dict>
+				<key>Frame</key>
+				<string>{{0, 20}, {786, 777}}</string>
+				<key>PBXModuleWindowStatusBarHidden2</key>
+				<false/>
+				<key>RubberWindowFrame</key>
+				<string>681 53 786 818 0 0 1440 878 </string>
+			</dict>
+		</dict>
+	</array>
 	<key>PerspectiveWidths</key>
 	<array>
 		<integer>1440</integer>
@@ -319,7 +360,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>plasmaAnims.c</string>
+								<string>testAnim.c</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -327,11 +368,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>plasmaAnims.c</string>
+										<string>testAnim.c</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>7303437F0E2A66B2001C4004</string>
+										<string>730344170E2EA40D001C4004</string>
 										<key>history</key>
 										<array>
 											<string>73E10C730D23281F005D39F9</string>
@@ -349,19 +390,21 @@
 											<string>73F3F5530E28E789003A423D</string>
 											<string>73F3F5540E28E789003A423D</string>
 											<string>73F3F5550E28E789003A423D</string>
-											<string>730342300E2A36E6001C4004</string>
 											<string>730342B00E2A43F2001C4004</string>
 											<string>730342CE0E2A44C3001C4004</string>
 											<string>730343440E2A63C2001C4004</string>
 											<string>730343450E2A63C2001C4004</string>
-											<string>730343460E2A63C2001C4004</string>
 											<string>730343470E2A63C2001C4004</string>
 											<string>730343490E2A63C2001C4004</string>
-											<string>7303434A0E2A63C2001C4004</string>
 											<string>7303434B0E2A63C2001C4004</string>
 											<string>7303434D0E2A63C2001C4004</string>
 											<string>7303434E0E2A63C2001C4004</string>
-											<string>7303434F0E2A63C2001C4004</string>
+											<string>7303438A0E2E9B5C001C4004</string>
+											<string>7303438B0E2E9B5C001C4004</string>
+											<string>7303438D0E2E9B5C001C4004</string>
+											<string>7303439D0E2E9C5C001C4004</string>
+											<string>730343A70E2E9CC4001C4004</string>
+											<string>730343A80E2E9CC4001C4004</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -422,6 +465,12 @@
 											<string>730343590E2A63C2001C4004</string>
 											<string>7303435B0E2A63C2001C4004</string>
 											<string>7303435C0E2A63C2001C4004</string>
+											<string>730343900E2E9B5C001C4004</string>
+											<string>730343910E2E9B5C001C4004</string>
+											<string>730343930E2E9B5C001C4004</string>
+											<string>730343950E2E9B5C001C4004</string>
+											<string>7303439F0E2E9C5C001C4004</string>
+											<string>730343A90E2E9CC4001C4004</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -610,7 +659,7 @@
 	<key>PerspectivesBarVisible</key>
 	<true/>
 	<key>PinnedNavigatorIdentifier</key>
-	<string>7303422B0E2A36D9001C4004</string>
+	<string>730343B90E2E9E0A001C4004</string>
 	<key>ShelfIsVisible</key>
 	<false/>
 	<key>StatusbarIsVisible</key>
@@ -634,11 +683,12 @@
 		<string>730342430E2A375D001C4004</string>
 		<string>730342440E2A375D001C4004</string>
 		<string>730342450E2A375D001C4004</string>
-		<string>73C9EC550D22ADCC006CA842</string>
-		<string>1CD10A99069EF8BA00B06720</string>
 		<string>1C78EAAD065D492600B07095</string>
+		<string>73C9EC550D22ADCC006CA842</string>
+		<string>730343B90E2E9E0A001C4004</string>
 		<string>/Users/madex/develop/bzr/farbborg/tools/farb-borg-3d-apiSimulator/osx/osx.xcodeproj</string>
-		<string>730343800E2A66B2001C4004</string>
+		<string>1CD10A99069EF8BA00B06720</string>
+		<string>730344190E2EA40D001C4004</string>
 	</array>
 	<key>WindowString</key>
 	<string>1 59 1440 819 0 0 1440 878 </string>
@@ -855,7 +905,7 @@
 			<key>WindowToolGUID</key>
 			<string>1CD10A99069EF8BA00B06720</string>
 			<key>WindowToolIsVisible</key>
-			<false/>
+			<true/>
 		</dict>
 		<dict>
 			<key>FirstTimeWindowDisplayed</key>
@@ -1024,7 +1074,7 @@
 			<key>WindowToolGUID</key>
 			<string>1C78EAAD065D492600B07095</string>
 			<key>WindowToolIsVisible</key>
-			<true/>
+			<false/>
 		</dict>
 		<dict>
 			<key>Identifier</key>

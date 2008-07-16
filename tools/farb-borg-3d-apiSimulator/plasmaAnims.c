@@ -19,6 +19,7 @@ unsigned int ioffset;
 #define PI 3.14159265
 #define SQUARE(x) ((x)*(x))
 #define max(x, y) (((x) > (y))?(x):(y))
+#define min(x, y) (((x) < (y))?(x):(y))
 #define abs(x) (((x) < 0)?-(x):(x))
 
 void plasmaSnake()
@@ -218,7 +219,10 @@ int plasmaPolarFlat(int sqpx, int sqpy, int scale, int borgDiameter, int ioff)
 
 int plasmaDiag(int x, int y, int z, int scale, int ioff)
 {
-	return Sine((-x * (0x8000*0x8000 / (MAX_X * scale))) + (y * (0x8000*0x8000 / (MAX_Y * scale))) + (-z * (0x8000*0x8000 / (MAX_Z * scale))) + ioff);
+	return Sine((-x * (0x8000*0x8000 / (MAX_X * scale))) + 
+				( y * (0x8000*0x8000 / (MAX_Y * scale))) + 
+				(-z * (0x8000*0x8000 / (MAX_Z * scale))) + 
+				ioff);
 }
 
 
@@ -228,96 +232,192 @@ typedef struct
 	voxel vPos;
 	unsigned int zDist;
 	unsigned int speed;
+	int spawnFlag;
 } plasmaSeaDrop;
 
-#define PLASSEA_MAXDROPS 4
+typedef struct
+{
+	voxel center;
+	unsigned int pDist;
+	unsigned int speed;
+	unsigned int myIOff;
+} plasmaSeaWave;
+
+typedef struct
+{
+    plasmaSeaWave element;
+    void *next; //FIXME: howto forward declare this type, so we can use a proper pointer ?
+} plasmaSeaWaveList;
+
+#define PLASSEA_MAXDROPS 3
 #define PLASSEA_ITERATIONS 8
-#define PLASSEA_M_FILTER 14
+#define PLASSEA_PLASMASPEED 64
+#define PLASSEA_M_FILTER 28
 #define PLASSEA_Z_HEADROOM 4
 #define PLASSEA_ZDIST_RESSCALE 24
 #define PLASSEA_ZDISTMAX ((PLASSEA_Z_HEADROOM + MAX_Z) * PLASSEA_ZDIST_RESSCALE)
+#define PLASSEA_PDISTMAX (MAX_Z * PLASSEA_ZDIST_RESSCALE)
 
+#define false 0
 void plasmaSea()
 {
-	int32_t col, scale;
+	int32_t col, scale, tmpR, tmpG, tmpB;
 	int32_t x, y, z, i;
-	int sqx, sqy, dingsVal, borgDiameter;
+	int sqx, sqy, dingsVal, borgDiameter, distCalc;
 	color colRGB;
-
+    plasmaSeaWaveList dummy;
+	plasmaSeaWaveList *head = &dummy, *runner;
+	
 	//drops
 	plasmaSeaDrop drops[PLASSEA_MAXDROPS];
 
 	scale = 16;
 	borgDiameter = BORGDIAMETER;
 	ioffset = 0;
+	dummy.next = NULL;
 
-	//init all drops as "fallen", so they'll get initialized by the usual pseudorandomness
+	//iqnit all drops as "fallen", so they'll get initialized by the usual pseudorandomness
 	for(i = 0; i < PLASSEA_MAXDROPS; i++)
 	{	
+        drops[i].vPos.x = (MAX_X - 1) / 2;
+        drops[i].vPos.y = (MAX_Y - 1) / 2;
 		drops[i].zDist = PLASSEA_ZDISTMAX + 16; //overshoot zdistmax, to be sure
 	}
 	
-	while (!false)
+	while(!false)
 	{
 		//clear backbuffer
 		clearImage(black);
 		
 		//move plasma "forward"
-		ioffset += 64;
+		ioffset += PLASSEA_PLASMASPEED;
 
 		//advance the drops
 		for(i = 0; i < PLASSEA_MAXDROPS; i++)
 		{
+            //is the drop in z=0 and has spawned no effect yet?
+            if(!drops[i].spawnFlag && (drops[i].zDist > (PLASSEA_ZDISTMAX - PLASSEA_ZDIST_RESSCALE)))
+            {
+                drops[i].spawnFlag = 1;
+                
+            	//add a new wave to the list
+				for(runner = head; runner->next != NULL; runner = runner->next);
+				runner->next = (plasmaSeaWaveList *)malloc(sizeof(plasmaSeaWaveList));
+				runner = runner->next;
+				runner->next = NULL;
+				
+				runner->element.center.x = drops[i].vPos.x;
+			    runner->element.center.y = drops[i].vPos.y;
+				runner->element.center.z = 0;
+				runner->element.pDist = 0;			
+				//set a custom offset for the plasma colors
+				runner->element.myIOff = easyRandom();
+		        runner->element.speed = 1;
+            }
 			//is the drop already fallen?
-			if(drops[i].zDist > PLASSEA_ZDISTMAX)
+			else if(drops[i].zDist > PLASSEA_ZDISTMAX)
 			{
-				//yes, spawn a new one
+				//yes, spawn a new drop			
 				drops[i].vPos.x = easyRandom() % MAX_X;
-				drops[i].vPos.y = easyRandom() % MAX_Z;
+				drops[i].vPos.y = easyRandom() % MAX_Y;
 				drops[i].speed = (easyRandom() % 2) + 1;
 				//put drop somewehere in the non-visible range
 				drops[i].zDist = easyRandom() % (PLASSEA_Z_HEADROOM * PLASSEA_ZDIST_RESSCALE);
+				drops[i].spawnFlag = 0;
 			}
 			else
 			{
-				//no, add speed
+				//no, add speed 
 				drops[i].zDist += drops[i].speed;
 			}
 		}
-		
+
+		//advance and recycle waves
+		for(runner = head; runner->next != NULL; runner = runner->next)
+		{
+            plasmaSeaWaveList *ltmp = (plasmaSeaWaveList *)runner->next;
+            if(ltmp->element.pDist > PLASSEA_PDISTMAX)
+            {
+                //recycle
+                runner->next = ltmp->next;
+                free(ltmp);
+                
+                if(runner->next == NULL)
+                    break;
+            }
+            else
+    		{
+                //add speed, but half as fast
+                if(ioffset % (3*PLASSEA_PLASMASPEED) == 0)
+                   ltmp->element.pDist += ltmp->element.speed;
+            }
+        }
 
 		for(x = 0; x < MAX_X; x++)
 		{
-			//cache squared polar X
-			sqx = ISQPX(x);
-	
 			//z = 0
 			for(y = 0; y < MAX_Y; y++)
 			{
-				sqy = ISQPY(y);
-				
-				//reset color;
-				col = 0;
-				
-				//diagonal scrolling sine 
-				col += plasmaPolarFlat(sqx, sqy, scale, borgDiameter, ioffset);
+                tmpR = 0; tmpG = 0; tmpB = 0;
+                
+                //for all waves
+                for(runner = head; runner != NULL; runner = runner->next)
+		        {                 
+                    if((runner != head) && (runner->element.pDist <= PLASSEA_PDISTMAX))
+                    {
+                        //modified calculation with custom centerpoint
+                        sqx = SQUARE(x - runner->element.center.x);
+         				sqy = SQUARE(y - runner->element.center.y);
+         				
+         				//calculate distance to wave center
+	                    distCalc = isqrt(sqx*SQUARE(PLASSEA_ZDIST_RESSCALE) + sqy*SQUARE(PLASSEA_ZDIST_RESSCALE));
 			
-				//colorspace offset
-				col += 0x8000;
-				col  = (col * 49152) / 0xFFFF;
-				
-				//finally draw the voxel
-				setVoxelH(x, y, 0, col);	
-
+        				//reset color;
+        				col = 0;
+        				
+        				//diagonal scrolling sine 
+        				col += plasmaPolarFlat(sqx, sqy, scale, borgDiameter, ioffset + runner->element.myIOff);
+        			
+        				//colorspace offset
+        				col += 0x8000;
+        				col  = (col * 49152) / 0xFFFF;
+        				
+        				//some mystic scaling stolen from setVoxelH, this removes yet another color clipping effect
+        				col = (col*49152)/32768;
+        				
+        				//calculate a voxel brightness (?) weakening value based on the distance to the balls outer hull
+    					dingsVal = abs((int)runner->element.pDist - distCalc);
+    					dingsVal *= 255 / PLASBALL_M_FILTER;
+    					if (dingsVal > 255)
+    						continue;
+						
+        				//get new voxels color
+        				colRGB = HtoRGB(col);
+        				//alter the voxels brightness (?), without uint overflows ;-)
+                        colRGB.r = max((int)colRGB.r - dingsVal, 0);
+         				colRGB.g = max((int)colRGB.g - dingsVal, 0);
+		                colRGB.b = max((int)colRGB.b - dingsVal, 0);
+        				
+        				//finally add the new color
+        				tmpR += colRGB.r; tmpG += colRGB.g; tmpB += colRGB.b;
+                    }
+                }
+                
+                //draw the voxel
+                tmpR /= 2; tmpG /= 2; tmpB /= 2;
+                colRGB.r = min(tmpR, 255);
+                colRGB.g = min(tmpG, 255);
+                colRGB.b = min(tmpB, 255);
+                setVoxel((voxel) {x, y, 0}, colRGB);
+                
+                //normalize();
+                    
 				//for all drops
 				for(i = 0; i < PLASSEA_MAXDROPS; i++)
-				{
-				
-					printf("%i ", i);
+				{                                     	
 					//check if this drop is in our z-column
 					if((drops[i].vPos.x == x) && (drops[i].vPos.y == y))
 					{
-						printf("%i ", i);
 						//if so, walk the z-range and see if we have to light up the pixel
 						//see plasmaball for this technique
 						for(z = 0; z < MAX_Z; z++)
@@ -327,10 +427,19 @@ void plasmaSea()
 							if (dingsVal > 255)
 								continue;
 							
-							//alter the voxels brightness (?), without uint overflows ;-)
-							colRGB.r = 0;//max(0 - dingsVal, 0);
-							colRGB.g = max(128 - dingsVal, 0);
-							colRGB.b = max(255 - dingsVal, 0);
+							//if(z == 0)
+							//{
+                                // colRGB.r = 0;
+							   //  colRGB.g = 128;
+							 //    colRGB.b = 255;
+                            //}
+                            //else
+                            //{
+    							//alter the voxels brightness (?), without uint overflows ;-)
+    							colRGB.r = 0;//max(0 - dingsVal, 0);
+    							colRGB.g = max(128 - dingsVal, 0);
+    							colRGB.b = max(255 - dingsVal, 0);
+                            //}
 							
 							//finally draw the voxel
 							drops[i].vPos.z = z;
@@ -360,7 +469,6 @@ void plasmaBall()
 	int sqx, sqy, distCalc;
 	unsigned int dist;
 	color colRGB;
-	voxel pos;
 	int dingsVal;
 
 	scale = 10*0x5000;
@@ -415,8 +523,7 @@ void plasmaBall()
 					colRGB.b = max((int)colRGB.b - dingsVal, 0);
 					
 					//finally draw the voxel
-					pos.x = x; pos.y = y; pos.z = z;
-					setVoxel(pos, colRGB);			
+					setVoxel((voxel) {x, y, z}, colRGB);			
 				} 
 			}
 		}

@@ -10,6 +10,31 @@
 void flashLight();
 void fadeTest();
 
+void waves() {
+	unsigned short data[5][5], l;
+	unsigned char i, j, k;
+	clearScreen(black);
+	for (i = 0; i < 254; i++) {
+		for (j = 0; j < 5; j++) {
+			l = Sine(((i+j) % 20) * (0x8000/20));
+			data[j][0] = l;
+			data[0][j] = l;
+		}
+		for (j = 1; j < 5; j++) {
+			for (k = 1; k < 5; k++) {
+				data[j][k] = (data[j-1][k] + data[j][k-1] + data[j-1][k-1])/3;
+			}
+		}
+		for (j = 0; j < 5; j++) {
+			for (k = 0; k < 5; k++) {
+				setVoxel((voxel){j, k, (data[j][k])/(0x8000/5)}, white);
+			}
+		}
+		swapAndWait(80);
+		clearImage(black);
+	}
+}
+
 void testBlur() {
 	int i, j;
 	for (i = 0; i < 23; i++)
