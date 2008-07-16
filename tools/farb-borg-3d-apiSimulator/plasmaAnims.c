@@ -250,29 +250,10 @@ typedef struct
 	voxel vPos;
 	unsigned int zDist;
 	unsigned int speed;
-<<<<<<< TREE
 	int spawnFlag;
 	unsigned int myIOff;
-=======
-	int spawnFlag;
->>>>>>> MERGE-SOURCE
 } plasmaSeaDrop;
 
-<<<<<<< TREE
-typedef struct
-{
-	voxel center;
-	unsigned int pDist;
-	unsigned int speed;
-	unsigned int myIOff;
-} plasmaSeaWave;
-
-typedef struct
-{
-    plasmaSeaWave element;
-    void *next; //FIXME: howto forward declare this type, so we can use a proper pointer ?
-} plasmaSeaWaveList;
-=======
 typedef struct
 {
 	voxel center;
@@ -287,14 +268,6 @@ typedef struct
     void *next; //FIXME: howto forward declare this type, so we can use a proper pointer ?
 } plasmaSeaWaveList;
 
-#define PLASSEA_MAXDROPS 3
-#define PLASSEA_ITERATIONS 8
-#define PLASSEA_PLASMASPEED 64
-#define PLASSEA_M_FILTER 28
-#define PLASSEA_Z_HEADROOM 4
-#define PLASSEA_ZDIST_RESSCALE 24
-#define PLASSEA_ZDISTMAX ((PLASSEA_Z_HEADROOM + MAX_Z) * PLASSEA_ZDIST_RESSCALE)
-#define PLASSEA_PDISTMAX (MAX_Z * PLASSEA_ZDIST_RESSCALE)
 
 void plasmaSea()
 {
@@ -408,8 +381,7 @@ void plasmaSea()
          				
          				//calculate distance to wave center
 	                    distCalc = isqrt(sqx*SQUARE(PLASSEA_ZDIST_RESSCALE) + sqy*SQUARE(PLASSEA_ZDIST_RESSCALE));
-			
-<<<<<<< TREE
+
         				//reset color;
         				col = 0;
         				
@@ -449,7 +421,7 @@ void plasmaSea()
                 setVoxel((voxel) {x, y, 0}, colRGB);
                 
                 //normalize();
-
+                    
 				//for all drops
 				for(i = 0; i < PLASSEA_MAXDROPS; i++)
 				{                                     	
