@@ -222,7 +222,7 @@ void plasmaTest()
 }
 
 
-//polar coordinate sine
+//polar coordinate sine (flat)
 //-> sine of distance from centerpoint (note the pythagoras to calc the distance)
 //here are some defines to calculate and precache the precacheable values
 #define BORGDIAMETER_XY (isqrt(SQUARE(MAX_X) + SQUARE(MAX_Y)))
@@ -232,6 +232,17 @@ void plasmaTest()
 int plasmaPolarFlat(int sqpx, int sqpy, int scale, int borgDiameter, int ioff)
 {
 	return Sine(isqrt(sqpx + sqpy) * (0x8000 / ((scale * borgDiameter) / 2)) + ioff);
+//end of sine
+}
+
+//polar coordinate sine
+//-> sine of distance from centerpoint (note the pythagoras to calc the distance)
+//here are some defines to calculate and precache the precacheable values
+#define BORGDIAMETER (isqrt(SQUARE(MAX_X) + SQUARE(MAX_Y) + SQUARE(MAX_Z)))
+#define ISQPZ(z) (SQUARE(z - (MAX_Z / 2)))
+int plasmaPolar(int sqpx, int sqpy, int sqpz, int scale, int borgDiameter, int ioff)
+{
+	return Sine(isqrt(sqpx + sqpy + sqpz) * (0x8000 / ((scale * borgDiameter) / 2)) + ioff);
 //end of sine
 }
 
@@ -246,17 +257,17 @@ int plasmaDiag(int x, int y, int z, int scale, int ioff)
 #define WAVES_ZDIST_RESSCALE 16
 #define WAVES_M_FILTER 22
 #define WAVES_ANIMSPEED 256
-#define WAVES_PLASMASPEED (WAVES_ANIMSPEED / 4)
+#define WAVES_PLASMASPEED (WAVES_ANIMSPEED / 6)
 #define WAVES_ITERATIONS 4096
 void plasmaWave() {
 	unsigned short data[5][5], l;
 	unsigned char j, k, z, r, g ,b;
-	int dingsVal, borgDiameter, sqy;
+	int dingsVal, borgDiameter, sqy, sqx;
 	unsigned int i;
 	color colRGB;
 	
 	ioffset = 0;
-	borgDiameter = BORGDIAMETER_XY;
+	borgDiameter = BORGDIAMETER;
 	
 	//clear screen and backbuffer
 	clearScreen(black);
@@ -294,13 +305,7 @@ void plasmaWave() {
             sqy = ISQPY(j);
 			for (k = 0; k < 5; k++)
             {   
-                unsigned int col;
-                //strange glitches happen here..
-                col = ((plasmaPolarFlat(ISQPX(k), sqy, 16, borgDiameter, ioffset) + 0x8000) * 49152) / 0xFFFF;
-                col = (col*49152)/32768;
-                
-                //calc plasma
-                colRGB = HtoRGB(col);
+                sqx = ISQPX(k);
                           
                 //scale value (distcalc)
                 data[j][k] = (data[j][k] * MAX_Z * WAVES_ZDIST_RESSCALE) / 0xFFFF;
@@ -309,23 +314,31 @@ void plasmaWave() {
                 //see plasmaball for this technique
                 for(z = 0; z < MAX_Z; z++)
                 {
-                	dingsVal = abs((int)data[j][k] - (z * WAVES_ZDIST_RESSCALE));
-                	dingsVal = (dingsVal * 255) / WAVES_M_FILTER;
-                	if (dingsVal > 255)
-                		continue;                                   		
-                	
-                	//alter the voxels brightness (?), without uint overflows ;-)
-                	r = max((int)colRGB.r - dingsVal, 0);
-                	g = max((int)colRGB.g - dingsVal, 0);
-                	b = max((int)colRGB.b - dingsVal, 0);
-                	
-                	//finally draw the voxel
-                	setVoxel((voxel){j, k, z}, (color){r, g, b});					
+                    unsigned int col;
+                    //calc plasma
+                    //strange glitches happen here..
+                    col = ((plasmaPolar(sqx, sqy, ISQPZ(2*z), 12, borgDiameter, ioffset) + 0x8000) * 49152) / 0xFFFF;
+                    col = (col*49152)/32768;
+                    
+                    colRGB = HtoRGB(col);
+                                      
+                    dingsVal = abs((int)data[j][k] - (z * WAVES_ZDIST_RESSCALE));
+                    dingsVal = (dingsVal * 255) / WAVES_M_FILTER;
+                    if (dingsVal > 255)
+                    	continue;                                   		
+                    
+                    //alter the voxels brightness (?), without uint overflows ;-)
+                    r = max((int)colRGB.r - dingsVal, 0);
+                    g = max((int)colRGB.g - dingsVal, 0);
+                    b = max((int)colRGB.b - dingsVal, 0);
+                    
+                    //finally draw the voxel
+                    setVoxel((voxel){j, k, z}, (color){r, g, b});					
                 }
 			}
 		}
 		
-		swapAndWait(10);
+		swapAndWait(8);
 	}
 }
 
