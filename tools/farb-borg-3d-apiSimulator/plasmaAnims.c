@@ -225,13 +225,13 @@ void plasmaTest()
 //polar coordinate sine
 //-> sine of distance from centerpoint (note the pythagoras to calc the distance)
 //here are some defines to calculate and precache the precacheable values
-#define BORGDIAMETER (isqrt(SQUARE(MAX_X) + SQUARE(MAX_Y)))
+#define BORGDIAMETER_XY (isqrt(SQUARE(MAX_X) + SQUARE(MAX_Y)))
 #define ISQPX(x) (SQUARE(x - (MAX_X / 2)))
 #define ISQPY(y) (SQUARE(y - (MAX_Y / 2)))
 
 int plasmaPolarFlat(int sqpx, int sqpy, int scale, int borgDiameter, int ioff)
 {
-	return Sine(isqrt(sqpx + sqpy) * (0xFFFF / ((scale * borgDiameter) / 2)) + ioff);
+	return Sine(isqrt(sqpx + sqpy) * (0x8000 / ((scale * borgDiameter) / 2)) + ioff);
 //end of sine
 }
 
@@ -241,6 +241,92 @@ int plasmaDiag(int x, int y, int z, int scale, int ioff)
 				( y * (0x8000*0x8000 / (MAX_Y * scale))) + 
 				(-z * (0x8000*0x8000 / (MAX_Z * scale))) + 
 				ioff);
+}
+
+#define WAVES_ZDIST_RESSCALE 16
+#define WAVES_M_FILTER 22
+#define WAVES_ANIMSPEED 256
+#define WAVES_PLASMASPEED (WAVES_ANIMSPEED / 4)
+#define WAVES_ITERATIONS 4096
+void plasmaWave() {
+	unsigned short data[5][5], l;
+	unsigned char j, k, z, r, g ,b;
+	int dingsVal, borgDiameter, sqy;
+	unsigned int i;
+	color colRGB;
+	
+	ioffset = 0;
+	borgDiameter = BORGDIAMETER_XY;
+	
+	//clear screen and backbuffer
+	clearScreen(black);
+
+	for (i = 0; i < WAVES_ITERATIONS; i++)
+    {
+        //advance plasma
+        ioffset += WAVES_PLASMASPEED;
+        
+        //clear backbuffer
+        clearImage(black);
+        
+        //calc z positions for one corner
+        // x x x x x
+        // 0 0 0 0 x
+        // 0 0 0 0 x
+        // 0 0 0 0 x
+        // 0 0 0 0 x       
+		for (j = 0; j < 5; j++) {
+			l = Sine(j * (0x8000 / (MAX_Z-1)) + (i*WAVES_ANIMSPEED)) + 0x8000;
+			data[j][0] = l;
+			data[0][j] = l;
+		}
+		
+		//multiplex data over whole plane
+		for (j = 1; j < 5; j++) {
+			for (k = 1; k < 5; k++) {
+				data[j][k] = (data[j-1][k] + data[j][k-1] + data[j-1][k-1])/3;
+			}
+		}
+        		
+		//z-anti-aliasing
+		for (j = 0; j < 5; j++)
+        {
+            sqy = ISQPY(j);
+			for (k = 0; k < 5; k++)
+            {   
+                unsigned int col;
+                //strange glitches happen here..
+                col = ((plasmaPolarFlat(ISQPX(k), sqy, 16, borgDiameter, ioffset) + 0x8000) * 49152) / 0xFFFF;
+                col = (col*49152)/32768;
+                
+                //calc plasma
+                colRGB = HtoRGB(col);
+                          
+                //scale value (distcalc)
+                data[j][k] = (data[j][k] * MAX_Z * WAVES_ZDIST_RESSCALE) / 0xFFFF;
+                
+ 		        //walk the z-range and see if we have to light up the pixel
+                //see plasmaball for this technique
+                for(z = 0; z < MAX_Z; z++)
+                {
+                	dingsVal = abs((int)data[j][k] - (z * WAVES_ZDIST_RESSCALE));
+                	dingsVal = (dingsVal * 255) / WAVES_M_FILTER;
+                	if (dingsVal > 255)
+                		continue;                                   		
+                	
+                	//alter the voxels brightness (?), without uint overflows ;-)
+                	r = max((int)colRGB.r - dingsVal, 0);
+                	g = max((int)colRGB.g - dingsVal, 0);
+                	b = max((int)colRGB.b - dingsVal, 0);
+                	
+                	//finally draw the voxel
+                	setVoxel((voxel){j, k, z}, (color){r, g, b});					
+                }
+			}
+		}
+		
+		swapAndWait(10);
+	}
 }
 
 
@@ -282,7 +368,7 @@ void plasmaSea()
 	plasmaSeaDrop drops[PLASSEA_MAXDROPS];
 
 	scale = 16;
-	borgDiameter = BORGDIAMETER;
+	borgDiameter = BORGDIAMETER_XY;
 	ioffset = 0;
 	dummy.next = NULL;
 
@@ -390,7 +476,7 @@ void plasmaSea()
         			
         				//colorspace offset
         				col += 0x8000;
-        				col  = (col * 49152) / 0xFFFF;
+        				//col  = (col * 49152) / 0xFFFF;
         				
         				//some mystic scaling stolen from setVoxelH, this removes yet another color clipping effect
         				col = (col*49152)/32768;

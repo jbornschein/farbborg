@@ -1,7 +1,6 @@
 #ifndef TESTANIMS_H
 #define TESTANIMS_H
 
-void waves();
 void testBlur();
 void shiftTest();
 void fadeTest();
