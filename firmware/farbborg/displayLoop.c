@@ -11,16 +11,21 @@
 // Playlist
 void *display_loop(void * unused)  {
 	while (1) {
+		plasmaWave();
+
 		plasmaSea();
+
 		plasmaBall();
+
 		testBlur();
+
 		uart_putstr("plasmaTest()\n");
 		plasmaTest();
 		uart_putstr("spirale()\n");
 		spirale();
-		
+
 		playPlaylist("anims/playlist.apl");
-				
+
 		playAnimFile("anim1.prn");
 		uart_putstr("colorSnakle()\n");
 		colorSnake();
@@ -33,7 +38,7 @@ void *display_loop(void * unused)  {
 		//uart_putstr("funkyBeat()\n");
 		//funkyBeat();
 		//uart_putstr("symetricRoutes()\n");
-		//symetricRoutes();	
+		//symetricRoutes();
 
 		uart_putstr("plasmaSnake()\n");
 		plasmaSnake();
@@ -45,7 +50,7 @@ void *display_loop(void * unused)  {
 		//symetricRoutes();
 		//uart_putstr("cubes()\n");
 		//cubes();
-		//uart_putstr("brightnesTest()\n");	
+		//uart_putstr("brightnesTest()\n");
 		//brightnesTest();
 		uart_putstr("movingArrows()\n");
 		movingArrows();
@@ -71,7 +76,7 @@ void *display_loop(void * unused)  {
 		testAnim();
 		//uart_putstr("fnordLicht()\n");
 		//fnordLicht();
-		
+
 	}
 	return 0;
 }
