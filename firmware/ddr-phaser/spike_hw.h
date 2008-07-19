@@ -9,7 +9,7 @@
 #define RAM_START 0x40000000
 #define RAM_SIZE  0x04000000
 
-#define FCPU      100000000
+#define FCPU      50000000
 
 #define UART_RXBUFSIZE 32
 
@@ -70,8 +70,13 @@ void tic_init();
  * GPIO0
  */
 typedef struct {
-	volatile uint32_t iport;
-	volatile uint32_t oport;
+	volatile uint32_t ctrl;
+	volatile uint32_t dummy1;
+	volatile uint32_t dummy2;
+	volatile uint32_t dummy3;
+	volatile uint32_t in;
+	volatile uint32_t out;
+	volatile uint32_t oe;
 } gpio_t;
 
 /***************************************************************************

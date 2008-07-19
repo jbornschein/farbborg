@@ -1,3 +1,4 @@
+
 VINCDIR=                                  \
 	-I../../rtl/wb_conbus                 \
 	-I../../rtl/lm32                      \
@@ -20,6 +21,7 @@ SRC=                                      \
 	../../rtl/lm32/lm32_cpu.v             \
 	../../rtl/lm32/lm32_instruction_unit.v	\
 	../../rtl/lm32/lm32_decoder.v         \
+	../../rtl/lm32/lm32_simtrace.v        \
 	../../rtl/lm32/lm32_load_store_unit.v \
 	../../rtl/lm32/lm32_adder.v           \
 	../../rtl/lm32/lm32_addsub.v          \
@@ -42,7 +44,6 @@ SRC=                                      \
 	../../rtl/wb_ddr/async_fifo.v         \
 	../../rtl/wb_ddr/gray_counter.v       \
 	../../rtl/wb_ddr/dpram.v              \
-	../../rtl/wb_ddr/rotary.v             \
 	../../rtl/wb_uart/wb_uart.v           \
 	../../rtl/wb_timer/wb_timer.v         \
 	../../rtl/wb_gpio/wb_gpio.v           \
@@ -96,7 +97,7 @@ system_tb.vvp: $(SRC) $(SIM_SRC)
 system.prj: $(SRC) $(SYN_SRC)
 	rm -f system.prj
 	@for i in `echo $^`; do \
-	    echo "verilog worlk $$i" >> system.prj; \
+	    echo "verilog work $$i" >> system.prj; \
 	done
 
 system.ngc: system.prj

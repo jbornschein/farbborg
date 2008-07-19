@@ -5,11 +5,11 @@ __DYNAMIC = 0;
 
 
 _RAM_START = 0x40000000;
-_RAM_SIZE  = 0x04000000;
+_RAM_SIZE  = 0x1000;
 _RAM_END   = _RAM_START + _RAM_SIZE;
 
 MEMORY {
-  ram    : ORIGIN = 0x40000000, LENGTH = 0x04000000          /* 64 MB */
+  ram    : ORIGIN = 0x40000000, LENGTH = 0x1000          /*  4k */
 }
 
 SECTIONS

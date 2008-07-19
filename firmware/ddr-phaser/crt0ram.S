@@ -38,16 +38,6 @@ _reset_handler:
 	nop
 	nop
 
-_breakpoint_handler:
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-
 _crt0:
 	/* Setup stack and global pointer */
 	mvhi    sp, hi(_fstack)

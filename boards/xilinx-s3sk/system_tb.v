@@ -160,8 +160,8 @@ always #(tck/2) clk <= ~clk;
 
 /* Simulation setup */
 initial begin
-	$dumpvars(-1);
 	$dumpfile("system_tb.vcd");
+	$dumpvars(-1, dut);
 
 	// reset
 	#0  reset <= 1;
@@ -204,6 +204,7 @@ begin
 	end
 end
 
+/*
 always @(posedge clk)
 begin
 	if (dut.lm32i_ack) begin
@@ -212,5 +213,6 @@ begin
 		            (dut.lm32i_we) ? dut.lm32i_dat_w : dut.lm32i_dat_r );
 	end
 end
+*/
 
 endmodule

@@ -38,7 +38,7 @@ $(VHDLFILE): image.srec
 	$(SREC2VHDL) image.srec > $(VHDLFILE)
 
 $(VRAMFILE): image.srec
-	$(SREC2VRAM) 4 image.srec 0x00000000 0x1000 > $(VRAMFILE)
+	$(SREC2VRAM) image.srec 0x00000000 0x1000 > $(VRAMFILE)
 
 clean:
 	rm -f image image.lst image.bin image.srec image.map  *.o *.d

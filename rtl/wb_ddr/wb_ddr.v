@@ -40,7 +40,10 @@ module wb_ddr
 	input                    wb_we_i,
 	output reg               wb_ack_o,
 	// XXX Temporary DCM control input XXX
-	input              [2:0] rot,  
+	output                   ps_ready,
+	input                    ps_up,
+	input                    ps_down,
+	// XXX probe wires XXX
 	output                   probe_clk,
 	input              [7:0] probe_sel,
 	output reg         [7:0] probe
@@ -328,7 +331,7 @@ begin
 				state      <= s_write;
 		end
 		s_read: begin
-			if (tag_load_match & wayX_sel_valid) begin
+			if ((tag_load_match0 & way0_sel_valid) | (tag_load_match1 & way1_sel_valid)) begin
 				state      <= s_idle;
 			end else if (store_to_way & ~ls_busy) begin
 				state      <= s_rfill;
@@ -398,11 +401,11 @@ begin
 	case (state)
 	s_idle: begin end
 	s_read: begin
-		if (tag_load_match0 & wayX_sel_valid) begin
+		if (tag_load_match0 & way0_sel_valid) begin
 			update_lru0  <= 1;
 			wb_dat_o     <= way0_load_dat;
 			wb_ack_o     <= 1;
-		end else if (tag_load_match1 & wayX_sel_valid) begin
+		end else if (tag_load_match1 & way1_sel_valid) begin
 			update_lru1  <= 1;
 			wb_dat_o     <= way1_load_dat;
 			wb_ack_o     <= 1;
@@ -447,7 +450,6 @@ ddr_ctrl #(
 ) ctrl0 (
 	.clk(          clk         ),
 	.reset(        reset       ),
-	.rot(          rot         ),
 	// DDR Ports
 	.ddr_clk(      ddr_clk     ),
 	.ddr_clk_n(    ddr_clk_n   ),
@@ -472,7 +474,11 @@ ddr_ctrl #(
 	.fml_wnext(    fml_wnext2  ),
 	.fml_rempty(   fml_rempty  ),
 	.fml_rdat(     fml_rdat    ),
-	.fml_rnext(    fml_rnext   )
+	.fml_rnext(    fml_rnext   ),
+	// DCM phase shift control
+	.ps_ready(     ps_ready   ),
+	.ps_up(        ps_up      ),
+	.ps_down(      ps_down    )
 );
 
 assign fml_adr = { ls_adr_tag, ls_adr_set };

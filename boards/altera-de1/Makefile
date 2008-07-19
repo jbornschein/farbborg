@@ -14,6 +14,7 @@ SRC =	                                  \
 	../../rtl/lm32/lm32_cpu.v             \
 	../../rtl/lm32/lm32_instruction_unit.v	\
 	../../rtl/lm32/lm32_decoder.v         \
+	../../rtl/lm32/lm32_simtrace.v        \
 	../../rtl/lm32/lm32_load_store_unit.v \
 	../../rtl/lm32/lm32_adder.v           \
 	../../rtl/lm32/lm32_addsub.v          \
@@ -35,10 +36,10 @@ SRC =	                                  \
 	../../rtl/wb_farbborg/dualportram.v   \
 	../../rtl/wb_farbborg/pwm.v           \
 	../../rtl/wb_spi/wb_spi.v             \
-	../../rtl/wb_sram/wb_sram16.v         \
-	../../rtl/wb_i2c/i2c_master_top.v     \
-	../../rtl/wb_i2c/i2c_master_bit_ctrl.v  \
-	../../rtl/wb_i2c/i2c_master_byte_ctrl.v
+	../../rtl/wb_sram/wb_sram16.v         
+#	../../rtl/wb_i2c/i2c_master_top.v     \
+#	../../rtl/wb_i2c/i2c_master_bit_ctrl.v  \
+#	../../rtl/wb_i2c/i2c_master_byte_ctrl.v
 
 
 #############################################################################

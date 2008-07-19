@@ -42,6 +42,9 @@ wire         clk = clock_50;
 wire         clk_pwm;
 reg    [1:0] clk_count;
 
+wire   [7:0] sd_cs;
+assign       sd_dat3 = sd_cs[0];
+
 always @(posedge clk) begin
 	clk_count = clk_count + 1;
 end
@@ -480,7 +483,7 @@ wb_spi spi0 (
 	.spi_sck(  sd_clk     ),
 	.spi_mosi( sd_cmd     ),
 	.spi_miso( sd_dat     ),
-	.spi_cs(   sd_dat3    )
+	.spi_cs(   sd_cs      )
 );
 
 

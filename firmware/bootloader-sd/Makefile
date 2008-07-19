@@ -60,7 +60,7 @@ image.srec: image image.lst
 	$(LM32_OBJCOPY) $(SEGMENTS) -O srec image image.srec
 
 $(VRAMFILE): image.srec
-	$(SREC2VRAM) 4 image.srec 0x00000000 0x2000 > $(VRAMFILE)
+	$(SREC2VRAM) image.srec 0x00000000 0x2000 > $(VRAMFILE)
 
 clean:
 	rm -f compress convert image image.lst image.bin image.srec image.map zimage zimage.lst zimage.bin zimage.map *.o *.d
